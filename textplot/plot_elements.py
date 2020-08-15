@@ -1,3 +1,4 @@
+import sys
 import numpy as np  # type: ignore
 from typing import List
 
@@ -20,6 +21,9 @@ UNICODE_SQUARES = {
     15: "█",
 }
 BINARY_ENCODING_MATRIX = np.array([[1, 2], [4, 8]])
+
+CURSOR_UP_ONE = "\x1b[1A"
+ERASE_LINE = "\x1b[2K"
 
 
 def character_for_2by2_pixels(square: np.array) -> str:
@@ -45,6 +49,13 @@ def yaxis_ticks(y_min: float, y_max: float, height: int) -> List[str]:
         else ""
         for i in range(height)
     ]
+
+
+def erase_previous_lines(nr_lines: int) -> None:
+    for i in range(nr_lines):
+        sys.stdout.write(ERASE_LINE)
+        sys.stdout.write(CURSOR_UP_ONE)
+        sys.stdout.write(ERASE_LINE)
 
 
 ###########

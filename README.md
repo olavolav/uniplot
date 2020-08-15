@@ -10,6 +10,13 @@ Another use case is having plots as part of your validation tests - that way whe
 something goes wrong, you get not only the error and backtrace but also plots that show
 you what the problem was.
 
+Features:
+
+* Unicode drawing, so 4x the resolution (pixels) of usual ASCII plots
+* Super simple API
+* Interactive mode (simply pass `interactive=True`)
+* Only one dependency: NumPy (but you have that anyway don't you)
+
 ## Examples
 
 ```
@@ -45,4 +52,3 @@ Coming up:
 
 * Line drawing
 * Add flag to disable Unicode
-* Interactive mode
