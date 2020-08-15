@@ -14,7 +14,7 @@ you what the problem was.
 
 * Unicode drawing, so 4x the resolution (pixels) of usual ASCII plots
 * Super simple API
-* Interactive mode (simply pass `interactive=True`)
+* Interactive mode (simply pass `interactive=True`) see [demo video](https://www.youtube.com/watch?v=nmYeBL_0K4A)
 * Only one dependency: NumPy (but you have that anyway don't you)
 
 ## Examples
