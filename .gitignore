@@ -1,0 +1,10 @@
+.DS_Store
+.ipynb_checkpoints/
+__pycache__/
+.mypy_cache/
+
+# Data directory
+data/
+
+# Directory for virtualenv files
+venv/
