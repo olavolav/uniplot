@@ -2,14 +2,14 @@ import numpy as np  # type: ignore
 from typing import Optional
 
 import textplot.pixel_matrix
-from textplot.plot_elements import character_for_2by2_pixels
+import textplot.plot_elements as elements
 
 
 def plot(
     ys: np.array,
     xs: Optional[np.array] = None,
     width: int = 60,
-    height: int = 16,
+    height: int = 17,
     title: Optional[str] = None,
     color: Optional[str] = None,
 ) -> None:
@@ -52,12 +52,15 @@ def plot(
     # print(f"└{'─'*width}┘ {y_min}")
 
     # Print plot (double resolution)
-    print(f"┌{'─'*width}┐ {y_max}")
+    print(f"┌{'─'*width}┐")
+    y_axis_labels = elements.yaxis_ticks(y_min=y_min, y_max=y_max, height=height)
     for row in range(height):
         pixel_row = [
-            character_for_2by2_pixels(pixels[2 * row : 2 * row + 2, 2 * i : 2 * i + 2])
+            elements.character_for_2by2_pixels(
+                pixels[2 * row : 2 * row + 2, 2 * i : 2 * i + 2]
+            )
             for i in range(width)
         ]
-        print(f"│{''.join(pixel_row)}│")
-    print(f"└{'─'*width}┘ {y_min}")
+        print(f"│{''.join(pixel_row)}│ {y_axis_labels[row]}")
+    print(f"└{'─'*width}┘")
     print(f"{xs.min()} up to {xs.max()}")
