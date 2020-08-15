@@ -10,7 +10,7 @@ Another use case is having plots as part of your validation tests - that way whe
 something goes wrong, you get not only the error and backtrace but also plots that show
 you what the problem was.
 
-Features:
+## Features
 
 * Unicode drawing, so 4x the resolution (pixels) of usual ASCII plots
 * Super simple API
@@ -44,7 +44,8 @@ Features:
 │       ▜  ▐▘                                                │
 │        ▙▄▛                                                 │ -0.3818507399164349
 └────────────────────────────────────────────────────────────┘
-1 up to 600```
+1 up to 600
+```
 
 ## Roadmap
 
