@@ -51,6 +51,19 @@ def yaxis_ticks(y_min: float, y_max: float, height: int) -> List[str]:
     ]
 
 
+def xaxis_ticks(x_min: float, x_max: float, width: int) -> str:
+    """
+    This will generate the x axis ticks marks.
+
+    It returns a string.
+    """
+    # TODO For now let's just render min and max at appropriate positions.
+    buffer = int(round(width - len(str(x_min)) - 0.5 * len(str(x_max))) - 1)
+    if buffer > 1:
+        return f" {x_min}{' '*buffer}{x_max}"
+    return f" {x_min} up to {x_max}"
+
+
 def erase_previous_lines(nr_lines: int) -> None:
     for i in range(nr_lines):
         sys.stdout.write(ERASE_LINE)

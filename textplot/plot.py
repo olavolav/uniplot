@@ -54,6 +54,10 @@ def plot(
             height=2 * height,
         )
 
+        # Prepare plot elements
+        y_axis_labels = elements.yaxis_ticks(y_min=y_min, y_max=y_max, height=height)
+        x_axis_labels = elements.xaxis_ticks(x_min=x_min, x_max=x_max, width=width)
+
         # Delete plot before we re-draw
         if loop_iteration > 0:
             elements.erase_previous_lines(height + 4)
@@ -67,7 +71,6 @@ def plot(
 
         # Print plot (double resolution)
         print(f"┌{'─'*width}┐")
-        y_axis_labels = elements.yaxis_ticks(y_min=y_min, y_max=y_max, height=height)
         for row in range(height):
             pixel_row = [
                 elements.character_for_2by2_pixels(
@@ -77,7 +80,7 @@ def plot(
             ]
             print(f"│{''.join(pixel_row)}│ {y_axis_labels[row]}")
         print(f"└{'─'*width}┘")
-        print(f"{x_min} up to {x_max}")
+        print(x_axis_labels)
 
         if interactive:
             print(
