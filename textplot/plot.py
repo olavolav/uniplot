@@ -1,6 +1,8 @@
 import numpy as np  # type: ignore
 from typing import Optional
 
+import textplot.pixel_matrix
+
 
 def plot(
     ys: np.array,
@@ -14,8 +16,12 @@ def plot(
     ys = np.array(ys)
     if xs is None:
         xs = np.arange(1, len(ys) + 1, step=1, dtype=int)
-    max_y = ys.max()
-    min_y = ys.min()
+
+    # Define view
+    x_min = xs.min()
+    x_max = xs.max()
+    y_min = ys.min()
+    y_max = ys.max()
 
     # Print title
     if title is not None:
@@ -25,20 +31,21 @@ def plot(
             offset = int((width + 2 - len(title)) / 2)
             print((" " * offset) + title)
 
-    # Put occurrences into pixel matrix
-    pixels = np.zeros((width, height), dtype=int)
-    i = 0
-    for y in ys:
-        # TODO Optimize as vector operations
-        x_pixel = int(1.0 * i / (len(ys) - 1) * width - 0.0001)
-        y_pixel = int(height - (y - min_y) / (max_y - min_y) * height - 0.0001)
-        pixels[x_pixel, y_pixel] = 1
-        i = i + 1
+    pixels = textplot.pixel_matrix.render(
+        xs,
+        ys,
+        x_min=x_min,
+        x_max=x_max,
+        y_min=y_min,
+        y_max=y_max,
+        width=width,
+        height=height,
+    )
 
     # Print plot
-    print(f"┌{'─'*width}┐ {max_y}")
+    print(f"┌{'─'*width}┐ {y_max}")
     for row in range(height):
         pixel_row = [("*" if p > 0 else " ") for p in pixels[:, row]]
         print(f"│{''.join(pixel_row)}│")
-    print(f"└{'─'*width}┘ {min_y}")
+    print(f"└{'─'*width}┘ {y_min}")
     print(f"{xs.min()} up to {xs.max()}")

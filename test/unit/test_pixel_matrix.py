@@ -24,5 +24,5 @@ def test_diagonal():
         xs=[1, 2], ys=[1, 2], x_min=1, y_min=1, x_max=2.1, y_max=2.1, width=2, height=2
     )
 
-    desired_pixels = np.array([[1, 0], [0, 1]])
+    desired_pixels = np.array([[0, 1], [1, 0]])
     np.testing.assert_array_equal(pixels, desired_pixels)
