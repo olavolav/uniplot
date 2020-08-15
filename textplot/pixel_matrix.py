@@ -33,7 +33,7 @@ def render(
     y_indices = (height - 1) - y_indices
 
     # Filter out of view pixels
-    xy_indices = np.stack((x_pixels, y_indices)).T
+    xy_indices = np.stack((x_indices, y_indices)).T
     xy_indices = xy_indices[
         (xy_indices[:, 0] >= 0)
         & (xy_indices[:, 0] < width)
