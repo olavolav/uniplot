@@ -10,3 +10,7 @@ def test_plotting():
 
     # Here we are just testing that no error is thrown
     assert True
+
+
+if __name__ == '__main__':
+    test_plotting()

@@ -15,6 +15,7 @@ you what the problem was.
 * Unicode drawing, so 4x the resolution (pixels) of usual ASCII plots
 * Super simple API
 * Interactive mode (simply pass `interactive=True`) see [demo video](https://www.youtube.com/watch?v=nmYeBL_0K4A)
+* It's fast: Plotting 1M data points takes 100ms thanks to NumPy magic
 * Only one dependency: NumPy (but you have that anyway don't you)
 
 ## Examples
