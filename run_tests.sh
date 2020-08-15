@@ -22,4 +22,4 @@ echo "##############"
 echo "# Unit tests #"
 echo "##############"
 
-python3 -m unittest
+python3 -m pytest

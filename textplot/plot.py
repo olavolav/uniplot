@@ -11,6 +11,7 @@ def plot(
     color: Optional[str] = None,
 ) -> None:
     """2D scatter dot plot on the terminal."""
+    ys = np.array(ys)
     if xs is None:
         xs = np.arange(1, len(ys) + 1, step=1, dtype=int)
     max_y = ys.max()
