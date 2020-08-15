@@ -26,7 +26,7 @@ def render(
     assert width > 0
     assert height > 0
 
-    pixels = np.zeros((width, height), dtype=int)
+    pixels = np.zeros((height, width), dtype=int)
 
     for i in range(len(ys)):
         # TODO Optimize as vector operations
@@ -34,7 +34,7 @@ def render(
         y_pixel = _discretize(ys[i], y_min, y_max, steps=height)
 
         if x_pixel is not None and y_pixel is not None:
-            pixels[x_pixel, height - 1 - y_pixel] = 1
+            pixels[height - 1 - y_pixel, x_pixel] = 1
 
     return pixels
 

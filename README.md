@@ -10,7 +10,7 @@ Another use case is having plots as part of your validation tests - that way whe
 something goes wrong, you get not only the error and backtrace but also plots that show
 you what the problem was.
 
-## Example
+## Examples
 
 ```
 >>> import math
@@ -18,23 +18,24 @@ you what the problem was.
 >>> x = [math.sin(i/20)+i/300 for i in range(300)]
 >>> plot.plot(x)
 ┌────────────────────────────────────────────────────────────┐ 1.9446933193830285
-│                                                      ******│
-│                                                     **    *│
-│                              ****                  **      │
-│                             **  **                 *       │
-│                            *     **               *        │
-│    *****                  *       **             **        │
-│   **   **                **        *             *         │
-│  **      *               *          *           **         │
-│ **       **             *           **          *          │
-│ *         **           **            **        *           │
-│**          *           *              *       **           │
-│*            *         **               *     **            │
-│             **       **                 **  **             │
-│              **      *                   ****              │
-│               **    *                                      │
-│                *****                                       │
+│                                                      ▗▛▀▀▜▖│
+│                                                     ▗▀    ▀│
+│                              ▄▄▄▖                  ▗▛      │
+│                             ▞▘  ▝▄                 ▞       │
+│                            ▞     ▝▙               ▐        │
+│    ▄▛▀▀▙                  ▟       ▝▖             ▗▌        │
+│   ▟▘   ▝▙                ▗▘        ▐             ▟         │
+│  ▗▘      ▙               ▌          ▚           ▐▘         │
+│ ▗▌       ▝▌             ▟           ▝▙          ▛          │
+│ ▞         ▝▖           ▗▘            ▐▖        ▟           │
+│▗▘          ▚           ▛              ▜       ▐▘           │
+│▌            ▙         ▟▘               ▚     ▗▀            │
+│             ▝▖       ▗▌                 ▜▖  ▗▀             │
+│              ▜▖      ▛                   ▀▀▀▘              │
+│               ▜▖    ▞                                      │
+│                ▀▄▄▄▛                                       │
 └────────────────────────────────────────────────────────────┘ -0.6880544387588794
+1 up to 300
 ```
 
 ## Roadmap
@@ -42,5 +43,5 @@ you what the problem was.
 Coming up:
 
 * Line drawing
-* Enable use of [Unicode box drawing](https://en.wikipedia.org/wiki/Box-drawing_character) to double the resolution
+* Add flag to disable Unicode
 * Interactive mode

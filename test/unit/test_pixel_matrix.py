@@ -6,7 +6,7 @@ from textplot.pixel_matrix import render
 def test_empty_plot():
     pixels = render(xs=[], ys=[], x_min=0, y_min=0, x_max=1, y_max=1, width=2, height=1)
 
-    desired_pixels = np.array([[0], [0]])
+    desired_pixels = np.array([[0, 0]])
     np.testing.assert_array_equal(pixels, desired_pixels)
 
 
@@ -25,4 +25,13 @@ def test_diagonal():
     )
 
     desired_pixels = np.array([[0, 1], [1, 0]])
+    np.testing.assert_array_equal(pixels, desired_pixels)
+
+
+def test_diagonal_in_bigger_window():
+    pixels = render(
+        xs=[1, 2], ys=[1, 2], x_min=1, y_min=1, x_max=2.1, y_max=2.1, width=5, height=3
+    )
+
+    desired_pixels = np.array([[0, 0, 0, 0, 1], [0, 0, 0, 0, 0], [1, 0, 0, 0, 0]])
     np.testing.assert_array_equal(pixels, desired_pixels)
