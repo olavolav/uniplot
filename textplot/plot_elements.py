@@ -1,6 +1,6 @@
 import sys
 import numpy as np  # type: ignore
-from typing import List
+from typing import List, Optional
 
 UNICODE_SQUARES = {
     0: " ",
@@ -43,12 +43,14 @@ def yaxis_ticks(y_min: float, y_max: float, height: int) -> List[str]:
 
     It returns an array of length `height`.
     """
-    return [
-        str(_compute_y_at_middle_of_row(i, y_min=y_min, y_max=y_max, height=height))
+    ticks = [
+        _compute_y_at_middle_of_row(i, y_min=y_min, y_max=y_max, height=height)
         if ((i % 4 == 0 and i != height - 2) or i == height - 1)
-        else ""
+        else None
         for i in range(height)
     ]
+
+    return _find_shortest_string_representation(ticks)
 
 
 def xaxis_ticks(x_min: float, x_max: float, width: int) -> str:
@@ -58,10 +60,11 @@ def xaxis_ticks(x_min: float, x_max: float, width: int) -> str:
     It returns a string.
     """
     # TODO For now let's just render min and max at appropriate positions.
-    buffer = int(round(width - len(str(x_min)) - 0.5 * len(str(x_max))) - 1)
+    min_str, max_str = _find_shortest_string_representation([x_min, x_max])
+    buffer = int(round(width - len(min_str) - 0.5 * len(max_str) - 1))
     if buffer > 1:
-        return f" {x_min}{' '*buffer}{x_max}"
-    return f" {x_min} up to {x_max}"
+        return f" {min_str}{' '*buffer}{max_str}"
+    return f" {min_str} up to {max_str}"
 
 
 def erase_previous_lines(nr_lines: int) -> None:
@@ -80,3 +83,25 @@ def _compute_y_at_middle_of_row(
     height_index_from_top: int, y_min: float, y_max: float, height: int
 ) -> float:
     return ((y_max - y_min) / height) * (height - height_index_from_top + 0.5) + y_min
+
+
+def _find_shortest_string_representation(numbers: List[Optional[float]],) -> List[str]:
+    """
+    This method will find the shortest numerical values for axis labels that are different from ech other.
+    """
+    # We actually want to add one more digit than needed for uniqueness
+    return_next = False
+    for nr_digits in range(10):
+        test_list = ["" if n is None else _float_format(n, nr_digits) for n in numbers]
+        if return_next:
+            return test_list
+        compact_list = [n for n in test_list if n != ""]
+        if len(compact_list) == len(set(compact_list)):
+            return_next = True
+
+    # Fallback to naive string conversion
+    return ["" if n is None else str(n) for n in numbers]
+
+
+def _float_format(n: float, nr_digits: int):
+    return ("{:,." + str(nr_digits) + "f}").format(float(n))

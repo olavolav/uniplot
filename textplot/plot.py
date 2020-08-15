@@ -84,9 +84,9 @@ def plot(
 
         if interactive:
             print(
-                "Interactive mode: Move viewport using h/j/k/l, zoom via u/n, or r to reset the view. Escape or q to quit"
+                "Interactive mode: Move viewport using h/j/k/l, zoom via u/n, or r to reset. Escape/q to quit"
             )
-            key_pressed = getch()
+            key_pressed = getch().lower()
             if key_pressed == "h":
                 # Left
                 step = 0.1 * (x_max - x_min)
@@ -129,8 +129,8 @@ def plot(
                 x_max = xs.max()
                 y_min = ys.min()
                 y_max = ys.max()
-            elif key_pressed in ["q", "Q", "\x1b"]:
-                # q, Enter and Escape will end interactive mode
+            elif key_pressed in ["q", "\x1b"]:
+                # q and Escape will end interactive mode
                 continue_looping = False
 
             loop_iteration += 1
