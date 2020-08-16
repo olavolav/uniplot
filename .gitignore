@@ -8,3 +8,8 @@ data/
 
 # Directory for virtualenv files
 venv/
+
+# Packaging artifacts
+build/
+dist/
+uniplot.egg-info/
