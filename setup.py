@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="uniplot",
-    version="0.0.1",
+    version="0.0.3",
     author="Olav Stetter",
     author_email="olav.stetter@googlemail.com",
     description="Lightweight plotting to the terminal. 4x resolution via Unicode.",

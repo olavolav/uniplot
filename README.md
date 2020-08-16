@@ -22,9 +22,9 @@ you what the problem was.
 
 ```
 >>> import math
->>> import uniplot.uniplot as plot
 >>> x = [math.sin(i/20)+i/300 for i in range(600)]
->>> plot.plot(x, title="Sine wave")
+>>> from uniplot.uniplot import plot
+>>> plot(x, title="Sine wave")
                           Sine wave
 ┌────────────────────────────────────────────────────────────┐
 │                                                    ▟▀▚     │ 2.9
@@ -46,6 +46,14 @@ you what the problem was.
 │        ▙▄▛                                                 │ -0.4
 └────────────────────────────────────────────────────────────┘
 1.0                                                      600.0
+```
+
+## Installation
+
+Install via pip using:
+
+```
+pip install uniplot
 ```
 
 ## Roadmap
