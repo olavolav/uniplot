@@ -2,7 +2,7 @@ import math
 import time
 import numpy as np  # type: ignore
 
-from textplot.plot import plot
+from uniplot.uniplot import plot
 
 
 def test_plotting():

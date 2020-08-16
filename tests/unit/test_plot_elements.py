@@ -1,6 +1,6 @@
 import numpy as np  # type: ignore
 
-from textplot.plot_elements import character_for_2by2_pixels
+from uniplot.plot_elements import character_for_2by2_pixels
 
 
 def test_empty_square():

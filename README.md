@@ -1,4 +1,4 @@
-# Textplot
+# Uniplot
 
 Simple plotting tool.
 
@@ -22,7 +22,7 @@ you what the problem was.
 
 ```
 >>> import math
->>> import textplot.plot as plot
+>>> import uniplot.uniplot as plot
 >>> x = [math.sin(i/20)+i/300 for i in range(600)]
 >>> plot.plot(x, title="Sine wave")
                           Sine wave

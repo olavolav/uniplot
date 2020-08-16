@@ -1,9 +1,9 @@
 import numpy as np  # type: ignore
 from typing import Optional
 
-import textplot.pixel_matrix
-import textplot.plot_elements as elements
-from textplot.getch import getch
+import uniplot.pixel_matrix
+import uniplot.plot_elements as elements
+from uniplot.getch import getch
 
 
 def plot(
@@ -43,7 +43,7 @@ def plot(
         if not interactive:
             continue_looping = False
 
-        pixels = textplot.pixel_matrix.render(
+        pixels = uniplot.pixel_matrix.render(
             xs,
             ys,
             x_min=x_min,

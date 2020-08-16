@@ -1,6 +1,6 @@
 import numpy as np  # type: ignore
 
-from textplot.pixel_matrix import render
+from uniplot.pixel_matrix import render
 
 
 def test_empty_plot():
