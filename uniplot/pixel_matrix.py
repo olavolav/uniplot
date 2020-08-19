@@ -26,8 +26,8 @@ def render(
     assert width > 0
     assert height > 0
 
-    x_indices = _discretize(np.array(xs), x_min, x_max, steps=width)
-    y_indices = _discretize(np.array(ys), y_min, y_max, steps=height)
+    x_indices = _discretize_array(np.array(xs), x_min, x_max, steps=width)
+    y_indices = _discretize_array(np.array(ys), y_min, y_max, steps=height)
 
     # Invert y direction to optimize for plotting later
     y_indices = (height - 1) - y_indices
@@ -54,8 +54,8 @@ def render(
 ###########
 
 
-def _discretize(x: np.array, x_min: float, x_max: float, steps: int) -> np.array:
+def _discretize_array(x: np.array, x_min: float, x_max: float, steps: int) -> np.array:
     """
-    Returns a discretized integer between 0 and `steps-1`, or None if the `x` value is outside of the given range.
+    Returns an array with discretized integers between 0 and `steps-1`.
     """
     return (((x - x_min) / (x_max - x_min)) * steps).astype(int)

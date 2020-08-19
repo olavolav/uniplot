@@ -1,11 +1,13 @@
 import setuptools  # type: ignore
 
+from version import version
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="uniplot",
-    version="0.0.3",
+    version=version,
     author="Olav Stetter",
     author_email="olav.stetter@googlemail.com",
     description="Lightweight plotting to the terminal. 4x resolution via Unicode.",

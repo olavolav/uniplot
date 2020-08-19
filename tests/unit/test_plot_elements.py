@@ -5,7 +5,7 @@ from uniplot.plot_elements import character_for_2by2_pixels
 
 def test_empty_square():
     square = np.zeros([2, 2])
-    assert character_for_2by2_pixels(square) == " "
+    assert character_for_2by2_pixels(square) == ""
 
 
 def test_full_square():

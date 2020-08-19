@@ -1,134 +1,114 @@
 import numpy as np  # type: ignore
-from typing import Optional
+from typing import List, Optional
 
-import uniplot.pixel_matrix
+from uniplot.options import Options
+import uniplot.layers as layers
 import uniplot.plot_elements as elements
 from uniplot.getch import getch
 
 
-def plot(
-    ys: np.array,
-    xs: Optional[np.array] = None,
-    width: int = 60,
-    height: int = 17,
-    title: Optional[str] = None,
-    color: Optional[str] = None,
-    interactive: bool = False,
-) -> None:
+def plot(ys: np.array, xs: Optional[np.array] = None, **kwargs) -> None:
     """2D scatter dot plot on the terminal."""
     ys = np.array(ys)
     if xs is None:
         xs = np.arange(1, len(ys) + 1, step=1, dtype=int)
 
-    # Define view
-    # TODO Make this a dataclass and expand the initial view by a few percent
-    x_min = xs.min()
-    x_max = xs.max()
-    y_min = ys.min()
-    y_max = ys.max()
+    options = Options(**kwargs)
+    options.initialize_view_to_show_all(xs=xs, ys=ys)
 
     # Print title
-    if title is not None:
-        if len(title) >= width:
-            print(title)
+    if options.title is not None:
+        if len(options.title) >= options.width:
+            print(options.title)
         else:
-            offset = int((width + 2 - len(title)) / 2)
-            print((" " * offset) + title)
+            offset = int((options.width + 2 - len(options.title)) / 2)
+            print((" " * offset) + options.title)
 
     # Main loop for interactive mode. Will only be executed once when not in interactive # mode.
     continue_looping: bool = True
     loop_iteration: int = 0
     while continue_looping:
         # Make sure we stop after first iteration when not in interactive mode
-        if not interactive:
+        if not options.interactive:
             continue_looping = False
 
-        pixels = uniplot.pixel_matrix.render(
-            xs,
-            ys,
-            x_min=x_min,
-            x_max=x_max,
-            y_min=y_min,
-            y_max=y_max,
-            width=2 * width,
-            height=2 * height,
+        # Prepare plot elements
+        y_axis_labels = elements.yaxis_ticks(
+            y_min=options.y_min, y_max=options.y_max, height=options.height
+        )
+        x_axis_labels = elements.xaxis_ticks(
+            x_min=options.x_min, x_max=options.x_max, width=options.width
         )
 
-        # Prepare plot elements
-        y_axis_labels = elements.yaxis_ticks(y_min=y_min, y_max=y_max, height=height)
-        x_axis_labels = elements.xaxis_ticks(x_min=x_min, x_max=x_max, width=width)
+        # Prefare graph surface
+        gridline_layers = [
+            layers.render_y_gridline(y=y, options=options) for y in options.y_gridlines
+        ]
+        pixel_layer = layers.render_points(xs=xs, ys=ys, options=options)
+        all_layers = gridline_layers + [pixel_layer]
+        pixel_character_matrix = layers.merge_layers(all_layers, options=options)
 
         # Delete plot before we re-draw
         if loop_iteration > 0:
-            elements.erase_previous_lines(height + 4)
-
-        # Print plot (single resolution)
-        # print(f"┌{'─'*width}┐ {y_max}")
-        # for row in range(height):
-        #     pixel_row = [("*" if p > 0 else " ") for p in pixels[:, row]]
-        #     print(f"│{''.join(pixel_row)}│")
-        # print(f"└{'─'*width}┘ {y_min}")
+            elements.erase_previous_lines(options.height + 4)
 
         # Print plot (double resolution)
-        print(f"┌{'─'*width}┐")
-        for row in range(height):
-            pixel_row = [
-                elements.character_for_2by2_pixels(
-                    pixels[2 * row : 2 * row + 2, 2 * i : 2 * i + 2]
-                )
-                for i in range(width)
-            ]
-            print(f"│{''.join(pixel_row)}│ {y_axis_labels[row]}")
-        print(f"└{'─'*width}┘")
+        print(f"┌{'─'*options.width}┐")
+        for i in range(options.height):
+            row = pixel_character_matrix[i]
+            print(f"│{''.join(row)}│ {y_axis_labels[i]}")
+        print(f"└{'─'*options.width}┘")
         print(x_axis_labels)
 
-        if interactive:
+        if options.interactive:
             print(
                 "Interactive mode: Move viewport using h/j/k/l, zoom via u/n, or r to reset. Escape/q to quit"
             )
             key_pressed = getch().lower()
+
+            # TODO Move all of the below to the `Options` class
             if key_pressed == "h":
                 # Left
-                step = 0.1 * (x_max - x_min)
-                x_min = x_min - step
-                x_max = x_max - step
+                step = 0.1 * (options.x_max - options.x_min)
+                options.x_min = options.x_min - step
+                options.x_max = options.x_max - step
             elif key_pressed == "l":
                 # Right
-                step = 0.1 * (x_max - x_min)
-                x_min = x_min + step
-                x_max = x_max + step
+                step = 0.1 * (options.x_max - options.x_min)
+                options.x_min = options.x_min + step
+                options.x_max = options.x_max + step
             elif key_pressed == "j":
                 # Up
-                step = 0.1 * (y_max - y_min)
-                y_min = y_min - step
-                y_max = y_max - step
+                step = 0.1 * (options.y_max - options.y_min)
+                options.y_min = options.y_min - step
+                options.y_max = options.y_max - step
             elif key_pressed == "k":
                 # Down
-                step = 0.1 * (y_max - y_min)
-                y_min = y_min + step
-                y_max = y_max + step
+                step = 0.1 * (options.y_max - options.y_min)
+                options.y_min = options.y_min + step
+                options.y_max = options.y_max + step
             elif key_pressed == "u":
                 # Zoom in
-                step = 0.1 * (x_max - x_min)
-                x_min = x_min + step
-                x_max = x_max - step
-                step = 0.1 * (y_max - y_min)
-                y_min = y_min + step
-                y_max = y_max - step
+                step = 0.1 * (options.x_max - options.x_min)
+                options.x_min = options.x_min + step
+                options.x_max = options.x_max - step
+                step = 0.1 * (options.y_max - options.y_min)
+                options.y_min = options.y_min + step
+                options.y_max = options.y_max - step
             elif key_pressed == "n":
                 # Zoom out
-                step = 0.1 * (x_max - x_min)
-                x_min = x_min - step
-                x_max = x_max + step
-                step = 0.1 * (y_max - y_min)
-                y_min = y_min - step
-                y_max = y_max + step
+                step = 0.1 * (options.x_max - options.x_min)
+                options.x_min = options.x_min - step
+                options.x_max = options.x_max + step
+                step = 0.1 * (options.y_max - options.y_min)
+                options.y_min = options.y_min - step
+                options.y_max = options.y_max + step
             elif key_pressed == "r":
                 # Reset view
-                x_min = xs.min()
-                x_max = xs.max()
-                y_min = ys.min()
-                y_max = ys.max()
+                options.x_min = xs.min()
+                options.x_max = xs.max()
+                options.y_min = ys.min()
+                options.y_max = ys.max()
             elif key_pressed in ["q", "\x1b"]:
                 # q and Escape will end interactive mode
                 continue_looping = False

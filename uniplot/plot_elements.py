@@ -3,7 +3,7 @@ import numpy as np  # type: ignore
 from typing import List, Optional
 
 UNICODE_SQUARES = {
-    0: " ",
+    0: "",
     1: "▘",
     2: "▝",
     3: "▀",
