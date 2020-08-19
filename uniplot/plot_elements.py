@@ -67,6 +67,19 @@ def xaxis_ticks(x_min: float, x_max: float, width: int) -> str:
     return f" {min_str} up to {max_str}"
 
 
+def plot_title(title: str, width: int) -> str:
+    """
+    Returns the centered title string.
+
+    Note that this assumes that `title` is not `None`.
+    """
+    if len(title) >= width + 2:
+        return title
+    else:
+        offset = int((width + 2 - len(title)) / 2)
+        return (" " * offset) + title
+
+
 def erase_previous_lines(nr_lines: int) -> None:
     for i in range(nr_lines):
         sys.stdout.write(ERASE_LINE)

@@ -18,11 +18,7 @@ def plot(ys: np.array, xs: Optional[np.array] = None, **kwargs) -> None:
 
     # Print title
     if options.title is not None:
-        if len(options.title) >= options.width:
-            print(options.title)
-        else:
-            offset = int((options.width + 2 - len(options.title)) / 2)
-            print((" " * offset) + options.title)
+        print(elements.plot_title(options.title, width=options.width))
 
     # Main loop for interactive mode. Will only be executed once when not in interactive # mode.
     continue_looping: bool = True
