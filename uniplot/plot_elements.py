@@ -2,6 +2,8 @@ import sys
 import numpy as np  # type: ignore
 from typing import List, Optional
 
+from uniplot.discretizer import compute_y_at_middle_of_row
+
 UNICODE_SQUARES = {
     0: "",
     1: "▘",
@@ -44,7 +46,9 @@ def yaxis_ticks(y_min: float, y_max: float, height: int) -> List[str]:
     It returns an array of length `height`.
     """
     ticks = [
-        _compute_y_at_middle_of_row(i, y_min=y_min, y_max=y_max, height=height)
+        compute_y_at_middle_of_row(
+            height_index_from_top=i, y_min=y_min, y_max=y_max, height=height
+        )
         if ((i % 4 == 0 and i != height - 2) or i == height - 1)
         else None
         for i in range(height)
@@ -90,12 +94,6 @@ def erase_previous_lines(nr_lines: int) -> None:
 ###########
 # private #
 ###########
-
-
-def _compute_y_at_middle_of_row(
-    height_index_from_top: int, y_min: float, y_max: float, height: int
-) -> float:
-    return ((y_max - y_min) / height) * (height - height_index_from_top + 0.5) + y_min
 
 
 def _find_shortest_string_representation(numbers: List[Optional[float]],) -> List[str]:

@@ -4,6 +4,7 @@ from typing import List
 import uniplot.pixel_matrix
 import uniplot.plot_elements as elements
 from uniplot.options import Options
+from uniplot.discretizer import discretize
 
 
 def merge_layers(character_layers: List[np.array], options: Options) -> np.array:
@@ -26,6 +27,9 @@ def merge_layers(character_layers: List[np.array], options: Options) -> np.array
     return merged_layer
 
 
+Y_GRIDLINE_CHARACTERS = ["▔", "─", "▁"]
+
+
 def render_y_gridline(y: float, options: Options) -> np.array:
     """
     Render the pixel matrix that only consists of a dashed line where the `y` value is.
@@ -34,10 +38,17 @@ def render_y_gridline(y: float, options: Options) -> np.array:
     if y < options.y_min or y >= options.y_max:
         return pixels
 
-    y_index = _discretize_number(
-        x=y, x_min=options.y_min, x_max=options.y_max, steps=options.height
+    y_index_superresolution = (
+        3 * options.height
+        - 1
+        - discretize(
+            x=y, x_min=options.y_min, x_max=options.y_max, steps=3 * options.height
+        )
     )
-    pixels[options.height - 1 - y_index, :] = "-"
+    y_index = int(y_index_superresolution / 3)
+
+    character = Y_GRIDLINE_CHARACTERS[y_index_superresolution % 3]
+    pixels[y_index, :] = character
 
     return pixels
 
@@ -87,10 +98,3 @@ def _init_pixel_character_matrix(width: int, height: int, value: str = "") -> np
 
 def _blank_pixel_character_matrix(width: int, height: int) -> np.array:
     return _init_pixel_character_matrix(width, height, value=" ")
-
-
-def _discretize_number(x: float, x_min: float, x_max: float, steps: int) -> int:
-    """
-    Returns a discretized integer.
-    """
-    return int(((x - x_min) / (x_max - x_min)) * steps)

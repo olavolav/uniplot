@@ -12,6 +12,8 @@ def plot(ys: np.array, xs: Optional[np.array] = None, **kwargs) -> None:
     ys = np.array(ys)
     if xs is None:
         xs = np.arange(1, len(ys) + 1, step=1, dtype=int)
+    else:
+        xs = np.array(xs)
 
     options = Options(**kwargs)
     options.initialize_view_to_show_all(xs=xs, ys=ys)
