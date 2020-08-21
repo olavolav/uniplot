@@ -15,8 +15,12 @@ def plot(ys: np.array, xs: Optional[np.array] = None, **kwargs) -> None:
     else:
         xs = np.array(xs)
 
+    # Set bounds to show all points by default
+    kwargs["x_min"] = kwargs.get("x_min") or xs.min()
+    kwargs["x_max"] = kwargs.get("x_max") or (xs.max() + 0.01 * (xs.max() - xs.min()))
+    kwargs["y_min"] = kwargs.get("y_min") or ys.min()
+    kwargs["y_max"] = kwargs.get("y_max") or (ys.max() + 0.01 * (ys.max() - ys.min()))
     options = Options(**kwargs)
-    options.initialize_view_to_show_all(xs=xs, ys=ys)
 
     # Print title
     if options.title is not None:

@@ -28,13 +28,8 @@ class Options:
     # Interactive mode
     interactive: bool = False
 
-    def initialize_view_to_show_all(self, xs: np.array, ys: np.array) -> None:
-        self.x_min = xs.min()
-        self.x_max = xs.max() + 0.01 * (xs.max() - xs.min())
-        self.y_min = ys.min()
-        self.y_max = ys.max() + 0.01 * (ys.max() - ys.min())
-
-        # Remeber values for resetting later
+    def __post_init__(self):
+        # Remember values for resetting later
         self._initial_bounds = (self.x_min, self.x_max, self.y_min, self.y_max)
 
     def reset_view(self) -> None:
