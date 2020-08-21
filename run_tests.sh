@@ -22,7 +22,7 @@ echo "################"
 echo "# Visual check #"
 echo "################"
 
-python3 -c "import math; x = [math.sin(i/20)+i/300 for i in range(600)]; from uniplot.uniplot import plot; plot(x, title=\"Sine wave\")"
+python3 -c "import math; x = [math.sin(i/20)+i/300 for i in range(600)]; from uniplot import plot; plot(x, title=\"Sine wave\")"
 
 echo ""
 echo "##############"
