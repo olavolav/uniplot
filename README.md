@@ -19,6 +19,10 @@ you what the problem was.
 * It's fast: Plotting 1M data points takes 100ms thanks to NumPy magic
 * Only one dependency: NumPy (but you have that anyway don't you)
 
+Please note that Unicode drawing will work correctly only when using a font that
+fully supports the [Box-drawing character set](https://en.wikipedia.org/wiki/Box-drawing_character).
+Please refer to [this page for a (incomplete) list of supported fonts](https://www.fileformat.info/info/unicode/block/block_elements/fontsupport.htm).
+
 
 ## Examples
 
@@ -84,3 +88,4 @@ Coming up:
 
 * Line drawing
 * Add flag to disable Unicode
+* Add generated page with list of supported fonts
