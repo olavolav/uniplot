@@ -61,7 +61,7 @@ def plot(ys: np.array, xs: Optional[np.array] = None, **kwargs) -> None:
 
         if options.interactive:
             print(
-                "Interactive mode: Move viewport using h/j/k/l, zoom via u/n, or r to reset. Escape/q to quit"
+                "Move h/j/k/l, zoom u/n, or r to reset. Escape/q to quit"
             )
             key_pressed = getch().lower()
 
