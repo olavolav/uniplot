@@ -51,7 +51,9 @@ def render_vertical_gridline(x: float, options: Options) -> np.array:
     if x < options.x_min or x >= options.x_max:
         return pixels
 
-    x_index = discretize(x=x, x_min=options.x_min, x_max=options.x_max, steps=options.width)
+    x_index = discretize(
+        x=x, x_min=options.x_min, x_max=options.x_max, steps=options.width
+    )
 
     pixels[:, x_index] = "│"
 

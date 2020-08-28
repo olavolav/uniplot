@@ -15,7 +15,7 @@ you what the problem was.
 
 * Unicode drawing, so 4x the resolution (pixels) of usual ASCII plots
 * Super simple API
-* Interactive mode (simply pass `interactive=True`) see [demo video](https://www.youtube.com/watch?v=nmYeBL_0K4A)
+* Interactive mode (simply pass `interactive=True`) see [the (slightly outdated) demo video](https://www.youtube.com/watch?v=nmYeBL_0K4A)
 * It's fast: Plotting 1M data points takes 100ms thanks to NumPy magic
 * Only one dependency: NumPy (but you have that anyway don't you)
 
@@ -33,25 +33,25 @@ Please refer to [this page for a (incomplete) list of supported fonts](https://w
 >>> plot(x, title="Sine wave")
                           Sine wave
 ┌────────────────────────────────────────────────────────────┐
-│                                                  │▗▛▜▖     │ 2.7
+│                                                   ▗▛▜▖     │ 2.7
 │                                                   ▟  ▜     │
-│▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗ ▞▜▖ ▗▗▗▗▗▗ ▐▀  ▝▌ ▗▗▗│
+│                                       ▐▀▙        ▗▌  ▝▌    │
 │                                      ▗▌ ▝▌       ▟    ▜    │
 │                           ▞▜▖        ▟   ▜       ▌    ▝▌   │ 1.9
 │                          ▟  ▜        ▌   ▝▌     ▐      ▚   │
 │              ▗▛▙        ▗▌  ▝▌      ▐     ▜     ▛      ▝▖  │
-│              ▛ ▝▌       ▐    ▜      ▛     ▝▌   ▗▘│      ▚  │
-│  ▟▜▖        ▐   ▐       ▌    ▝▌    ▗▘      ▚   ▟ │      ▝▙▖│ 1.1
-│ ▐▘ ▜        ▌    ▌     ▐▘     ▜    ▟       ▝▌ ▗▌ │         │
-│ ▌   ▌      ▐▘    ▜     ▞      ▝▖   ▌        ▜▄▞  │         │
-│▐    ▐      ▞     ▝▌    ▌       ▜  ▟              │         │
-│▛    ▝▌     ▌      ▜   ▐        ▝▙▄▘              │         │ 0.2
-│▌─────▜────▐───────▝▌──▛──────────────────────────│─────────│
-│      ▝▌   ▛        ▜▄▟                           │         │
-│       ▜  ▐▘                                      │         │
-│       ▝▙▄▌                                       │         │ -0.6
+│              ▛ ▝▌       ▐    ▜      ▛     ▝▌   ▗▘       ▚  │
+│  ▟▜▖        ▐   ▐       ▌    ▝▌    ▗▘      ▚   ▟        ▝▙▖│ 1.1
+│ ▐▘ ▜        ▌    ▌     ▐▘     ▜    ▟       ▝▌ ▗▌           │
+│ ▌   ▌      ▐▘    ▜     ▞      ▝▖   ▌        ▜▄▞            │
+│▐    ▐      ▞     ▝▌    ▌       ▜  ▟                        │
+│▛    ▝▌     ▌      ▜   ▐        ▝▙▄▘                        │ 0.2
+│▌─────▜────▐───────▝▌──▛────────────────────────────────────│
+│      ▝▌   ▛        ▜▄▟                                     │
+│       ▜  ▐▘                                                │
+│       ▝▙▄▌                                                 │ -0.6
 └────────────────────────────────────────────────────────────┘
-1.0                                                      606.0
+ 1.0                                                      606.0
 ```
 
 
@@ -59,12 +59,13 @@ Please refer to [this page for a (incomplete) list of supported fonts](https://w
 
 The `plot` function accepts the following parameters:
 
-* `ys` - A list or Numpy array of numerical values
+* `ys` - A list or NumPy array of numerical values of the y coordinates of the points to plot.
+* `xs` - A list or NumPy array of numerical values of the x coordinates of the points to plot.
 * `x_min` - Minimum x value of the view. Defaults to a value that shows all data points.
 * `x_max` - Maximum x value of the view. Defaults to a value that shows all data points.
 * `y_min` - Minimum y value of the view. Defaults to a value that shows all data points.
 * `y_max` - Maximum y value of the view. Defaults to a value that shows all data points.
-* `title` - The first line of the plot. Defaults to `None`.
+* `title` - The title of the plot. Defaults to `None`.
 * `y_gridlines` - A list of y values that have a horizontal line for better orientation. Defaults to `[0]`
 * `x_gridlines` - A list of x values that have a vertical line for better orientation. Defaults to `[0]`
 * `width` - The width of the plotting region, in characters. Default is `60`.

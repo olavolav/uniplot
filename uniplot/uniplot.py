@@ -60,9 +60,7 @@ def plot(ys: np.array, xs: Optional[np.array] = None, **kwargs) -> None:
         print(x_axis_labels)
 
         if options.interactive:
-            print(
-                "Move h/j/k/l, zoom u/n, or r to reset. Escape/q to quit"
-            )
+            print("Move h/j/k/l, zoom u/n, or r to reset. Escape/q to quit")
             key_pressed = getch().lower()
 
             # TODO Move all of the below to the `Options` class
