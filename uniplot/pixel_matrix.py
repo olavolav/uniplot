@@ -49,3 +49,28 @@ def render(
     pixels[xy_indices[1], xy_indices[0]] = 1
 
     return pixels
+
+
+# def merge_on_top_with_shadow(
+#     low_layer: np.array, high_layer: np.array, width: int, height: int
+# ) -> np.array:
+#     """
+#     Put a pixel matrix on top of another, with a single solid line of "shadow",
+#     including diagonal fields.
+#
+#     This shadow will ensure that later 2x2 squares exclusively belong to one particular
+#     line.
+#     """
+#     merged_layer = bottom_layer
+#
+#     for row in range(height):
+#         for col in range(width):
+#             if high_layer[row, col] != 0:
+#                 # Overwrite bottom with top value
+#                 merged_layer[row, col] = high_layer[row, col]
+#             elif low_layer[row, col] != 0:
+#                 # Check if we should set this pixel to zero because of shadowing
+#                 if not _check_surrounding_is_blank():
+#                     merged_layer[row, col] = 0
+#
+#     return merged_layer

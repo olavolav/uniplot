@@ -2,7 +2,7 @@ import numpy as np  # type: ignore
 from typing import List, Optional
 
 from uniplot.options import Options
-import uniplot.layers as layers
+import uniplot.layer_assembly as layer_assembly
 import uniplot.plot_elements as elements
 from uniplot.getch import getch
 
@@ -43,12 +43,9 @@ def plot(ys: np.array, xs: Optional[np.array] = None, **kwargs) -> None:
         )
 
         # Prefare graph surface
-        gridline_layers = [
-            layers.render_y_gridline(y=y, options=options) for y in options.y_gridlines
-        ]
-        pixel_layer = layers.render_points(xs=xs, ys=ys, options=options)
-        all_layers = gridline_layers + [pixel_layer]
-        pixel_character_matrix = layers.merge_layers(all_layers, options=options)
+        pixel_character_matrix = layer_assembly.assemble_scatter_plot(
+            xs=xs, ys=ys, options=options
+        )
 
         # Delete plot before we re-draw
         if loop_iteration > 0:

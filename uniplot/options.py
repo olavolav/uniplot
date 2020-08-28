@@ -3,7 +3,7 @@ from typing import List, Optional
 import numpy as np  # type: ignore
 
 
-def _default_y_gridlines() -> List[float]:
+def _default_gridlines() -> List[float]:
     return [0.0]
 
 
@@ -20,7 +20,9 @@ class Options:
     # Title of the plot
     title: Optional[str] = None
     # Horizontal gridlines
-    y_gridlines: List[float] = field(default_factory=_default_y_gridlines)
+    y_gridlines: List[float] = field(default_factory=_default_gridlines)
+    # Vertical gridlines
+    x_gridlines: List[float] = field(default_factory=_default_gridlines)
     # Width of the plotting region, in characters
     width: int = 60
     # Height of the plotting region, in lines

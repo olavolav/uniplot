@@ -7,32 +7,22 @@ from uniplot.options import Options
 from uniplot.discretizer import discretize
 
 
-def merge_layers(character_layers: List[np.array], options: Options) -> np.array:
-    # Initialize with blank layer consisting of spaces only
-    merged_layer = _blank_pixel_character_matrix(
-        width=options.width, height=options.height
-    )
-
-    # Merge layers on top
-    for character_layer in character_layers:
-        # Just checking
-        assert character_layer.shape == (options.height, options.width)
-        for row_index in range(options.height):
-            for column_index in range(options.width):
-                if character_layer[row_index, column_index] != "":
-                    merged_layer[row_index, column_index] = character_layer[
-                        row_index, column_index
-                    ]
-
-    return merged_layer
-
-
 Y_GRIDLINE_CHARACTERS = ["▔", "─", "▁"]
 
 
-def render_y_gridline(y: float, options: Options) -> np.array:
+def blank_pixel_character_matrix(width: int, height: int) -> np.array:
     """
-    Render the pixel matrix that only consists of a dashed line where the `y` value is.
+    Initialize an empty character matrix as a NumPy array.
+    """
+    return _init_pixel_character_matrix(width, height, value=" ")
+
+
+def render_horizontal_gridline(y: float, options: Options) -> np.array:
+    """
+    Render the pixel matrix that only consists of a line where the `y` value is.
+
+    Because a character is higher than wide, this is rendered with "super-resolution"
+    Unicode characters.
     """
     pixels = _init_pixel_character_matrix(width=options.width, height=options.height)
     if y < options.y_min or y >= options.y_max:
@@ -49,6 +39,21 @@ def render_y_gridline(y: float, options: Options) -> np.array:
 
     character = Y_GRIDLINE_CHARACTERS[y_index_superresolution % 3]
     pixels[y_index, :] = character
+
+    return pixels
+
+
+def render_vertical_gridline(x: float, options: Options) -> np.array:
+    """
+    Render the pixel matrix that only consists of a line where the `x` value is.
+    """
+    pixels = _init_pixel_character_matrix(width=options.width, height=options.height)
+    if x < options.x_min or x >= options.x_max:
+        return pixels
+
+    x_index = discretize(x=x, x_min=options.x_min, x_max=options.x_max, steps=options.width)
+
+    pixels[:, x_index] = "│"
 
     return pixels
 
@@ -94,7 +99,3 @@ def print_raw_pixel_matrix(pixels: np.array, verbose: bool = False) -> None:
 
 def _init_pixel_character_matrix(width: int, height: int, value: str = "") -> np.array:
     return np.full((height, width), fill_value=value)
-
-
-def _blank_pixel_character_matrix(width: int, height: int) -> np.array:
-    return _init_pixel_character_matrix(width, height, value=" ")

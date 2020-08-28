@@ -33,23 +33,23 @@ Please refer to [this page for a (incomplete) list of supported fonts](https://w
 >>> plot(x, title="Sine wave")
                           Sine wave
 ┌────────────────────────────────────────────────────────────┐
-│                                                   ▗▛▜▖     │ 2.7
+│                                                  │▗▛▜▖     │ 2.7
 │                                                   ▟  ▜     │
-│                                       ▐▀▙        ▗▌  ▝▌    │
+│▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗▗ ▞▜▖ ▗▗▗▗▗▗ ▐▀  ▝▌ ▗▗▗│
 │                                      ▗▌ ▝▌       ▟    ▜    │
 │                           ▞▜▖        ▟   ▜       ▌    ▝▌   │ 1.9
 │                          ▟  ▜        ▌   ▝▌     ▐      ▚   │
 │              ▗▛▙        ▗▌  ▝▌      ▐     ▜     ▛      ▝▖  │
-│              ▛ ▝▌       ▐    ▜      ▛     ▝▌   ▗▘       ▚  │
-│  ▟▜▖        ▐   ▐       ▌    ▝▌    ▗▘      ▚   ▟        ▝▙▖│ 1.1
-│ ▐▘ ▜        ▌    ▌     ▐▘     ▜    ▟       ▝▌ ▗▌           │
-│ ▌   ▌      ▐▘    ▜     ▞      ▝▖   ▌        ▜▄▞            │
-│▐    ▐      ▞     ▝▌    ▌       ▜  ▟                        │
-│▛    ▝▌     ▌      ▜   ▐        ▝▙▄▘                        │ 0.2
-│▌─────▜────▐───────▝▌──▛────────────────────────────────────│
-│      ▝▌   ▛        ▜▄▟                                     │
-│       ▜  ▐▘                                                │
-│       ▝▙▄▌                                                 │ -0.6
+│              ▛ ▝▌       ▐    ▜      ▛     ▝▌   ▗▘│      ▚  │
+│  ▟▜▖        ▐   ▐       ▌    ▝▌    ▗▘      ▚   ▟ │      ▝▙▖│ 1.1
+│ ▐▘ ▜        ▌    ▌     ▐▘     ▜    ▟       ▝▌ ▗▌ │         │
+│ ▌   ▌      ▐▘    ▜     ▞      ▝▖   ▌        ▜▄▞  │         │
+│▐    ▐      ▞     ▝▌    ▌       ▜  ▟              │         │
+│▛    ▝▌     ▌      ▜   ▐        ▝▙▄▘              │         │ 0.2
+│▌─────▜────▐───────▝▌──▛──────────────────────────│─────────│
+│      ▝▌   ▛        ▜▄▟                           │         │
+│       ▜  ▐▘                                      │         │
+│       ▝▙▄▌                                       │         │ -0.6
 └────────────────────────────────────────────────────────────┘
 1.0                                                      606.0
 ```
@@ -65,7 +65,8 @@ The `plot` function accepts the following parameters:
 * `y_min` - Minimum y value of the view. Defaults to a value that shows all data points.
 * `y_max` - Maximum y value of the view. Defaults to a value that shows all data points.
 * `title` - The first line of the plot. Defaults to `None`.
-* `y_gridlines` - A list of y values that have a dashed line for better orientation. Defaults to `[0]`
+* `y_gridlines` - A list of y values that have a horizontal line for better orientation. Defaults to `[0]`
+* `x_gridlines` - A list of x values that have a vertical line for better orientation. Defaults to `[0]`
 * `width` - The width of the plotting region, in characters. Default is `60`.
 * `height` - The height of the plotting region, in characters. Default is `17`.
 * `interactive` - Enable interactive mode. Defaults to `False`.
