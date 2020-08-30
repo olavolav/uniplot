@@ -5,4 +5,4 @@ install:
   - pip install --upgrade pip
   - pip install -U -r requirements.txt -r requirements-dev.txt
 script:
-  - ./run_tests.sh
+  - python -m pytest
