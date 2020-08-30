@@ -2,8 +2,16 @@ import setuptools  # type: ignore
 
 from version import version
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+long_description = """Simple plotting tool.
+
+When working with production data science code it can be handy to have simple plotting
+tool that does not rely on graphics dependencies or works only in a Jupyter notebook.
+
+I use this all the time when transforming exploratory code to production Python code.
+
+A common use case is having plots as part of your CI pipeline - that way whenever
+something goes wrong, you get not only the error and backtrace but also plots that show
+what the problem was."""
 
 setuptools.setup(
     name="uniplot",
