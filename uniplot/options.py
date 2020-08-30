@@ -11,11 +11,11 @@ def _default_gridlines() -> List[float]:
 class Options:
     # Minimum x value of the current view
     x_min: float = 0.0
-    # Maximun x value of the current view
+    # Maximum x value of the current view
     x_max: float = 1.0
     # Minimum y value of the current view
     y_min: float = 0.0
-    # Maximun y value of the current view
+    # Maximum y value of the current view
     y_max: float = 1.0
     # Title of the plot
     title: Optional[str] = None
@@ -29,6 +29,8 @@ class Options:
     height: int = 17
     # Interactive mode
     interactive: bool = False
+    # Color mode
+    color: bool = False
 
     def __post_init__(self):
         # Remember values for resetting later

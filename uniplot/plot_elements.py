@@ -27,16 +27,33 @@ BINARY_ENCODING_MATRIX = np.array([[1, 2], [4, 8]])
 CURSOR_UP_ONE = "\x1b[1A"
 ERASE_LINE = "\x1b[2K"
 
+COLOR_CODES = {
+    "blue": "\033[34m",
+    "magenta": "\033[35m",
+    "red": "\033[31m",
+    "green": "\033[32m",
+    "yellow": "\033[33m",
+    "cyan": "\033[36m",
+}
+COLOR_RESET_CODE = "\033[0m"
 
-def character_for_2by2_pixels(square: np.array) -> str:
+
+def character_for_2by2_pixels(square: np.array, color_mode: bool = False) -> str:
     """
     Convert 2x2 matrix to unicode character representation for plotting.
     """
     # Convert matric to integer
-    # NOTE That this will fail if the square is not 2x2 or contains anything else than
-    # zeros and ones
-    integer_encoding = np.multiply(square, BINARY_ENCODING_MATRIX).sum()
-    return UNICODE_SQUARES[integer_encoding]
+    # NOTE That this will fail if the square is not 2x2
+    binary_square = np.clip(square, a_min=0, a_max=1)
+    integer_encoding = np.multiply(binary_square, BINARY_ENCODING_MATRIX).sum()
+    char = UNICODE_SQUARES[integer_encoding]
+
+    if char == "" or not color_mode:
+        return char
+
+    color_code = list(COLOR_CODES.values())[(square.max() - 1) % len(COLOR_CODES)]
+    # TODO remove HACK
+    return f"{color_code}{char}{COLOR_RESET_CODE}"
 
 
 def yaxis_ticks(y_min: float, y_max: float, height: int) -> List[str]:

@@ -1,6 +1,11 @@
 import numpy as np  # type: ignore
 
-from uniplot.pixel_matrix import render
+from uniplot.pixel_matrix import render, merge_on_top_with_shadow
+
+
+###################
+# Testing: render #
+###################
 
 
 def test_empty_plot():
@@ -35,3 +40,51 @@ def test_diagonal_in_bigger_window():
 
     desired_pixels = np.array([[0, 0, 0, 0, 1], [0, 0, 0, 0, 0], [1, 0, 0, 0, 0]])
     np.testing.assert_array_equal(pixels, desired_pixels)
+
+
+#####################################
+# Testing: merge_on_top_with_shadow #
+#####################################
+
+
+def test_merge_two_empty_pixel_matrices():
+    blank_pixels = np.array([[0, 0, 0], [0, 0, 0]])
+    result = merge_on_top_with_shadow(
+        low_layer=blank_pixels, high_layer=blank_pixels, width=3, height=2
+    )
+
+    np.testing.assert_array_equal(result, blank_pixels)
+
+
+def test_merge_with_empty_lower_layer():
+    some_pixels = np.array([[1, 0, 2], [0, 3, 4]])
+    blank_pixels = np.array([[0, 0, 0], [0, 0, 0]])
+    result = merge_on_top_with_shadow(
+        low_layer=blank_pixels, high_layer=some_pixels, width=3, height=2
+    )
+
+    np.testing.assert_array_equal(result, some_pixels)
+
+
+def test_merge_with_effective_shadow_small_patch():
+    high_layer = np.array([[2, 0, 0], [0, 0, 0]])
+    low_layer = np.array([[1, 1, 1], [1, 1, 1]])
+    desired_layer = np.array([[2, 0, 1], [0, 0, 1]])
+
+    result = merge_on_top_with_shadow(
+        low_layer=low_layer, high_layer=high_layer, width=3, height=2
+    )
+
+    np.testing.assert_array_equal(result, desired_layer)
+
+
+def test_merge_with_effective_shadow_bigger_patch():
+    high_layer = np.array([[0, 2, 0], [2, 0, 0], [0, 0, 0],])
+    low_layer = np.array([[0, 0, 1], [0, 1, 1], [1, 1, 1],])
+    desired_layer = np.array([[0, 2, 0], [2, 0, 0], [0, 0, 1],])
+
+    result = merge_on_top_with_shadow(
+        low_layer=low_layer, high_layer=high_layer, width=3, height=3
+    )
+
+    np.testing.assert_array_equal(result, desired_layer)

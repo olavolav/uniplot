@@ -11,7 +11,11 @@ def plot(ys: np.array, xs: Optional[np.array] = None, **kwargs) -> None:
     """2D scatter dot plot on the terminal."""
     ys = np.array(ys)
     if xs is None:
-        xs = np.arange(1, len(ys) + 1, step=1, dtype=int)
+        if len(ys.shape) == 1:
+            xs = np.arange(1, len(ys) + 1, step=1, dtype=int)
+        # TODO Proper validation
+        else:
+            xs = np.array([np.arange(1, len(ysi) + 1, step=1, dtype=int) for ysi in ys])
     else:
         xs = np.array(xs)
 
@@ -60,7 +64,7 @@ def plot(ys: np.array, xs: Optional[np.array] = None, **kwargs) -> None:
         print(x_axis_labels)
 
         if options.interactive:
-            print("Move h/j/k/l, zoom u/n, or r to reset. Escape/q to quit")
+            print("Move h/j/k/l, zoom u/n, or r to reset. ESC/q to quit")
             key_pressed = getch().lower()
 
             # TODO Move all of the below to the `Options` class

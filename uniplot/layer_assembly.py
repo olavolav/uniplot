@@ -34,8 +34,7 @@ def assemble_scatter_plot(xs: np.array, ys: np.array, options: Options) -> np.ar
 
 
 def _merge_layers(character_layers: List[np.array], options: Options) -> np.array:
-    # Initialize with blank layer consisting of spaces only
-    merged_layer = layer_factory.blank_pixel_character_matrix(
+    merged_layer = layer_factory.blank_character_matrix(
         width=options.width, height=options.height
     )
 

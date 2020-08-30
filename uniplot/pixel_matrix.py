@@ -51,26 +51,35 @@ def render(
     return pixels
 
 
-# def merge_on_top_with_shadow(
-#     low_layer: np.array, high_layer: np.array, width: int, height: int
-# ) -> np.array:
-#     """
-#     Put a pixel matrix on top of another, with a single solid line of "shadow",
-#     including diagonal fields.
-#
-#     This shadow will ensure that later 2x2 squares exclusively belong to one particular
-#     line.
-#     """
-#     merged_layer = bottom_layer
-#
-#     for row in range(height):
-#         for col in range(width):
-#             if high_layer[row, col] != 0:
-#                 # Overwrite bottom with top value
-#                 merged_layer[row, col] = high_layer[row, col]
-#             elif low_layer[row, col] != 0:
-#                 # Check if we should set this pixel to zero because of shadowing
-#                 if not _check_surrounding_is_blank():
-#                     merged_layer[row, col] = 0
-#
-#     return merged_layer
+def merge_on_top_with_shadow(
+    low_layer: np.array, high_layer: np.array, width: int, height: int
+) -> np.array:
+    """
+    Put a pixel matrix on top of another, with a single solid line of "shadow",
+    including diagonal fields.
+
+    This shadow will ensure that later 2x2 squares exclusively belong to one particular
+    line. This is important such that we can add color later.
+    """
+    merged_layer = np.copy(low_layer)
+
+    for row in range(height):
+        for col in range(width):
+            if high_layer[row, col] != 0:
+                # Overwrite bottom with top value
+                merged_layer[row, col] = high_layer[row, col]
+            elif merged_layer[row, col] != 0:
+                # So we know that the top layer at position `[row, col]` is blank but
+                # the bottom one is not. So now we check if we should set this pixel to
+                # zero because of shadowing.
+                if (
+                    high_layer[
+                        max(row - 1, 0) : min(row + 2, height),
+                        max(col - 1, 0) : min(col + 2, width),
+                    ]
+                    > 0
+                ).any():
+                    # Apply shadow
+                    merged_layer[row, col] = 0
+
+    return merged_layer

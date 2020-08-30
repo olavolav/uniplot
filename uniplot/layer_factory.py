@@ -1,7 +1,7 @@
 import numpy as np  # type: ignore
 from typing import List
 
-import uniplot.pixel_matrix
+import uniplot.pixel_matrix as pixel_matrix
 import uniplot.plot_elements as elements
 from uniplot.options import Options
 from uniplot.discretizer import discretize
@@ -10,11 +10,11 @@ from uniplot.discretizer import discretize
 Y_GRIDLINE_CHARACTERS = ["▔", "─", "▁"]
 
 
-def blank_pixel_character_matrix(width: int, height: int) -> np.array:
+def blank_character_matrix(width: int, height: int) -> np.array:
     """
     Initialize an empty character matrix as a NumPy array.
     """
-    return _init_pixel_character_matrix(width, height, value=" ")
+    return _init_character_matrix(width, height, value=" ")
 
 
 def render_horizontal_gridline(y: float, options: Options) -> np.array:
@@ -24,7 +24,7 @@ def render_horizontal_gridline(y: float, options: Options) -> np.array:
     Because a character is higher than wide, this is rendered with "super-resolution"
     Unicode characters.
     """
-    pixels = _init_pixel_character_matrix(width=options.width, height=options.height)
+    pixels = _init_character_matrix(width=options.width, height=options.height)
     if y < options.y_min or y >= options.y_max:
         return pixels
 
@@ -47,7 +47,7 @@ def render_vertical_gridline(x: float, options: Options) -> np.array:
     """
     Render the pixel matrix that only consists of a line where the `x` value is.
     """
-    pixels = _init_pixel_character_matrix(width=options.width, height=options.height)
+    pixels = _init_character_matrix(width=options.width, height=options.height)
     if x < options.x_min or x >= options.x_max:
         return pixels
 
@@ -61,23 +61,70 @@ def render_vertical_gridline(x: float, options: Options) -> np.array:
 
 
 def render_points(xs: np.array, ys: np.array, options: Options) -> np.array:
-    matrix = uniplot.pixel_matrix.render(
-        xs=xs,
-        ys=ys,
-        x_min=options.x_min,
-        x_max=options.x_max,
-        y_min=options.y_min,
-        y_max=options.y_max,
-        # Unicode super-resolution :-)
-        width=2 * options.width,
-        height=2 * options.height,
-    )
+    assert ys.shape == xs.shape
+    # matrix = pixel_matrix.render(
+    #     xs=xs,
+    #     ys=ys,
+    #     x_min=options.x_min,
+    #     x_max=options.x_max,
+    #     y_min=options.y_min,
+    #     y_max=options.y_max,
+    #     # Unicode super-resolution :-)
+    #     width=2 * options.width,
+    #     height=2 * options.height,
+    # )
 
-    pixels = _init_pixel_character_matrix(width=options.width, height=options.height)
+    # TODO validation of the xs and ys
+    if len(ys.shape) == 1:
+        matrix = pixel_matrix.render(
+            xs=xs,
+            ys=ys,
+            x_min=options.x_min,
+            x_max=options.x_max,
+            y_min=options.y_min,
+            y_max=options.y_max,
+            # Unicode super-resolution :-)
+            width=2 * options.width,
+            height=2 * options.height,
+        )
+    else:
+        matrix = pixel_matrix.render(
+            xs=xs[0],
+            ys=ys[0],
+            x_min=options.x_min,
+            x_max=options.x_max,
+            y_min=options.y_min,
+            y_max=options.y_max,
+            # Unicode super-resolution :-)
+            width=2 * options.width,
+            height=2 * options.height,
+        )
+
+        for i in range(1, len(ys)):
+            next_matrix = (i + 1) * pixel_matrix.render(
+                xs=xs[i],
+                ys=ys[i],
+                x_min=options.x_min,
+                x_max=options.x_max,
+                y_min=options.y_min,
+                y_max=options.y_max,
+                # Unicode super-resolution :-)
+                width=2 * options.width,
+                height=2 * options.height,
+            )
+            matrix = pixel_matrix.merge_on_top_with_shadow(
+                low_layer=matrix,
+                high_layer=next_matrix,
+                width=2 * options.width,
+                height=2 * options.height,
+            )
+
+    pixels = _init_character_matrix(width=options.width, height=options.height)
     for row in range(options.height):
         for col in range(options.width):
             pixels[row, col] = elements.character_for_2by2_pixels(
-                matrix[2 * row : 2 * row + 2, 2 * col : 2 * col + 2]
+                matrix[2 * row : 2 * row + 2, 2 * col : 2 * col + 2],
+                color_mode=options.color,
             )
 
     return pixels
@@ -99,5 +146,5 @@ def print_raw_pixel_matrix(pixels: np.array, verbose: bool = False) -> None:
 ###########
 
 
-def _init_pixel_character_matrix(width: int, height: int, value: str = "") -> np.array:
-    return np.full((height, width), fill_value=value)
+def _init_character_matrix(width: int, height: int, value: str = "") -> np.array:
+    return np.full((height, width), fill_value=value, dtype="<U15")
