@@ -101,18 +101,17 @@ def _find_shortest_string_representation(numbers: List[Optional[float]],) -> Lis
     This method will find the shortest numerical values for axis labels that are different from ech other.
     """
     # We actually want to add one more digit than needed for uniqueness
-    return_next = False
     for nr_digits in range(10):
         test_list = ["" if n is None else _float_format(n, nr_digits) for n in numbers]
-        if return_next:
-            return test_list
         compact_list = [n for n in test_list if n != ""]
         if len(compact_list) == len(set(compact_list)):
-            return_next = True
+            return test_list
 
     # Fallback to naive string conversion
     return ["" if n is None else str(n) for n in numbers]
 
 
 def _float_format(n: float, nr_digits: int):
+    if nr_digits == 0:
+        return ("{:,d}").format(int(n))
     return ("{:,." + str(nr_digits) + "f}").format(float(n))
