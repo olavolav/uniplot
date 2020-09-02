@@ -62,19 +62,7 @@ def render_vertical_gridline(x: float, options: Options) -> np.array:
 
 def render_points(xs: np.array, ys: np.array, options: Options) -> np.array:
     assert ys.shape == xs.shape
-    # matrix = pixel_matrix.render(
-    #     xs=xs,
-    #     ys=ys,
-    #     x_min=options.x_min,
-    #     x_max=options.x_max,
-    #     y_min=options.y_min,
-    #     y_max=options.y_max,
-    #     # Unicode super-resolution :-)
-    #     width=2 * options.width,
-    #     height=2 * options.height,
-    # )
 
-    # TODO validation of the xs and ys
     if len(ys.shape) == 1:
         matrix = pixel_matrix.render(
             xs=xs,

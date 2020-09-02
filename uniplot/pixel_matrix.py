@@ -22,7 +22,7 @@ def render(
     Note that the row order is optimized for drawing later, so the first row corresponds
     to the highest line of pixels.
     """
-    assert len(xs) == len(ys)
+    assert xs.shape == ys.shape
     assert x_max > x_min
     assert y_max > y_min
     assert width > 0

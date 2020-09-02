@@ -9,7 +9,16 @@ from uniplot.pixel_matrix import render, merge_on_top
 
 
 def test_empty_plot():
-    pixels = render(xs=[], ys=[], x_min=0, y_min=0, x_max=1, y_max=1, width=2, height=1)
+    pixels = render(
+        xs=np.array([]),
+        ys=np.array([]),
+        x_min=0,
+        y_min=0,
+        x_max=1,
+        y_max=1,
+        width=2,
+        height=1,
+    )
 
     desired_pixels = np.array([[0, 0]])
     np.testing.assert_array_equal(pixels, desired_pixels)
@@ -17,7 +26,14 @@ def test_empty_plot():
 
 def test_single_pixel():
     pixels = render(
-        xs=[0.5], ys=[0.5], x_min=0, y_min=0, x_max=1, y_max=1, width=1, height=1
+        xs=np.array([0.5]),
+        ys=np.array([0.5]),
+        x_min=0,
+        y_min=0,
+        x_max=1,
+        y_max=1,
+        width=1,
+        height=1,
     )
 
     desired_pixels = np.array([[1]])
@@ -26,7 +42,14 @@ def test_single_pixel():
 
 def test_diagonal():
     pixels = render(
-        xs=[1, 2], ys=[1, 2], x_min=1, y_min=1, x_max=2.1, y_max=2.1, width=2, height=2
+        xs=np.array([1, 2]),
+        ys=np.array([1, 2]),
+        x_min=1,
+        y_min=1,
+        x_max=2.1,
+        y_max=2.1,
+        width=2,
+        height=2,
     )
 
     desired_pixels = np.array([[0, 1], [1, 0]])
@@ -35,7 +58,14 @@ def test_diagonal():
 
 def test_diagonal_in_bigger_window():
     pixels = render(
-        xs=[1, 2], ys=[1, 2], x_min=1, y_min=1, x_max=2.1, y_max=2.1, width=5, height=3
+        xs=np.array([1, 2]),
+        ys=np.array([1, 2]),
+        x_min=1,
+        y_min=1,
+        x_max=2.1,
+        y_max=2.1,
+        width=5,
+        height=3,
     )
 
     desired_pixels = np.array([[0, 0, 0, 0, 1], [0, 0, 0, 0, 0], [1, 0, 0, 0, 0]])

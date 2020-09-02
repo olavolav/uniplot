@@ -8,22 +8,45 @@ from uniplot.getch import getch
 
 
 def plot(ys: np.array, xs: Optional[np.array] = None, **kwargs) -> None:
-    """2D scatter dot plot on the terminal."""
+    """
+    2D scatter dot plot on the terminal.
+
+    Parameters:
+
+    - `ys` are the y coordinates of the points to plot. This parameter is mandatory and
+      can either be a list or a list of lists, or the equivalent NumPy array.
+    - `xs` are the x coordinates of the points to plot. This parameter is optional and
+      can either be a `None` or of the same shape as `ys`.
+    - Any additional keyword arguments are passed to the `uniplot.options.Options` class.
+    """
+
+    # Initialize mandatory parameter `ys` as NumPy array
     ys = np.array(ys)
+    assert len(ys.shape) <= 2
+
+    # Initialize optional parameter `xs` as NumPy array
     if xs is None:
         if len(ys.shape) == 1:
             xs = np.arange(1, len(ys) + 1, step=1, dtype=int)
-        # TODO Proper validation
         else:
             xs = np.array([np.arange(1, len(ysi) + 1, step=1, dtype=int) for ysi in ys])
     else:
         xs = np.array(xs)
+    # Make sure that the end result looks good
+    assert ys.shape == xs.shape
 
     # Set bounds to show all points by default
     kwargs["x_min"] = kwargs.get("x_min") or xs.min()
     kwargs["x_max"] = kwargs.get("x_max") or (xs.max() + 1e-4 * (xs.max() - xs.min()))
+    if float(kwargs["x_min"]) == float(kwargs["x_max"]):
+        kwargs["x_min"] = kwargs["x_min"] - 1
+        kwargs["x_max"] = kwargs["x_max"] + 1
     kwargs["y_min"] = kwargs.get("y_min") or ys.min()
     kwargs["y_max"] = kwargs.get("y_max") or (ys.max() + 1e-4 * (ys.max() - ys.min()))
+    if float(kwargs["y_min"]) == float(kwargs["y_max"]):
+        kwargs["y_min"] = kwargs["y_min"] - 1
+        kwargs["y_max"] = kwargs["y_max"] + 1
+    print(f"DEBUG: kwargs = {kwargs}")
     options = Options(**kwargs)
 
     # Print title

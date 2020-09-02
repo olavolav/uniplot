@@ -33,6 +33,12 @@ class Options:
     color: bool = False
 
     def __post_init__(self):
+        # Validate values
+        assert self.x_max > self.x_min
+        assert self.y_max > self.y_min
+        assert self.width > 0
+        assert self.height > 0
+
         # Remember values for resetting later
         self._initial_bounds = (self.x_min, self.x_max, self.y_min, self.y_max)
 
