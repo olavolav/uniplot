@@ -1,6 +1,6 @@
 import numpy as np  # type: ignore
 
-from uniplot.pixel_matrix import render, merge_on_top_with_shadow
+from uniplot.pixel_matrix import render, merge_on_top
 
 
 ###################
@@ -43,13 +43,13 @@ def test_diagonal_in_bigger_window():
 
 
 #####################################
-# Testing: merge_on_top_with_shadow #
+# Testing: merge_on_top #
 #####################################
 
 
 def test_merge_two_empty_pixel_matrices():
     blank_pixels = np.array([[0, 0, 0], [0, 0, 0]])
-    result = merge_on_top_with_shadow(
+    result = merge_on_top(
         low_layer=blank_pixels, high_layer=blank_pixels, width=3, height=2
     )
 
@@ -59,7 +59,7 @@ def test_merge_two_empty_pixel_matrices():
 def test_merge_with_empty_lower_layer():
     some_pixels = np.array([[1, 0, 2], [0, 3, 4]])
     blank_pixels = np.array([[0, 0, 0], [0, 0, 0]])
-    result = merge_on_top_with_shadow(
+    result = merge_on_top(
         low_layer=blank_pixels, high_layer=some_pixels, width=3, height=2
     )
 
@@ -71,8 +71,8 @@ def test_merge_with_effective_shadow_small_patch():
     low_layer = np.array([[1, 1, 1], [1, 1, 1]])
     desired_layer = np.array([[2, 0, 1], [0, 0, 1]])
 
-    result = merge_on_top_with_shadow(
-        low_layer=low_layer, high_layer=high_layer, width=3, height=2
+    result = merge_on_top(
+        low_layer=low_layer, high_layer=high_layer, width=3, height=2, with_shadow=True
     )
 
     np.testing.assert_array_equal(result, desired_layer)
@@ -83,8 +83,20 @@ def test_merge_with_effective_shadow_bigger_patch():
     low_layer = np.array([[0, 0, 1], [0, 1, 1], [1, 1, 1],])
     desired_layer = np.array([[0, 2, 0], [2, 0, 0], [0, 0, 1],])
 
-    result = merge_on_top_with_shadow(
-        low_layer=low_layer, high_layer=high_layer, width=3, height=3
+    result = merge_on_top(
+        low_layer=low_layer, high_layer=high_layer, width=3, height=3, with_shadow=True
+    )
+
+    np.testing.assert_array_equal(result, desired_layer)
+
+
+def test_merge_without_shadow_bigger_patch():
+    high_layer = np.array([[0, 2, 0], [2, 0, 0], [0, 0, 0],])
+    low_layer = np.array([[0, 0, 1], [0, 1, 1], [1, 1, 1],])
+    desired_layer = np.array([[0, 2, 1], [2, 1, 1], [1, 1, 1],])
+
+    result = merge_on_top(
+        low_layer=low_layer, high_layer=high_layer, width=3, height=3, with_shadow=False
     )
 
     np.testing.assert_array_equal(result, desired_layer)

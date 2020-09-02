@@ -51,15 +51,19 @@ def render(
     return pixels
 
 
-def merge_on_top_with_shadow(
-    low_layer: np.array, high_layer: np.array, width: int, height: int
+def merge_on_top(
+    low_layer: np.array,
+    high_layer: np.array,
+    width: int,
+    height: int,
+    with_shadow: bool = False,
 ) -> np.array:
     """
-    Put a pixel matrix on top of another, with a single solid line of "shadow",
+    Put a pixel matrix on top of another, with an optional single solid line of "shadow",
     including diagonal fields.
 
-    This shadow will ensure that later 2x2 squares exclusively belong to one particular
-    line. This is important such that we can add color later.
+    If activated, this shadow will ensure that later 2x2 squares exclusively belong to
+    one particular line.
     """
     merged_layer = np.copy(low_layer)
 
@@ -68,7 +72,7 @@ def merge_on_top_with_shadow(
             if high_layer[row, col] != 0:
                 # Overwrite bottom with top value
                 merged_layer[row, col] = high_layer[row, col]
-            elif merged_layer[row, col] != 0:
+            elif with_shadow and merged_layer[row, col] != 0:
                 # So we know that the top layer at position `[row, col]` is blank but
                 # the bottom one is not. So now we check if we should set this pixel to
                 # zero because of shadowing.

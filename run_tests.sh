@@ -23,7 +23,7 @@ echo "# Visual check #"
 echo "################"
 
 python3 -c "import math; ys = [math.sin(i/20)+i/300 for i in range(600)]; from uniplot import plot; plot(ys, title=\"Single sine wave\")"
-python3 -c "import math; ys = [[math.sin(i/(10+i/50)) - math.sin(i/100) for i in range(1000)], [math.sin(i/(10+i/50)) - math.sin(i/100) - 1 for i in range(1000)]]; from uniplot import plot; plot(ys, title=\"Double sine wave\")"
+python3 -c "import math; ys = [[math.sin(i/(10+i/50)) - math.sin(i/100) for i in range(1000)], [math.sin(i/(10+i/50)) - math.sin(i/100) - 1 for i in range(1000)]]; from uniplot import plot; plot(ys, title=\"Double sine wave\", color=True)"
 
 echo ""
 echo "##############"

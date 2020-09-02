@@ -30,21 +30,31 @@ ERASE_LINE = "\x1b[2K"
 COLOR_CODES = {
     "blue": "\033[34m",
     "magenta": "\033[35m",
-    "red": "\033[31m",
     "green": "\033[32m",
     "yellow": "\033[33m",
     "cyan": "\033[36m",
+    "red": "\033[31m",
 }
 COLOR_RESET_CODE = "\033[0m"
 
 
 def character_for_2by2_pixels(square: np.array, color_mode: bool = False) -> str:
     """
-    Convert 2x2 matrix to unicode character representation for plotting.
+    Convert 2x2 matrix (non-negative integers) to unicode character representation for plotting.
     """
-    # Convert matric to integer
-    # NOTE That this will fail if the square is not 2x2
-    binary_square = np.clip(square, a_min=0, a_max=1)
+    assert square.shape == (2, 2)
+    assert square.min() >= 0
+
+    # HACK Postprocess to remove everything that is not max color
+    max_color = square.max()
+    if max_color <= 1:
+        binary_square = np.clip(square, a_min=0, a_max=1)
+    else:
+        binary_square = np.clip(square, a_min=max_color - 1, a_max=max_color) - (
+            max_color - 1
+        )
+
+    # binary_square = np.clip(square, a_min=0, a_max=1)
     integer_encoding = np.multiply(binary_square, BINARY_ENCODING_MATRIX).sum()
     char = UNICODE_SQUARES[integer_encoding]
 

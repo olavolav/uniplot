@@ -112,7 +112,7 @@ def render_points(xs: np.array, ys: np.array, options: Options) -> np.array:
                 width=2 * options.width,
                 height=2 * options.height,
             )
-            matrix = pixel_matrix.merge_on_top_with_shadow(
+            matrix = pixel_matrix.merge_on_top(
                 low_layer=matrix,
                 high_layer=next_matrix,
                 width=2 * options.width,
