@@ -46,7 +46,8 @@ def plot(ys: np.array, xs: Optional[np.array] = None, **kwargs) -> None:
     if float(kwargs["y_min"]) == float(kwargs["y_max"]):
         kwargs["y_min"] = kwargs["y_min"] - 1
         kwargs["y_max"] = kwargs["y_max"] + 1
-    print(f"DEBUG: kwargs = {kwargs}")
+
+    # Initialize options object
     options = Options(**kwargs)
 
     # Print title

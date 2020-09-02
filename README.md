@@ -17,7 +17,8 @@ what the problem was.
 
 * Unicode drawing, so 4x the resolution (pixels) of usual ASCII plots
 * Super simple API
-* Interactive mode (simply pass `interactive=True`) see [the (slightly outdated) demo video](https://www.youtube.com/watch?v=nmYeBL_0K4A)
+* Interactive mode (pass `interactive=True`) see [the (slightly outdated) demo video](https://www.youtube.com/watch?v=nmYeBL_0K4A)
+* Color mode (pass `color=True`) useful in particular when plotting multiple series
 * It's fast: Plotting 1M data points takes 100ms thanks to NumPy magic
 * Only one dependency: NumPy (but you have that anyway don't you)
 
@@ -73,6 +74,7 @@ The `plot` function accepts the following parameters:
 * `width` - The width of the plotting region, in characters. Default is `60`.
 * `height` - The height of the plotting region, in characters. Default is `17`.
 * `interactive` - Enable interactive mode. Defaults to `False`.
+* `color` - Draw series in color. Defaults to `False`.
 
 Note that only `ys` is a required argument, all others are optional.
 
