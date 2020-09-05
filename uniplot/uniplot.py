@@ -1,13 +1,14 @@
 import numpy as np  # type: ignore
-from typing import List, Optional
+from typing import List, Optional, Any
 
-from uniplot.options import Options
+from uniplot.multi_series import MultiSeries
 import uniplot.layer_assembly as layer_assembly
 import uniplot.plot_elements as elements
 from uniplot.getch import getch
+from uniplot.param_initializer import validate_and_transform_options
 
 
-def plot(ys: np.array, xs: Optional[np.array] = None, **kwargs) -> None:
+def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
     """
     2D scatter dot plot on the terminal.
 
@@ -19,36 +20,8 @@ def plot(ys: np.array, xs: Optional[np.array] = None, **kwargs) -> None:
       can either be a `None` or of the same shape as `ys`.
     - Any additional keyword arguments are passed to the `uniplot.options.Options` class.
     """
-
-    # Initialize mandatory parameter `ys` as NumPy array
-    ys = np.array(ys)
-    assert len(ys.shape) <= 2
-
-    # Initialize optional parameter `xs` as NumPy array
-    if xs is None:
-        if len(ys.shape) == 1:
-            xs = np.arange(1, len(ys) + 1, step=1, dtype=int)
-        else:
-            xs = np.array([np.arange(1, len(ysi) + 1, step=1, dtype=int) for ysi in ys])
-    else:
-        xs = np.array(xs)
-    # Make sure that the end result looks good
-    assert ys.shape == xs.shape
-
-    # Set bounds to show all points by default
-    kwargs["x_min"] = kwargs.get("x_min") or xs.min()
-    kwargs["x_max"] = kwargs.get("x_max") or (xs.max() + 1e-4 * (xs.max() - xs.min()))
-    if float(kwargs["x_min"]) == float(kwargs["x_max"]):
-        kwargs["x_min"] = kwargs["x_min"] - 1
-        kwargs["x_max"] = kwargs["x_max"] + 1
-    kwargs["y_min"] = kwargs.get("y_min") or ys.min()
-    kwargs["y_max"] = kwargs.get("y_max") or (ys.max() + 1e-4 * (ys.max() - ys.min()))
-    if float(kwargs["y_min"]) == float(kwargs["y_max"]):
-        kwargs["y_min"] = kwargs["y_min"] - 1
-        kwargs["y_max"] = kwargs["y_max"] + 1
-
-    # Initialize options object
-    options = Options(**kwargs)
+    series = MultiSeries(xs=xs, ys=ys)
+    options = validate_and_transform_options(series=series, kwargs=kwargs)
 
     # Print title
     if options.title is not None:
@@ -72,7 +45,7 @@ def plot(ys: np.array, xs: Optional[np.array] = None, **kwargs) -> None:
 
         # Prefare graph surface
         pixel_character_matrix = layer_assembly.assemble_scatter_plot(
-            xs=xs, ys=ys, options=options
+            xs=series.xs, ys=series.ys, options=options
         )
 
         # Delete plot before we re-draw
@@ -129,11 +102,7 @@ def plot(ys: np.array, xs: Optional[np.array] = None, **kwargs) -> None:
                 options.y_min = options.y_min - step
                 options.y_max = options.y_max + step
             elif key_pressed == "r":
-                # Reset view
-                options.x_min = xs.min()
-                options.x_max = xs.max()
-                options.y_min = ys.min()
-                options.y_max = ys.max()
+                options.reset_view()
             elif key_pressed in ["q", "\x1b"]:
                 # q and Escape will end interactive mode
                 continue_looping = False

@@ -45,7 +45,7 @@ def character_for_2by2_pixels(square: np.array, color_mode: bool = False) -> str
     assert square.shape == (2, 2)
     assert square.min() >= 0
 
-    # HACK Postprocess to remove everything that is not max color
+    # Postprocess to remove everything that is not max color
     max_color = square.max()
     if max_color <= 1:
         binary_square = np.clip(square, a_min=0, a_max=1)
@@ -62,7 +62,6 @@ def character_for_2by2_pixels(square: np.array, color_mode: bool = False) -> str
         return char
 
     color_code = list(COLOR_CODES.values())[(square.max() - 1) % len(COLOR_CODES)]
-    # TODO remove HACK
     return f"{color_code}{char}{COLOR_RESET_CODE}"
 
 
