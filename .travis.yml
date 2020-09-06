@@ -7,6 +7,4 @@ install:
   - pip install --upgrade pip
   - pip install -U -r requirements.txt -r requirements-dev.txt
 script:
-  - python -m pytest --cov=uniplot/
-after_success:
-  - coveralls
+  - python -m pytest
