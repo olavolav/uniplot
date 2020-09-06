@@ -25,4 +25,8 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
         kwargs["y_min"] = kwargs["y_min"] - 1
         kwargs["y_max"] = kwargs["y_max"] + 1
 
+    # Make sure the length of the labels is not exceeding the number of series
+    if kwargs.get("legend_labels") is not None:
+        kwargs["legend_labels"] = list(kwargs["legend_labels"])[0 : len(series)]
+
     return Options(**kwargs)

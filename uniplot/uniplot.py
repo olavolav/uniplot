@@ -50,7 +50,10 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
 
         # Delete plot before we re-draw
         if loop_iteration > 0:
-            elements.erase_previous_lines(options.height + 4)
+            nr_lines_to_erase = options.height + 4
+            if options.legend_labels is not None:
+                nr_lines_to_erase += len(options.legend_labels)
+            elements.erase_previous_lines(nr_lines_to_erase)
 
         # Print plot (double resolution)
         print(f"┌{'─'*options.width}┐")
@@ -59,6 +62,11 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
             print(f"│{''.join(row)}│ {y_axis_labels[i]}")
         print(f"└{'─'*options.width}┘")
         print(x_axis_labels)
+
+        # Print legend if labels were specified
+        # TODO Fix erase during interactive mode
+        if options.legend_labels is not None:
+            print(elements.legend(options.legend_labels, width=options.width))
 
         if options.interactive:
             print("Move h/j/k/l, zoom u/n, or r to reset. ESC/q to quit")

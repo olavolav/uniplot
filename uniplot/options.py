@@ -23,6 +23,8 @@ class Options:
     y_gridlines: List[float] = field(default_factory=_default_gridlines)
     # Vertical gridlines
     x_gridlines: List[float] = field(default_factory=_default_gridlines)
+    # Labels for the series
+    legend_labels: Optional[List[str]] = None
     # Width of the plotting region, in characters
     width: int = 60
     # Height of the plotting region, in lines

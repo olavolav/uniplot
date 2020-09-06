@@ -63,15 +63,16 @@ Please refer to [this page for a (incomplete) list of supported fonts](https://w
 
 The `plot` function accepts the following parameters:
 
-* `ys` - A list or NumPy array of numerical values of the y coordinates of the points to plot.
-* `xs` - A list or NumPy array of numerical values of the x coordinates of the points to plot.
+* `ys` - The y coordinates of the points to plot. Can either be a list or NumPy array for plotting a single series, or a list of those for plotting multiple series.
+* `xs` - The x coordinates of the points to plot. Can either be `None`, or a list or NumPy array for plotting a single series, or a list of those for plotting multiple series. Defaults to `None`.
 * `x_min` - Minimum x value of the view. Defaults to a value that shows all data points.
 * `x_max` - Maximum x value of the view. Defaults to a value that shows all data points.
 * `y_min` - Minimum y value of the view. Defaults to a value that shows all data points.
 * `y_max` - Maximum y value of the view. Defaults to a value that shows all data points.
 * `title` - The title of the plot. Defaults to `None`.
-* `y_gridlines` - A list of y values that have a horizontal line for better orientation. Defaults to `[0]`
-* `x_gridlines` - A list of x values that have a vertical line for better orientation. Defaults to `[0]`
+* `y_gridlines` - A list of y values that have a horizontal line for better orientation. Defaults to `[0]`.
+* `x_gridlines` - A list of x values that have a vertical line for better orientation. Defaults to `[0]`.
+* `legend_labels` - Labels for the series. Can be `None` or a list of strings. Defaults to `None`.
 * `width` - The width of the plotting region, in characters. Default is `60`.
 * `height` - The height of the plotting region, in characters. Default is `17`.
 * `interactive` - Enable interactive mode. Defaults to `False`.
