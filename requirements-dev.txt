@@ -1,3 +1,4 @@
 black
 mypy
 pytest>=6.0.1
+coveralls
