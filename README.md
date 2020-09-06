@@ -1,5 +1,6 @@
 # Uniplot
 [![Build Status](https://travis-ci.org/olavolav/uniplot.svg?branch=master)](https://travis-ci.org/olavolav/uniplot)
+[![PyPI version](https://badge.fury.io/py/uniplot.svg)](https://badge.fury.io/py/uniplot)
 
 Simple plotting tool.
 
