@@ -29,4 +29,7 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
     if kwargs.get("legend_labels") is not None:
         kwargs["legend_labels"] = list(kwargs["legend_labels"])[0 : len(series)]
 
+    if "color" not in kwargs:
+        kwargs["color"] = len(series) > 1
+
     return Options(**kwargs)

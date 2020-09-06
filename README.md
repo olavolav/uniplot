@@ -1,6 +1,6 @@
 # Uniplot
 [![Build Status](https://travis-ci.org/olavolav/uniplot.svg?branch=master)](https://travis-ci.org/olavolav/uniplot)
-[![PyPI version](https://badge.fury.io/py/uniplot.svg)](https://badge.fury.io/py/uniplot)
+[![PyPI version](https://badge.fury.io/py/uniplot.svg)](https://pypi.org/project/uniplot/)
 
 Simple plotting tool.
 
@@ -76,7 +76,7 @@ The `plot` function accepts the following parameters:
 * `width` - The width of the plotting region, in characters. Default is `60`.
 * `height` - The height of the plotting region, in characters. Default is `17`.
 * `interactive` - Enable interactive mode. Defaults to `False`.
-* `color` - Draw series in color. Defaults to `False`.
+* `color` - Draw series in color. Defaults to `False` when plotting a single series, and to `True` when plotting multiple.
 
 Note that only `ys` is a required argument, all others are optional.
 
