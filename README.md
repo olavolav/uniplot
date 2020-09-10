@@ -4,21 +4,25 @@
 
 Simple plotting tool.
 
-When working with production data science code it can be handy to have simple plotting
+When working with production data science code it can be handy to have plotting
 tool that does not rely on graphics dependencies or works only in a Jupyter notebook.
 
-I use this all the time when transforming exploratory code to production Python code.
+The **use case** that this was built for is to have plots as part of your data science /
+machine learning CI pipeline - that way whenever something goes wrong, you get not only
+the error and backtrace but also plots that show what the problem was.
 
-A common use case is having plots as part of your CI pipeline - that way whenever
-something goes wrong, you get not only the error and backtrace but also plots that show
-what the problem was.
+Demo:
+[On asciinema](https://asciinema.org/a/Ldgn5pHOgxPJmIf2ZvlfIPR3L)
+[On Youtube](https://youtu.be/rZxGAGMjP5k)
+
+[![asciicast](https://asciinema.org/a/Ldgn5pHOgxPJmIf2ZvlfIPR3L.png)](https://asciinema.org/a/Ldgn5pHOgxPJmIf2ZvlfIPR3L)
 
 
 ## Features
 
 * Unicode drawing, so 4x the resolution (pixels) of usual ASCII plots
 * Super simple API
-* Interactive mode (pass `interactive=True`) see [the (slightly outdated) demo video](https://www.youtube.com/watch?v=nmYeBL_0K4A)
+* Interactive mode (pass `interactive=True`)
 * Color mode (pass `color=True`) useful in particular when plotting multiple series
 * It's fast: Plotting 1M data points takes 100ms thanks to NumPy magic
 * Only one dependency: NumPy (but you have that anyway don't you)
@@ -28,7 +32,7 @@ fully supports the [Box-drawing character set](https://en.wikipedia.org/wiki/Box
 Please refer to [this page for a (incomplete) list of supported fonts](https://www.fileformat.info/info/unicode/block/block_elements/fontsupport.htm).
 
 
-## Examples
+## Example
 
 ```
 >>> import math
