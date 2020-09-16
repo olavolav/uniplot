@@ -1,4 +1,4 @@
-import setuptools  # type: ignore
+from setuptools import setup  # type: ignore
 
 from version import version
 
@@ -17,7 +17,8 @@ Demo:
 
 [![asciicast](https://asciinema.org/a/Ldgn5pHOgxPJmIf2ZvlfIPR3L.png)](https://asciinema.org/a/Ldgn5pHOgxPJmIf2ZvlfIPR3L)"""
 
-setuptools.setup(
+
+setup(
     name="uniplot",
     version=version,
     author="Olav Stetter",
@@ -29,6 +30,8 @@ setuptools.setup(
     license="MIT",
     platforms=["any"],
     packages=["uniplot"],
+    package_data={"uniplot": ["py.typed"]},
+    zip_safe=False,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
@@ -36,4 +39,5 @@ setuptools.setup(
     ],
     python_requires=">=3.5",
     install_requires=["numpy>=1.15.0"],
+    extras_require={"dev": ["black", "mypy", "pytest>=6.0.1",]},
 )
