@@ -4,7 +4,7 @@ from version import version
 
 long_description = """Lightweight plotting to the terminal. 4x resolution via Unicode.
 
-[![uniplot demo GIF](https://github.com/olavolav/uniplot/raw/master/resource/uniplot-demo.gif)](https://asciinema.org/a/Ldgn5pHOgxPJmIf2ZvlfIPR3L)
+![uniplot screenshot](https://github.com/olavolav/uniplot/raw/master/resource/uniplot-screenshot.png)
 
 When working with production data science code it can be handy to have plotting
 tool that does not rely on graphics dependencies or works only in a Jupyter notebook.
