@@ -96,5 +96,5 @@ pip install uniplot
 
 Coming up:
 
-* Add flag to disable Unicode
+* Fill area under curve
 * Add generated page with list of supported fonts
