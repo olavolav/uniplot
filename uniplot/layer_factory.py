@@ -61,20 +61,7 @@ def render_vertical_gridline(x: float, options: Options) -> np.array:
 
 
 def render_points(xs: List[np.array], ys: List[np.array], options: Options) -> np.array:
-    matrix = pixel_matrix.render(
-        xs=xs[0],
-        ys=ys[0],
-        x_min=options.x_min,
-        x_max=options.x_max,
-        y_min=options.y_min,
-        y_max=options.y_max,
-        # Unicode super-resolution :-)
-        width=2 * options.width,
-        height=2 * options.height,
-        lines=options.lines,
-    )
-
-    for i in range(1, len(ys)):
+    for i in range(len(ys)):
         next_matrix = (i + 1) * pixel_matrix.render(
             xs=xs[i],
             ys=ys[i],
@@ -87,12 +74,15 @@ def render_points(xs: List[np.array], ys: List[np.array], options: Options) -> n
             height=2 * options.height,
             lines=options.lines,
         )
-        matrix = pixel_matrix.merge_on_top(
-            low_layer=matrix,
-            high_layer=next_matrix,
-            width=2 * options.width,
-            height=2 * options.height,
-        )
+        if i == 0:
+            matrix = next_matrix
+        else:
+            matrix = pixel_matrix.merge_on_top(
+                low_layer=matrix,
+                high_layer=next_matrix,
+                width=2 * options.width,
+                height=2 * options.height,
+            )
 
     pixels = _init_character_matrix(width=options.width, height=options.height)
     for row in range(options.height):
