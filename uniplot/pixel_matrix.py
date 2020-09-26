@@ -62,10 +62,8 @@ def render(
 
         # TODO This can likely be optimized by assembling all segments and computing the
         # pixels of all lines together, or at least of each half split by slope
-        # print("DEBUG: xy_line_endpoints = ", xy_line_endpoints)
         # for segment in np.nditer(xy_line_endpoints): # TODO use this
         for segment in xy_line_endpoints:
-            print("DEBUG: segment = ", segment)
             [
                 [x_index_start, y_index_start],
                 [x_start, y_start],
@@ -79,11 +77,9 @@ def render(
                 indices_slope = (
                     -1 * (y_index_stop - y_index_start) / (x_index_stop - x_index_start)
                 )
-            print("DEBUG: indices_slope = ", indices_slope)
             slope: Optional[float] = None
             if x_start != x_stop:
                 slope = (y_stop - y_start) / (x_stop - x_start)
-            print("DEBUG: slope = ", slope)
 
             # Skip those segments where there is no space anyway between the points
             # TODO Those should be filtered out before, for better performance
@@ -95,7 +91,6 @@ def render(
 
             pixels_already_drawn = False
             if indices_slope is None:
-                print("DEBUG: it's a vertical line")
                 # That means it's a vertical line
                 step = 1
                 if y_index_stop < y_index_start:
@@ -103,14 +98,12 @@ def render(
                 pixels[y_index_start:y_index_stop:step, x_index_start] = 1
                 pixels_already_drawn = True
             elif y_index_start == y_index_stop:
-                print("DEBUG: it's a horizontal line")
                 # That means it's a horizontal line
                 step = 1
                 if x_index_stop < x_index_start:
                     step = -1
                 pixels[y_index_start, x_index_start:x_index_stop:step] = 1
                 pixels_already_drawn = True
-                print(pixels)
             elif abs(indices_slope) > 1:
                 # Draw line by iterating vertically
                 # 1. Compute y indices in the middle of bins between the two origins
@@ -120,61 +113,52 @@ def render(
                 y_indices_of_line = np.arange(
                     y_index_start + 1, y_index_stop, step=step
                 )
-                print("DEBUG: y_indices_of_line = ", y_indices_of_line)
                 ys_of_line = invert_discretize(
                     height - 1 - y_indices_of_line,
                     minimum=y_min,
                     maximum=y_max,
                     nr_bins=height,
                 )
-                print("DEBUG: ys_of_line = ", ys_of_line)
 
                 # 2. Compute corresponding x coordinates
+                # Derivation:
+                #   xs_of_line - x_start = (ys_of_line - y_start) / slope
+                #   xs_of_line = (ys_of_line - y_start) / slope + x_start
                 xs_of_line = (ys_of_line - y_start) / slope + x_start
-                print("DEBUG: xs_of_line = ", xs_of_line)
                 x_indices_of_line = discretize(
                     xs_of_line, x_min=x_min, x_max=x_max, steps=width
                 )
-                print("DEBUG: x_indices_of_line = ", x_indices_of_line)
 
                 # 3. Draw pixels
                 xy_indices_of_line = np.column_stack(
                     (x_indices_of_line, y_indices_of_line)
                 )
-                # print("DEBUG: xy_indices_of_line = ", xy_indices_of_line)
             else:
                 # Draw line by iterating horizontically
                 # 1. Compute x indices in the middle of bins between the two origins
                 step = 1
                 if x_index_stop < x_index_start:
                     step = -1
-                x_indices_of_line = np.arange(x_index_start + 1, x_index_stop)
-                # print("DEBUG: x_indices_of_line = ", x_indices_of_line)
+                x_indices_of_line = np.arange(
+                    x_index_start + 1, x_index_stop, step=step
+                )
                 xs_of_line = invert_discretize(
                     x_indices_of_line, minimum=x_min, maximum=x_max, nr_bins=width
                 )
-                # print("DEBUG: xs_of_line = ", xs_of_line)
 
                 # 2. Compute corresponding y coordinates
                 ys_of_line = y_start + slope * (xs_of_line - x_start)
-                # invert:
-                # xs_of_line - x_start = (ys_of_line - y_start) / slope
-                # xs_of_line = (ys_of_line - y_start) / slope + x_start
-
-                # print("DEBUG: ys_of_line = ", ys_of_line)
                 y_indices_of_line = (
                     height
                     - 1
                     - discretize(ys_of_line, x_min=y_min, x_max=y_max, steps=height)
                 )
-                # print("DEBUG: y_indices_of_line = ", y_indices_of_line)
 
             # Finally, draw pixels (of needed)
             if not pixels_already_drawn:
                 xy_indices_of_line = np.column_stack(
                     (x_indices_of_line, y_indices_of_line)
                 )
-                # print("DEBUG: xy_indices_of_line = ", xy_indices_of_line)
 
                 # Filter out of view pixels
                 # TODO DRY

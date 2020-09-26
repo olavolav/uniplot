@@ -199,6 +199,91 @@ def test_forward_line_with_shallow_downward_slope():
     np.testing.assert_array_equal(pixels, desired_pixels)
 
 
+def test_backward_line_with_steep_upward_slope():
+    pixels = render(
+        xs=np.flip(np.array([1, 20])),
+        ys=np.flip(np.array([1, 200])),
+        x_min=1,
+        y_min=1,
+        x_max=20.1,
+        y_max=200.1,
+        width=2,
+        height=4,
+        lines=True,
+    )
+
+    desired_pixels = np.array([[0, 1], [0, 1], [1, 0], [1, 0]])
+    np.testing.assert_array_equal(pixels, desired_pixels)
+
+
+def test_backward_line_with_shallow_upward_slope():
+    pixels = render(
+        xs=np.flip(np.array([1, 20])),
+        ys=np.flip(np.array([1, 200])),
+        x_min=1,
+        y_min=1,
+        x_max=20.1,
+        y_max=200.1,
+        width=4,
+        height=2,
+        lines=True,
+    )
+
+    desired_pixels = np.array([[0, 0, 1, 1], [1, 1, 0, 0]])
+    np.testing.assert_array_equal(pixels, desired_pixels)
+
+
+def test_backward_line_with_steep_downward_slope():
+    pixels = render(
+        xs=np.flip(np.array([1, 20])),
+        ys=np.flip(np.array([200, 1])),
+        x_min=1,
+        y_min=1,
+        x_max=20.1,
+        y_max=200.1,
+        width=2,
+        height=4,
+        lines=True,
+    )
+
+    desired_pixels = np.array([[1, 0], [1, 0], [0, 1], [0, 1]])
+    np.testing.assert_array_equal(pixels, desired_pixels)
+
+
+def test_backward_line_with_shallow_downward_slope():
+    pixels = render(
+        xs=np.flip(np.array([1, 20])),
+        ys=np.flip(np.array([200, 1])),
+        x_min=1,
+        y_min=1,
+        x_max=20.1,
+        y_max=200.1,
+        width=4,
+        height=2,
+        lines=True,
+    )
+
+    desired_pixels = np.array([[1, 1, 0, 0], [0, 0, 1, 1]])
+    np.testing.assert_array_equal(pixels, desired_pixels)
+
+
+def test_draw_triangular_line():
+    pixels = render(
+        xs=np.array([1, 3, 2, 1]),
+        ys=np.array([1, 1, 2, 1]),
+        x_min=1,
+        y_min=1,
+        x_max=3.01,
+        y_max=2.01,
+        width=5,
+        height=3,
+        lines=True,
+    )
+
+    desired_pixels = np.array([[0, 0, 1, 0, 0], [0, 1, 0, 1, 0], [1, 1, 1, 1, 1],])
+    np.testing.assert_array_equal(pixels, desired_pixels)
+
+
 #########################
 # Testing: merge_on_top #
 #########################
