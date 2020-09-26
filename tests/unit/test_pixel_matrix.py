@@ -114,22 +114,89 @@ def test_horizontal_line():
     np.testing.assert_array_equal(pixels, desired_pixels)
 
 
-# Steep curves not implemented yet
-# def test_vertical_line():
-#     pixels = render(
-#         xs=np.array([1, 1]),
-#         ys=np.array([1, 2]),
-#         x_min=1,
-#         y_min=1,
-#         x_max=2.1,
-#         y_max=2.1,
-#         width=2,
-#         height=4,
-#         lines=True,
-#     )
-#
-#     desired_pixels = np.array([[1, 0], [1, 0], [1, 0], [1, 0]])
-#     np.testing.assert_array_equal(pixels, desired_pixels)
+def test_vertical_line():
+    pixels = render(
+        xs=np.array([1, 1]),
+        ys=np.array([1, 2]),
+        x_min=1,
+        y_min=1,
+        x_max=2.1,
+        y_max=2.1,
+        width=2,
+        height=4,
+        lines=True,
+    )
+
+    desired_pixels = np.array([[1, 0], [1, 0], [1, 0], [1, 0]])
+    np.testing.assert_array_equal(pixels, desired_pixels)
+
+
+def test_forward_line_with_steep_upward_slope():
+    pixels = render(
+        xs=np.array([1, 20]),
+        ys=np.array([1, 200]),
+        x_min=1,
+        y_min=1,
+        x_max=20.1,
+        y_max=200.1,
+        width=2,
+        height=4,
+        lines=True,
+    )
+
+    desired_pixels = np.array([[0, 1], [0, 1], [1, 0], [1, 0]])
+    np.testing.assert_array_equal(pixels, desired_pixels)
+
+
+def test_forward_line_with_shallow_upward_slope():
+    pixels = render(
+        xs=np.array([1, 20]),
+        ys=np.array([1, 200]),
+        x_min=1,
+        y_min=1,
+        x_max=20.1,
+        y_max=200.1,
+        width=4,
+        height=2,
+        lines=True,
+    )
+
+    desired_pixels = np.array([[0, 0, 1, 1], [1, 1, 0, 0]])
+    np.testing.assert_array_equal(pixels, desired_pixels)
+
+
+def test_forward_line_with_steep_downward_slope():
+    pixels = render(
+        xs=np.array([1, 20]),
+        ys=np.array([200, 1]),
+        x_min=1,
+        y_min=1,
+        x_max=20.1,
+        y_max=200.1,
+        width=2,
+        height=4,
+        lines=True,
+    )
+
+    desired_pixels = np.array([[1, 0], [1, 0], [0, 1], [0, 1]])
+    np.testing.assert_array_equal(pixels, desired_pixels)
+
+
+def test_forward_line_with_shallow_downward_slope():
+    pixels = render(
+        xs=np.array([1, 20]),
+        ys=np.array([200, 1]),
+        x_min=1,
+        y_min=1,
+        x_max=20.1,
+        y_max=200.1,
+        width=4,
+        height=2,
+        lines=True,
+    )
+
+    desired_pixels = np.array([[1, 1, 0, 0], [0, 0, 1, 1]])
+    np.testing.assert_array_equal(pixels, desired_pixels)
 
 
 #########################
