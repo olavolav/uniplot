@@ -56,9 +56,38 @@ def render(
             (xy_indices[:-1], xys[:-1], xy_indices[1:], xys[1:]), axis=1
         ).astype(float)
 
-        # TODO Sort list, to have good assumptions for later
-
-        # TODO Filter out of view line segments
+        # Filter out of view line segments
+        xy_line_endpoints = xy_line_endpoints[
+            (
+                # At least one of the x coordinates of start and end need to be >= x_min
+                (xy_line_endpoints[:, 1, 0] < x_max)
+                | (xy_line_endpoints[:, 3, 0] >= x_min)
+            )
+            & (
+                # At least one of the x coordinates of start and end need to be < x_max
+                (xy_line_endpoints[:, 1, 0] < x_max)
+                | (xy_line_endpoints[:, 3, 0] < x_max)
+            )
+            & (
+                # At least one of the y coordinates of start and end need to be >= y_min
+                (xy_line_endpoints[:, 1, 1] >= y_min)
+                | (xy_line_endpoints[:, 3, 1] >= y_min)
+            )
+            & (
+                # At least one of the y coordinates of start and end need to be < x_max
+                (xy_line_endpoints[:, 1, 1] < y_max)
+                | (xy_line_endpoints[:, 3, 1] < y_max)
+            )
+            & (
+                # The start and stop indices need to be different by at least 2 in any
+                # direction
+                (np.abs(xy_line_endpoints[:, 0, 0] - xy_line_endpoints[:, 2, 0]) > 1.5)
+                | (
+                    np.abs(xy_line_endpoints[:, 0, 1] - xy_line_endpoints[:, 2, 1])
+                    > 1.5
+                )
+            )
+        ]
 
         # TODO This can likely be optimized by assembling all segments and computing the
         # pixels of all lines together, or at least of each half split by slope
@@ -86,14 +115,6 @@ def render(
             slope: Optional[float] = None
             if x_start != x_stop:
                 slope = (y_stop - y_start) / (x_stop - x_start)
-
-            # Skip those segments where there is no space anyway between the points
-            # TODO Those should be filtered out before, for better performance
-            if (
-                abs(x_index_stop - x_index_start) < 2
-                and abs(y_index_stop - y_index_start) < 2
-            ):
-                continue
 
             pixels_already_drawn = False
             if indices_slope is None:

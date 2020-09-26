@@ -284,6 +284,23 @@ def test_draw_triangular_line():
     np.testing.assert_array_equal(pixels, desired_pixels)
 
 
+def test_lines_outside_of_the_field_of_view():
+    pixels = render(
+        xs=np.array([1, 3, 2, 1]),
+        ys=np.array([1, 1, 2, 1]),
+        x_min=1.9,
+        y_min=1.5,
+        x_max=2.1,
+        y_max=1.51,
+        width=5,
+        height=3,
+        lines=True,
+    )
+
+    desired_pixels = np.array([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0],])
+    np.testing.assert_array_equal(pixels, desired_pixels)
+
+
 #########################
 # Testing: merge_on_top #
 #########################
