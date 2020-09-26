@@ -71,6 +71,7 @@ def render_points(xs: List[np.array], ys: List[np.array], options: Options) -> n
         # Unicode super-resolution :-)
         width=2 * options.width,
         height=2 * options.height,
+        lines=options.lines,
     )
 
     for i in range(1, len(ys)):
@@ -84,6 +85,7 @@ def render_points(xs: List[np.array], ys: List[np.array], options: Options) -> n
             # Unicode super-resolution :-)
             width=2 * options.width,
             height=2 * options.height,
+            lines=options.lines,
         )
         matrix = pixel_matrix.merge_on_top(
             low_layer=matrix,

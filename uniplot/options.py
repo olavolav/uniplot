@@ -33,6 +33,8 @@ class Options:
     interactive: bool = False
     # Color mode
     color: bool = False
+    # Draw lines between points
+    lines: bool = False
 
     def __post_init__(self):
         # Validate values

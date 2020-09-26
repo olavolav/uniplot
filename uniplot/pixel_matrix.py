@@ -1,7 +1,7 @@
 import numpy as np  # type: ignore
 from typing import Optional
 
-from uniplot.discretizer import discretize
+from uniplot.discretizer import discretize, invert_discretize
 
 
 def render(
@@ -13,6 +13,7 @@ def render(
     y_max: float,
     width: int,
     height: int,
+    lines: bool = False,
 ) -> np.array:
     """
     Turn a list of 2D points into a raster matrix.
@@ -28,14 +29,105 @@ def render(
     assert width > 0
     assert height > 0
 
-    x_indices = discretize(np.array(xs), x_min, x_max, steps=width)
-    y_indices = discretize(np.array(ys), y_min, y_max, steps=height)
+    pixels = np.zeros((height, width), dtype=int)
+
+    xs = np.array(xs)
+    ys = np.array(ys)
+
+    x_indices = discretize(xs, x_min, x_max, steps=width)
+    y_indices = discretize(ys, y_min, y_max, steps=height)
 
     # Invert y direction to optimize for plotting later
     y_indices = (height - 1) - y_indices
 
+    # Combine lists to get coordinates
+    xy_indices = np.column_stack((x_indices, y_indices))
+
+    if lines:
+        xys = np.column_stack((xs, ys))
+        # Compute all line segments as an array with entries of the shape:
+        # [
+        #     [x_index_start, y_index_start],
+        #     [x_start, y_start],
+        #     [x_index_stop, y_index_stop],
+        #     [x_stop, y_stop]
+        # ]
+        xy_line_endpoints = np.stack(
+            (xy_indices[:-1], xys[:-1], xy_indices[1:], xys[1:]), axis=1
+        )
+
+        # TODO Sort list, to have good assumptions for later
+
+        # TODO Filter out of view line segments
+
+        # TODO This can likely be optimized by assembling all segments and computing the
+        # pixels of all lines together, or at least of each half split by slope
+        # print("DEBUG: xy_line_endpoints = ", xy_line_endpoints)
+        # for segment in np.nditer(xy_line_endpoints): # TODO use this
+        for segment in xy_line_endpoints:
+            # print("DEBUG: segment = ", segment)
+            [
+                [x_index_start, y_index_start],
+                [x_start, y_start],
+                [x_index_stop, y_index_stop],
+                [x_stop, y_stop],
+            ] = segment
+
+            # Slope is inverted because y indices are inverted
+            indices_slope = (
+                -1 * (y_index_stop - y_index_start) / (x_index_stop - x_index_start)
+            )
+            print("DEBUG: indices_slope = ", indices_slope)
+            slope = (y_stop - y_start) / (x_stop - x_start)
+            print("DEBUG: slope = ", slope)
+
+            # Skip those segments where there is no space anyway between the points
+            if (
+                abs(x_index_stop - x_index_start) < 2
+                or abs(y_index_stop - y_index_start) < 2
+            ):
+                continue
+
+            # if indices_slope > 0.5: # TODO
+            #     # Draw line by iterating vertically
+            #     pass
+            # else:
+
+            # Draw line by iterating horizontically
+            # 1. Compute x indices in the middle of bins between the two origins
+            x_indices_of_line = np.arange(x_index_start + 1, x_index_stop)
+            print("DEBUG: x_indices_of_line = ", x_indices_of_line)
+            xs_of_line = invert_discretize(
+                x_indices_of_line, minimum=x_min, maximum=x_max, nr_bins=width
+            )
+            print("DEBUG: xs_of_line = ", xs_of_line)
+
+            # 2. Compute corresponding y coordinates
+            ys_of_line = y_start + slope * (xs_of_line - x_start)
+            print("DEBUG: ys_of_line = ", ys_of_line)
+            y_indices_of_line = (
+                height
+                - 1
+                - discretize(ys_of_line, x_min=y_min, x_max=y_max, steps=height)
+            )
+            print("DEBUG: y_indices_of_line = ", y_indices_of_line)
+
+            # 3. Draw pixels
+            xy_indices_of_line = np.column_stack((x_indices_of_line, y_indices_of_line))
+            print("DEBUG: xy_indices_of_line = ", xy_indices_of_line)
+
+            # Filter out of view pixels
+            # TODO DRY
+            xy_indices_of_line = xy_indices_of_line[
+                (xy_indices_of_line[:, 0] >= 0)
+                & (xy_indices_of_line[:, 0] < width)
+                & (xy_indices_of_line[:, 1] >= 0)
+                & (xy_indices_of_line[:, 1] < height)
+            ]
+            xy_indices_of_line = xy_indices_of_line.T
+            pixels[xy_indices_of_line[1], xy_indices_of_line[0]] = 1
+
     # Filter out of view pixels
-    xy_indices = np.stack((x_indices, y_indices)).T
     xy_indices = xy_indices[
         (xy_indices[:, 0] >= 0)
         & (xy_indices[:, 0] < width)
@@ -45,7 +137,6 @@ def render(
     xy_indices = xy_indices.T
 
     # Assemble pixel matrix
-    pixels = np.zeros((height, width), dtype=int)
     pixels[xy_indices[1], xy_indices[0]] = 1
 
     return pixels

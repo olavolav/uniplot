@@ -72,9 +72,68 @@ def test_diagonal_in_bigger_window():
     np.testing.assert_array_equal(pixels, desired_pixels)
 
 
-#####################################
+def test_diagonal_line():
+    pixels = render(
+        xs=np.array([1, 2]),
+        ys=np.array([1, 2]),
+        x_min=1,
+        y_min=1,
+        x_max=2.1,
+        y_max=2.1,
+        width=5,
+        height=5,
+        lines=True,
+    )
+
+    desired_pixels = np.array(
+        [
+            [0, 0, 0, 0, 1],
+            [0, 0, 0, 1, 0],
+            [0, 0, 1, 0, 0],
+            [0, 1, 0, 0, 0],
+            [1, 0, 0, 0, 0],
+        ]
+    )
+    np.testing.assert_array_equal(pixels, desired_pixels)
+
+
+def test_horizontal_line():
+    pixels = render(
+        xs=np.array([1, 2]),
+        ys=np.array([1, 1]),
+        x_min=1,
+        y_min=1,
+        x_max=2.1,
+        y_max=2.1,
+        width=5,
+        height=3,
+        lines=True,
+    )
+
+    desired_pixels = np.array([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [1, 1, 1, 1, 1]])
+    np.testing.assert_array_equal(pixels, desired_pixels)
+
+
+def test_vertical_line():
+    pixels = render(
+        xs=np.array([1, 1]),
+        ys=np.array([1, 2]),
+        x_min=1,
+        y_min=1,
+        x_max=2.1,
+        y_max=2.1,
+        width=2,
+        height=4,
+        lines=True,
+    )
+
+    desired_pixels = np.array([[1, 0], [1, 0], [1, 0], [1, 0]])
+    np.testing.assert_array_equal(pixels, desired_pixels)
+
+
+#########################
 # Testing: merge_on_top #
-#####################################
+#########################
 
 
 def test_merge_two_empty_pixel_matrices():
