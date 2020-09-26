@@ -35,3 +35,9 @@ def test_just_single_point_plotting():
     """
     x = [2.34]
     plot(x)
+
+
+def test_random_line_plotting():
+    xs = np.random.normal(size=100)
+    ys = np.random.normal(size=100)
+    plot(xs=xs, ys=ys, lines=True)

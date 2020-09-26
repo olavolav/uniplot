@@ -54,7 +54,7 @@ def render(
         # ]
         xy_line_endpoints = np.stack(
             (xy_indices[:-1], xys[:-1], xy_indices[1:], xys[1:]), axis=1
-        )
+        ).astype(float)
 
         # TODO Sort list, to have good assumptions for later
 
@@ -70,6 +70,12 @@ def render(
                 [x_index_stop, y_index_stop],
                 [x_stop, y_stop],
             ] = segment
+
+            # Convert back to integers (not very efficient)
+            x_index_start = int(round(x_index_start))
+            x_index_stop = int(round(x_index_stop))
+            y_index_start = int(round(y_index_start))
+            y_index_stop = int(round(y_index_stop))
 
             # Slope is inverted because y indices are inverted
             indices_slope: Optional[float] = None
