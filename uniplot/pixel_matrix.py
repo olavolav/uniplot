@@ -23,6 +23,9 @@ def render(
     Note that the row order is optimized for drawing later, so the first row corresponds
     to the highest line of pixels.
     """
+    xs = np.array(xs)
+    ys = np.array(ys)
+
     assert xs.shape == ys.shape
     assert x_max > x_min
     assert y_max > y_min
@@ -30,9 +33,6 @@ def render(
     assert height > 0
 
     pixels = np.zeros((height, width), dtype=int)
-
-    xs = np.array(xs)
-    ys = np.array(ys)
 
     x_indices = discretize(xs, x_min, x_max, steps=width)
     y_indices = discretize(ys, y_min, y_max, steps=height)
@@ -74,17 +74,17 @@ def render(
             ] = segment
 
             # Slope is inverted because y indices are inverted
-            indices_slope = (
-                -1 * (y_index_stop - y_index_start) / (x_index_stop - x_index_start)
-            )
-            print("DEBUG: indices_slope = ", indices_slope)
+            # indices_slope = (
+            #     -1 * (y_index_stop - y_index_start) / (x_index_stop - x_index_start)
+            # )
+            # print("DEBUG: indices_slope = ", indices_slope)
             slope = (y_stop - y_start) / (x_stop - x_start)
             print("DEBUG: slope = ", slope)
 
             # Skip those segments where there is no space anyway between the points
             if (
                 abs(x_index_stop - x_index_start) < 2
-                or abs(y_index_stop - y_index_start) < 2
+                and abs(y_index_stop - y_index_start) < 2
             ):
                 continue
 

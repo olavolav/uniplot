@@ -71,6 +71,7 @@ The `plot` function accepts the following parameters:
 * `y_min` - Minimum y value of the view. Defaults to a value that shows all data points.
 * `y_max` - Maximum y value of the view. Defaults to a value that shows all data points.
 * `title` - The title of the plot. Defaults to `None`.
+* `lines` - Draw lines between points. Defaults to `False`.
 * `y_gridlines` - A list of y values that have a horizontal line for better orientation. Defaults to `[0]`.
 * `x_gridlines` - A list of x values that have a vertical line for better orientation. Defaults to `[0]`.
 * `legend_labels` - Labels for the series. Can be `None` or a list of strings. Defaults to `None`.
