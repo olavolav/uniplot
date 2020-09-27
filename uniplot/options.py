@@ -9,32 +9,32 @@ def _default_gridlines() -> List[float]:
 
 @dataclass
 class Options:
-    # Minimum x value of the current view
-    x_min: float = 0.0
-    # Maximum x value of the current view
-    x_max: float = 1.0
-    # Minimum y value of the current view
-    y_min: float = 0.0
-    # Maximum y value of the current view
-    y_max: float = 1.0
-    # Title of the plot
-    title: Optional[str] = None
-    # Horizontal gridlines
-    y_gridlines: List[float] = field(default_factory=_default_gridlines)
-    # Vertical gridlines
-    x_gridlines: List[float] = field(default_factory=_default_gridlines)
-    # Labels for the series
-    legend_labels: Optional[List[str]] = None
-    # Width of the plotting region, in characters
-    width: int = 60
+    # Color mode
+    color: bool = False
     # Height of the plotting region, in lines
     height: int = 17
     # Interactive mode
     interactive: bool = False
-    # Color mode
-    color: bool = False
+    # Labels for the series
+    legend_labels: Optional[List[str]] = None
     # Draw lines between points
     lines: bool = False
+    # Title of the plot
+    title: Optional[str] = None
+    # Width of the plotting region, in characters
+    width: int = 60
+    # Vertical gridlines
+    x_gridlines: List[float] = field(default_factory=_default_gridlines)
+    # Minimum x value of the current view
+    x_min: float = 0.0
+    # Maximum x value of the current view
+    x_max: float = 1.0
+    # Horizontal gridlines
+    y_gridlines: List[float] = field(default_factory=_default_gridlines)
+    # Minimum y value of the current view
+    y_min: float = 0.0
+    # Maximum y value of the current view
+    y_max: float = 1.0
 
     def __post_init__(self):
         # Validate values
