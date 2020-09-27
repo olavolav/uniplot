@@ -138,7 +138,7 @@ def render(
                 if y_index_stop < y_index_start:
                     step = -1
                 y_indices_of_line = np.arange(
-                    y_index_start + 1, y_index_stop, step=step
+                    y_index_start + step, y_index_stop, step=step
                 )
                 ys_of_line = invert_discretize(
                     height - 1 - y_indices_of_line,
@@ -167,7 +167,7 @@ def render(
                 if x_index_stop < x_index_start:
                     step = -1
                 x_indices_of_line = np.arange(
-                    x_index_start + 1, x_index_stop, step=step
+                    x_index_start + step, x_index_stop, step=step
                 )
                 xs_of_line = invert_discretize(
                     x_indices_of_line, minimum=x_min, maximum=x_max, nr_bins=width

@@ -297,7 +297,32 @@ def test_lines_outside_of_the_field_of_view():
         lines=True,
     )
 
-    desired_pixels = np.array([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0],])
+    desired_pixels = np.array([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
+    np.testing.assert_array_equal(pixels, desired_pixels)
+
+
+def test_lines_with_steep_ends_due_to_point_near_pixel_edges():
+    pixels = render(
+        xs=np.array([1.99, 3.01]),
+        ys=np.array([1.01, 3.99]),
+        x_min=0,
+        y_min=0,
+        x_max=5,
+        y_max=5,
+        width=5,
+        height=5,
+        lines=True,
+    )
+
+    desired_pixels = np.array(
+        [
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 1, 0],
+            [0, 0, 1, 0, 0],
+            [0, 1, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+        ]
+    )
     np.testing.assert_array_equal(pixels, desired_pixels)
 
 
