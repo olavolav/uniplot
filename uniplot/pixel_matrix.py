@@ -45,6 +45,7 @@ def render(
 
     if lines:
         xys = np.column_stack((xs, ys))
+
         # Compute all line segments as an array with entries of the shape:
         # [
         #     [x_index_start, y_index_start],
@@ -60,7 +61,7 @@ def render(
         xy_line_endpoints = xy_line_endpoints[
             (
                 # At least one of the x coordinates of start and end need to be >= x_min
-                (xy_line_endpoints[:, 1, 0] < x_max)
+                (xy_line_endpoints[:, 1, 0] >= x_min)
                 | (xy_line_endpoints[:, 3, 0] >= x_min)
             )
             & (
@@ -122,7 +123,18 @@ def render(
                 step = 1
                 if y_index_stop < y_index_start:
                     step = -1
-                pixels[y_index_start:y_index_stop:step, x_index_start] = 1
+                # DEBUG
+                try:
+                    pixels[y_index_start:y_index_stop:step, x_index_start] = 1
+                except:
+                    print(
+                        "PROBLEM: values:",
+                        y_index_start,
+                        y_index_stop,
+                        step,
+                        x_index_start,
+                    )
+                    raise
                 pixels_already_drawn = True
             elif y_index_start == y_index_stop:
                 # That means it's a horizontal line

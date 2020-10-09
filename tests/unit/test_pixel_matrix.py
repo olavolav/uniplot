@@ -131,6 +131,28 @@ def test_vertical_line():
     np.testing.assert_array_equal(pixels, desired_pixels)
 
 
+def test_no_mysterious_extra_vertical_lines():
+    """
+    This test is to make sure that issue #2 is fixed.
+    """
+    width = 60
+    height = 17
+    pixels = render(
+        xs=np.array([1, 1]),
+        ys=np.array([0, 1]),
+        x_min=3,
+        y_min=0,
+        x_max=6,
+        y_max=1.1,
+        width=width,
+        height=height,
+        lines=True,
+    )
+
+    desired_pixels = np.zeros((height, width), dtype=int)
+    np.testing.assert_array_equal(pixels, desired_pixels)
+
+
 def test_forward_line_with_steep_upward_slope():
     pixels = render(
         xs=np.array([1, 20]),
