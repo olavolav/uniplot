@@ -138,8 +138,7 @@ def histogram(
     multi_series = MultiSeries(ys=xs)
 
     # Histograms usually make sense only with lines
-    if "lines" not in kwargs:
-        kwargs["lines"] = True
+    kwargs["lines"] = kwargs.get("lines", True)
 
     bins_min = bins_min or multi_series.y_min()
     bins_max = bins_max or multi_series.y_max()
