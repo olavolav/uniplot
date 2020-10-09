@@ -123,18 +123,7 @@ def render(
                 step = 1
                 if y_index_stop < y_index_start:
                     step = -1
-                # DEBUG
-                try:
-                    pixels[y_index_start:y_index_stop:step, x_index_start] = 1
-                except:
-                    print(
-                        "PROBLEM: values:",
-                        y_index_start,
-                        y_index_stop,
-                        step,
-                        x_index_start,
-                    )
-                    raise
+                pixels[y_index_start:y_index_stop:step, x_index_start] = 1
                 pixels_already_drawn = True
             elif y_index_start == y_index_stop:
                 # That means it's a horizontal line
