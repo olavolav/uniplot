@@ -84,11 +84,11 @@ In alphabetical order:
 * `title` - The title of the plot. Defaults to `None`.
 * `width` - The width of the plotting region, in characters. Default is `60`.
 * `x_gridlines` - A list of x values that have a vertical line for better orientation. Defaults to `[0]`.
-* `x_min` - Minimum x value of the view. Defaults to a value that shows all data points.
 * `x_max` - Maximum x value of the view. Defaults to a value that shows all data points.
+* `x_min` - Minimum x value of the view. Defaults to a value that shows all data points.
 * `y_gridlines` - A list of y values that have a horizontal line for better orientation. Defaults to `[0]`.
-* `y_min` - Minimum y value of the view. Defaults to a value that shows all data points.
 * `y_max` - Maximum y value of the view. Defaults to a value that shows all data points.
+* `y_min` - Minimum y value of the view. Defaults to a value that shows all data points.
 
 
 

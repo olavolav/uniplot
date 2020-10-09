@@ -25,16 +25,16 @@ class Options:
     width: int = 60
     # Vertical gridlines
     x_gridlines: List[float] = field(default_factory=_default_gridlines)
-    # Minimum x value of the current view
-    x_min: float = 0.0
     # Maximum x value of the current view
     x_max: float = 1.0
+    # Minimum x value of the current view
+    x_min: float = 0.0
     # Horizontal gridlines
     y_gridlines: List[float] = field(default_factory=_default_gridlines)
-    # Minimum y value of the current view
-    y_min: float = 0.0
     # Maximum y value of the current view
     y_max: float = 1.0
+    # Minimum y value of the current view
+    y_min: float = 0.0
 
     def __post_init__(self):
         # Validate values
