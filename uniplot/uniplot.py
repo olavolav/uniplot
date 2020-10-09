@@ -116,3 +116,53 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
                 continue_looping = False
 
             loop_iteration += 1
+
+
+def histogram(
+    xs: Any,
+    bins: int = 20,
+    bins_min: Optional[float] = None,
+    bins_max: Optional[float] = None,
+    **kwargs,
+) -> None:
+    """
+    Plot a histogram to the terminal.
+
+    Parameters:
+
+    - `xs` are the values of the points to plot. This parameter is mandatory and
+      can either be a list or a list of lists, or the equivalent NumPy array.
+    - Any additional keyword arguments are passed to the `uniplot.options.Options` class.
+    """
+    # HACK Use the `MultiSeries` constructor to cast values to uniform format
+    multi_series = MultiSeries(ys=xs)
+
+    # Histograms usually make sense only with lines
+    if "lines" not in kwargs:
+        kwargs["lines"] = True
+
+    bins_min = bins_min or multi_series.y_min()
+    bins_max = bins_max or multi_series.y_max()
+    range = bins_max - bins_min
+    if range > 0:
+        bins_min = bins_min - 0.1 * range
+        bins_max = bins_max + 0.1 * range
+
+    xs_histo_series = []
+    ys_histo_series = []
+    for s in multi_series.ys:
+        hist, bin_edges = np.histogram(s, bins=bins, range=(bins_min, bins_max))
+        xs_here = np.zeros(1 + 2 * bins + 1)
+        ys_here = np.zeros(1 + 2 * bins + 1)
+        xs_here[0] = bin_edges[0]
+        xs_here[1::2] = bin_edges
+        xs_here[2::2] = bin_edges[1:]
+        # ys_here[0] = 0
+        ys_here[1:-1:2] = hist
+        ys_here[2:-1:2] = hist
+        # ys_here[-1] = 0
+
+        xs_histo_series.append(xs_here)
+        ys_histo_series.append(ys_here)
+
+    plot(xs=xs_histo_series, ys=ys_histo_series, **kwargs)
