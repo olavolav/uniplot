@@ -336,6 +336,8 @@ def test_lines_with_steep_ends_due_to_point_near_pixel_edges():
         lines=True,
     )
 
+    # Despite the fact that we extend the lines to the end points (see issue #4), we
+    # do not wish there to be extensions beyond the end points.
     desired_pixels = np.array(
         [
             [0, 0, 0, 0, 0],

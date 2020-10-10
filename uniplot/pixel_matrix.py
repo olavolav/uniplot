@@ -107,6 +107,12 @@ def render(
             y_index_start = int(round(y_index_start))
             y_index_stop = int(round(y_index_stop))
 
+            # For convenience
+            x_index_smaller = min(x_index_start, x_index_stop)
+            x_index_bigger = max(x_index_start, x_index_stop)
+            y_index_smaller = min(y_index_start, y_index_stop)
+            y_index_bigger = max(y_index_start, y_index_stop)
+
             # Slope is inverted because y indices are inverted
             indices_slope: Optional[float] = None
             if x_index_start != x_index_stop:
@@ -125,6 +131,7 @@ def render(
                     step = -1
                 pixels[y_index_start:y_index_stop:step, x_index_start] = 1
                 pixels_already_drawn = True
+
             elif y_index_start == y_index_stop:
                 # That means it's a horizontal line
                 step = 1
@@ -132,6 +139,7 @@ def render(
                     step = -1
                 pixels[y_index_start, x_index_start:x_index_stop:step] = 1
                 pixels_already_drawn = True
+
             elif abs(indices_slope) > 1:
                 # Draw line by iterating vertically
                 # 1. Compute y indices in the middle of bins between the two origins
@@ -139,7 +147,7 @@ def render(
                 if y_index_stop < y_index_start:
                     step = -1
                 y_indices_of_line = np.arange(
-                    y_index_start + step, y_index_stop, step=step
+                    y_index_start, y_index_stop + step, step=step
                 )
                 ys_of_line = invert_discretize(
                     height - 1 - y_indices_of_line,
@@ -157,10 +165,6 @@ def render(
                     xs_of_line, x_min=x_min, x_max=x_max, steps=width
                 )
 
-                # 3. Draw pixels
-                xy_indices_of_line = np.column_stack(
-                    (x_indices_of_line, y_indices_of_line)
-                )
             else:
                 # Draw line by iterating horizontically
                 # 1. Compute x indices in the middle of bins between the two origins
@@ -168,7 +172,7 @@ def render(
                 if x_index_stop < x_index_start:
                     step = -1
                 x_indices_of_line = np.arange(
-                    x_index_start + step, x_index_stop, step=step
+                    x_index_start, x_index_stop + step, step=step
                 )
                 xs_of_line = invert_discretize(
                     x_indices_of_line, minimum=x_min, maximum=x_max, nr_bins=width
@@ -182,19 +186,19 @@ def render(
                     - discretize(ys_of_line, x_min=y_min, x_max=y_max, steps=height)
                 )
 
-            # Finally, draw pixels (of needed)
+            # Finally, draw pixels (if needed)
             if not pixels_already_drawn:
+                # Assemble pixels
                 xy_indices_of_line = np.column_stack(
                     (x_indices_of_line, y_indices_of_line)
                 )
 
                 # Filter out of view pixels
-                # TODO DRY
                 xy_indices_of_line = xy_indices_of_line[
-                    (xy_indices_of_line[:, 0] >= 0)
-                    & (xy_indices_of_line[:, 0] < width)
-                    & (xy_indices_of_line[:, 1] >= 0)
-                    & (xy_indices_of_line[:, 1] < height)
+                    (xy_indices_of_line[:, 0] >= max(0, x_index_smaller))
+                    & (xy_indices_of_line[:, 0] <= min(width - 1, x_index_bigger))
+                    & (xy_indices_of_line[:, 1] >= max(0, y_index_smaller))
+                    & (xy_indices_of_line[:, 1] <= min(height - 1, y_index_bigger))
                 ]
                 xy_indices_of_line = xy_indices_of_line.T
                 pixels[xy_indices_of_line[1], xy_indices_of_line[0]] = 1
