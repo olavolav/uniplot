@@ -91,6 +91,14 @@ In alphabetical order:
 * `y_min` - Minimum y value of the view. Defaults to a value that shows all data points.
 
 
+## Experimental features
+
+For convenience there is also a `histogram` function that accepts one or more series and
+plots bar-chart like histograms. It will automatically discretize the series into a
+number of bins given by the `bins` option and display the result.
+
+When calling the `histogram` function, the `lines` option is `True` by default.
+
 
 ## Installation
 
