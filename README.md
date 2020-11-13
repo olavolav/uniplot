@@ -99,6 +99,34 @@ number of bins given by the `bins` option and display the result.
 
 When calling the `histogram` function, the `lines` option is `True` by default.
 
+Example:
+
+```
+>>> import numpy as np
+>>> xs = np.sin(np.linspace(1000))
+>>> from uniplot import histogram
+>>> histogram(xs)
+┌────────────────────────────────────────────────────────────┐
+│  ▐▀▀▜                        │                   ▐▀▀▜      │ 4
+│  ▐  ▐                        │                   ▐  ▐      │
+│  ▐  ▐                        │                   ▐  ▐      │
+│  ▐  ▝▀▀▜                     │                ▐▀▀▀  ▝▀▀▜   │
+│  ▐     ▐                     │                ▐        ▐   │ 3
+│  ▐     ▐                     │                ▐        ▐   │
+│  ▐     ▐▄▄▄▄▄▄               │          ▗▄▄▄  ▐        ▐   │
+│  ▐           ▐               │          ▐  ▐  ▐        ▐   │
+│  ▐           ▐               │          ▐  ▐  ▐        ▐   │ 2
+│  ▐           ▐               │          ▐  ▐  ▐        ▐   │
+│  ▐           ▝▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▜  ▐▀▀▀  ▝▀▀▀        ▐   │
+│  ▐                           │    ▐  ▐                 ▐   │
+│  ▐                           │    ▐  ▐                 ▐   │ 1
+│  ▐                           │    ▐▄▄▟                 ▐   │
+│  ▐                           │                         ▐   │
+│  ▐                           │                         ▐   │
+│▄▄▟▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁│▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▐▄▄▄│ 0
+└────────────────────────────────────────────────────────────┘
+ -1                                                        1
+```
 
 ## Installation
 
