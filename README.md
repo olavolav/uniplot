@@ -103,9 +103,9 @@ Example:
 
 ```
 >>> import numpy as np
->>> xs = np.sin(np.linspace(1000))
+>>> x = np.sin(np.linspace(1, 1000))
 >>> from uniplot import histogram
->>> histogram(xs)
+>>> histogram(x)
 ┌────────────────────────────────────────────────────────────┐
 │  ▐▀▀▜                        │                   ▐▀▀▜      │ 4
 │  ▐  ▐                        │                   ▐  ▐      │
