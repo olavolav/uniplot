@@ -35,5 +35,11 @@ setup(
     ],
     python_requires=">=3.5",
     install_requires=["numpy>=1.15.0"],
-    extras_require={"dev": ["black", "mypy", "pytest>=6.0.1",]},
+    extras_require={
+        "dev": [
+            "black",
+            "mypy",
+            "pytest>=6.0.1",
+        ]
+    },
 )

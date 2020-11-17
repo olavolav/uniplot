@@ -302,7 +302,13 @@ def test_draw_triangular_line():
         lines=True,
     )
 
-    desired_pixels = np.array([[0, 0, 1, 0, 0], [0, 1, 0, 1, 0], [1, 1, 1, 1, 1],])
+    desired_pixels = np.array(
+        [
+            [0, 0, 1, 0, 0],
+            [0, 1, 0, 1, 0],
+            [1, 1, 1, 1, 1],
+        ]
+    )
     np.testing.assert_array_equal(pixels, desired_pixels)
 
 
@@ -387,9 +393,27 @@ def test_merge_with_effective_shadow_small_patch():
 
 
 def test_merge_with_effective_shadow_bigger_patch():
-    high_layer = np.array([[0, 2, 0], [2, 0, 0], [0, 0, 0],])
-    low_layer = np.array([[0, 0, 1], [0, 1, 1], [1, 1, 1],])
-    desired_layer = np.array([[0, 2, 0], [2, 0, 0], [0, 0, 1],])
+    high_layer = np.array(
+        [
+            [0, 2, 0],
+            [2, 0, 0],
+            [0, 0, 0],
+        ]
+    )
+    low_layer = np.array(
+        [
+            [0, 0, 1],
+            [0, 1, 1],
+            [1, 1, 1],
+        ]
+    )
+    desired_layer = np.array(
+        [
+            [0, 2, 0],
+            [2, 0, 0],
+            [0, 0, 1],
+        ]
+    )
 
     result = merge_on_top(
         low_layer=low_layer, high_layer=high_layer, width=3, height=3, with_shadow=True
@@ -399,9 +423,27 @@ def test_merge_with_effective_shadow_bigger_patch():
 
 
 def test_merge_without_shadow_bigger_patch():
-    high_layer = np.array([[0, 2, 0], [2, 0, 0], [0, 0, 0],])
-    low_layer = np.array([[0, 0, 1], [0, 1, 1], [1, 1, 1],])
-    desired_layer = np.array([[0, 2, 1], [2, 1, 1], [1, 1, 1],])
+    high_layer = np.array(
+        [
+            [0, 2, 0],
+            [2, 0, 0],
+            [0, 0, 0],
+        ]
+    )
+    low_layer = np.array(
+        [
+            [0, 0, 1],
+            [0, 1, 1],
+            [1, 1, 1],
+        ]
+    )
+    desired_layer = np.array(
+        [
+            [0, 2, 1],
+            [2, 1, 1],
+            [1, 1, 1],
+        ]
+    )
 
     result = merge_on_top(
         low_layer=low_layer, high_layer=high_layer, width=3, height=3, with_shadow=False
