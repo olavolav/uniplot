@@ -1,5 +1,5 @@
 # Uniplot
-[![Build Status](https://travis-ci.org/olavolav/uniplot.svg?branch=master)](https://travis-ci.org/olavolav/uniplot)
+![Build Status](https://github.com/olavolav/uniplot/workflows/Unit%20Test/badge.svg)
 [![PyPI Version](https://badge.fury.io/py/uniplot.svg)](https://pypi.org/project/uniplot/)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/uniplot)](https://pypistats.org/packages/uniplot)
 
