@@ -1,7 +1,7 @@
 # Uniplot
 [![Build Status](https://github.com/olavolav/uniplot/workflows/Unit%20Tests/badge.svg)](https://github.com/olavolav/uniplot/actions?query=workflow%3A"Unit+Tests")
 [![PyPI Version](https://badge.fury.io/py/uniplot.svg)](https://pypi.org/project/uniplot/)
-[![PyPI Downloads](https://img.shields.io/pypi/dm/uniplot)](https://pypistats.org/packages/uniplot)
+[![PyPI Downloads](https://pepy.tech/badge/uniplot)](https://pepy.tech/project/uniplot)
 
 Lightweight plotting to the terminal. 4x resolution via Unicode.
 
