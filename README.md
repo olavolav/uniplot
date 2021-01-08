@@ -142,4 +142,10 @@ pip install uniplot
 Coming up:
 
 * Fill area under curve
+* Log scales
+* Nicer positioning for axis labels
 * Add generated page with list of supported fonts
+* Auto-detect color mode depending on terminal capabilities
+* Possibly: Fallback to ASCII characters
+
+Input is always welcome, let me know what is most needed for this to be as useful as possible.
