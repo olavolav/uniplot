@@ -42,6 +42,3 @@ def test_xaxis_labels_on_small_symmetric_interval():
     # This test makes sure that issue #5 is solved
     labels = xaxis_ticks(-0.01, 0.01, 20)
     assert labels.split() == ["-0.01", "0.01"]
-
-
-import numpy as np  # type: ignore
