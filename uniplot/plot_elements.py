@@ -142,12 +142,14 @@ def _find_shortest_string_representation(numbers: List[Optional[float]]) -> List
     """
     This method will find the shortest numerical values for axis labels that are different from ech other.
     """
+    compact_abs_numbers = [abs(n) for n in numbers if n is not None]
+
     # We actually want to add one more digit than needed for uniqueness
     for nr_digits in range(10):
-        test_list = ["" if n is None else _float_format(n, nr_digits) for n in numbers]
-        compact_list = [n for n in test_list if n != ""]
-        if len(compact_list) == len(set(compact_list)):
-            return test_list
+        # The test for the right number of digits happens on the absolute numbers. See issue #5.
+        test_list = [_float_format(n, nr_digits) for n in compact_abs_numbers]
+        if len(test_list) == len(set(test_list)):
+            return ["" if n is None else _float_format(n, nr_digits) for n in numbers]
 
     # Fallback to naive string conversion
     return ["" if n is None else str(n) for n in numbers]
