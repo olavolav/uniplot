@@ -149,3 +149,10 @@ Coming up:
 * Possibly: Fallback to ASCII characters
 
 Input is always welcome, let me know what is most needed for this to be as useful as possible.
+
+
+## Contributing
+
+Clone this repository, and install dependecies via `pip3 install -e .\[dev\]`.
+You can run the tests vie `./run_tests` to make sure your setup is good. Then
+proceed with issues, PRs etc. the usual way.
