@@ -10,6 +10,10 @@ WEIGHTS = np.array([0.2, 0.25, 0.5, 0.05])
 def extended_talbot_labels(
     x_min: float, x_max: float, available_space: int, vertical_direction: bool = False
 ) -> Optional[float]:
+    """
+    The following is based on the paper Talbot, J., Lin, S. & Hanrahan, P. An Extension of Wilkinson’s Algorithm for Positioning Tick Labels on Axes. IEEE T Vis Comput Gr 16, 1036–1043 (2010).
+    We have further exteded the algorithm to account for the discrete nature of terminal output.
+    """
     result: Optional[np.array] = None
     best_score: float = -2.0
 
@@ -28,7 +32,7 @@ def extended_talbot_labels(
             f"DEBUG: exponent = {exponent}, x_min_normalized = {x_min_normalized}, x_max_normalized = {x_max_normalized}"
         )
 
-        # j is the "skip amount"
+        # j is the "skip amount". For simplicity, we have at this point still fixed the maximum value.
         for j in range(1, 10):
             # i is the index of the currently selected "nice" number q
             for i, q in enumerate(Q_VALUES):
@@ -50,7 +54,7 @@ def extended_talbot_labels(
                     labels = labels[(labels >= x_min) & (labels <= x_max)]
 
                     if len(labels) < 2:
-                        # print("Invalid, skipping ...")
+                        # Invalid, skipping
                         continue
 
                     simplicity = _compute_simplicity_score(labels, i, j)
@@ -60,7 +64,7 @@ def extended_talbot_labels(
                         np.array([simplicity, coverage, density, 1]), WEIGHTS
                     )
 
-                    # if np.dot(np.array([s, 1, 1, 1]), WEIGHTS) < best_score:
+                    # TODO Performance optimizations like: if np.dot(np.array([s, 1, 1, 1]), WEIGHTS) < best_score:
                     if score > best_score:
                         print(
                             f"DEBUG: simplicity = {simplicity}, coverage = {coverage}, density = {density} => score = {score}"
@@ -79,9 +83,10 @@ def extended_talbot_labels(
 
 def _compute_simplicity_score(labels, i: int, j: int) -> float:
     """
-    Simplicity Score according to Talbot.
+    Simplicity score according to Talbot.
     """
-    # Indicator if zero is part of the labels
+    # Indicator variable that is one if zero is part of the labels, and zero otherwise
+    # NOTE It might make sense to extend this to all gridline values, plus zero
     v = int(0.0 in labels)
     return 1 - (i - 1) / (len(Q_VALUES) - 1) - j + v
 
