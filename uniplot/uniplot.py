@@ -6,6 +6,7 @@ import uniplot.layer_assembly as layer_assembly
 import uniplot.plot_elements as elements
 from uniplot.getch import getch
 from uniplot.param_initializer import validate_and_transform_options
+from uniplot.axis_labels.extended_talbot_labels import extended_talbot_labels
 
 
 def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
@@ -35,13 +36,21 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
         if not options.interactive:
             continue_looping = False
 
-        # Prepare plot elements
+        # Prepare y axis labels
         y_axis_labels = elements.yaxis_ticks(
             y_min=options.y_min, y_max=options.y_max, height=options.height
         )
-        x_axis_labels = elements.xaxis_ticks(
-            x_min=options.x_min, x_max=options.x_max, width=options.width
+
+        # Prepare x axis labels
+        x_axis_label_set = extended_talbot_labels(
+            x_min=options.x_min,
+            x_max=options.x_max,
+            available_space=options.width,
+            vertical_direction=False,
         )
+        x_axis_labels = "-error generating labels, sorry-"
+        if x_axis_label_set is not None:
+            x_axis_labels = x_axis_label_set.render()[0]
 
         # Prefare graph surface
         pixel_character_matrix = layer_assembly.assemble_scatter_plot(
