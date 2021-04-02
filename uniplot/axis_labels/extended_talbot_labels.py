@@ -1,20 +1,26 @@
 import numpy as np  # type: ignore
 from typing import List, Optional
 
+from uniplot.axis_labels.label_set import LabelSet
+
 # Preference-ordered list of "nice" numbers
 Q_VALUES = [1, 5, 2, 2.5, 4, 3]
 # Weights to be able to combine the different scores
-WEIGHTS = np.array([0.2, 0.25, 0.5, 0.05])
+WEIGHTS = np.array([0.2, 0.2, 0.4, 0.2])
 
 
 def extended_talbot_labels(
-    x_min: float, x_max: float, available_space: int, vertical_direction: bool = False
-):
+    x_min: float,
+    x_max: float,
+    available_space: int,
+    vertical_direction: bool = False,
+    verbose: bool = False,
+) -> Optional[LabelSet]:
     """
     The following is based on the paper Talbot, J., Lin, S. & Hanrahan, P. An Extension of Wilkinson’s Algorithm for Positioning Tick Labels on Axes. IEEE T Vis Comput Gr 16, 1036–1043 (2010).
     We have further exteded the algorithm to account for the discrete nature of terminal output.
     """
-    result: Optional[np.array] = None
+    result: Optional[LabelSet] = None
     best_score: float = -2.0
 
     data_range: float = x_max - x_min
@@ -58,18 +64,33 @@ def extended_talbot_labels(
                     simplicity = _compute_simplicity_score(labels, i, j)
                     coverage = _compute_coverage_score(labels, x_min, x_max)
                     density = _compute_density_score(labels, preferred_number_of_labels)
+
+                    # Generate `LabelSet` instance to compute remaining scores
+                    current_set = LabelSet(
+                        labels,
+                        x_min=x_min,
+                        x_max=x_max,
+                        available_space=available_space,
+                        vertical_direction=vertical_direction,
+                    )
+
+                    # TODO Simplistic grid alignment score is used, needs refinement
+                    grid_alignment = 1 - 100 * int(
+                        current_set.compute_if_render_does_overlap()
+                    )
                     score = np.dot(
-                        np.array([simplicity, coverage, density, 1]), WEIGHTS
+                        np.array([simplicity, coverage, density, grid_alignment]),
+                        WEIGHTS,
                     )
 
                     # TODO Performance optimizations like: if np.dot(np.array([s, 1, 1, 1]), WEIGHTS) < best_score:
                     if score > best_score:
-                        print(
-                            f"DEBUG: simplicity = {simplicity}, coverage = {coverage}, density = {density} => score = {score}"
-                        )
-                        print(f"DEBUG: New best score 😀 labels = {labels}")
+                        if verbose:
+                            print(
+                                f"DEBUG: simplicity = {simplicity}, coverage = {coverage}, density = {density}, grid_alignment = {grid_alignment} => New best score 😀 = {score} with labels = {labels}"
+                            )
                         best_score = score
-                        result = labels
+                        result = current_set
 
     return result
 

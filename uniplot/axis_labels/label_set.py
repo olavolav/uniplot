@@ -5,6 +5,10 @@ from uniplot.discretizer import discretize
 
 
 class LabelSet:
+    """
+    This class represents a list of possible axis labels. It can render them to a string, or list of strings. It also provides metrics about the rendering result.
+    """
+
     def __init__(
         self,
         labels: np.array,
@@ -18,8 +22,27 @@ class LabelSet:
         self.x_max = x_max
         self.available_space = available_space
         self.vertical_direction = vertical_direction
+        self._results_already_in_cache: bool = False
+        self._rendered_result: List[str] = []
+        self._render_does_overlap: bool = False
 
-    def to_string(self) -> str:
+    def render(self) -> List[str]:
+        self._render_and_measure_to_cache()
+        return self._rendered_result
+
+    def compute_if_render_does_overlap(self) -> bool:
+        self._render_and_measure_to_cache()
+        return self._render_does_overlap
+
+    ###########
+    # private #
+    ###########
+
+    def _render_and_measure_to_cache(self) -> None:
+        # Break if result is already in cache
+        if self._results_already_in_cache:
+            return
+
         str_labels = self._find_shortest_string_representation(self.labels)
         line = ""
         for i, label in enumerate(self.labels):
@@ -36,16 +59,14 @@ class LabelSet:
             )
             buffer = offset - len(line)
             if i > 0 and buffer < 1:
-                # TODO Fix this
-                raise
+                # This is bad and leads to wrong offsets
+                buffer = 1
+                self._render_does_overlap = True
 
             line = line + (" " * buffer) + str_label
 
-        return line
-
-    ###########
-    # private #
-    ###########
+        self._rendered_result = [line]
+        self._results_already_in_cache = True
 
     def _find_shortest_string_representation(
         self,
@@ -70,6 +91,11 @@ class LabelSet:
         return ["" if n is None else str(n) for n in numbers]
 
     def _float_format(self, n: float, nr_digits: int):
+        """
+        Format a number to a specified precision.
+
+        Ref.: https://docs.python.org/3.8/library/string.html#format-specification-mini-language
+        """
         if nr_digits == 0:
             return ("{:,d}").format(int(n))
-        return ("{:,." + str(nr_digits) + "f}").format(float(n))
+        return ("{:,." + str(nr_digits) + "g}").format(float(n))
