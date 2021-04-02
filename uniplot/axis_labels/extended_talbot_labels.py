@@ -9,7 +9,7 @@ WEIGHTS = np.array([0.2, 0.25, 0.5, 0.05])
 
 def extended_talbot_labels(
     x_min: float, x_max: float, available_space: int, vertical_direction: bool = False
-) -> Optional[float]:
+):
     """
     The following is based on the paper Talbot, J., Lin, S. & Hanrahan, P. An Extension of Wilkinson’s Algorithm for Positioning Tick Labels on Axes. IEEE T Vis Comput Gr 16, 1036–1043 (2010).
     We have further exteded the algorithm to account for the discrete nature of terminal output.
@@ -20,7 +20,7 @@ def extended_talbot_labels(
     data_range: float = x_max - x_min
     base_exponent = int(np.log10(data_range))
 
-    # Set the preferred number of labels
+    # HACK Set the preferred number of labels
     preferred_number_of_labels = int(available_space / 2)
     if vertical_direction is False:
         preferred_number_of_labels = int(available_space / 15)
@@ -28,18 +28,16 @@ def extended_talbot_labels(
     for exponent in [base_exponent, base_exponent - 1]:
         x_min_normalized = int(np.floor(x_min / 10 ** exponent))
         x_max_normalized = int(np.ceil(x_max / 10 ** exponent))
-        print(
-            f"DEBUG: exponent = {exponent}, x_min_normalized = {x_min_normalized}, x_max_normalized = {x_max_normalized}"
-        )
+        # print(f"DEBUG: exponent = {exponent}, x_min_normalized = {x_min_normalized}, x_max_normalized = {x_max_normalized}")
 
-        # j is the "skip amount". For simplicity, we have at this point still fixed the maximum value.
+        # j is the "skip amount"
         for j in range(1, 10):
             # i is the index of the currently selected "nice" number q
             for i, q in enumerate(Q_VALUES):
                 q = Q_VALUES[i]
                 single_step_size = q / (10 ** int(np.log10(j * q)))
                 step_size = j * single_step_size
-                print(f"DEBUG: j = {j}, q = {q}, step_size = {step_size}")
+                # print(f"DEBUG: j = {j}, q = {q}, step_size = {step_size}")
 
                 for offset in range(j):
                     labels = (
@@ -53,8 +51,8 @@ def extended_talbot_labels(
                     # Crop labels
                     labels = labels[(labels >= x_min) & (labels <= x_max)]
 
+                    # Skipping is less than two labels
                     if len(labels) < 2:
-                        # Invalid, skipping
                         continue
 
                     simplicity = _compute_simplicity_score(labels, i, j)
