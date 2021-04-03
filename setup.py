@@ -25,7 +25,7 @@ setup(
     url="https://github.com/olavolav/uniplot",
     license="MIT",
     platforms=["any"],
-    packages=["uniplot"],
+    packages=["uniplot", "uniplot.axis_labels"],
     package_data={"uniplot": ["py.typed"]},
     zip_safe=False,
     classifiers=[
