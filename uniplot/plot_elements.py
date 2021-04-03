@@ -85,38 +85,6 @@ def legend(legend_labels: List[str], width: int) -> str:
     return _center_if_possible(full_label_string, width=width + 2)
 
 
-def yaxis_ticks(y_min: float, y_max: float, height: int) -> List[str]:
-    """
-    This will generate the y axis ticks marks.
-
-    It returns an array of length `height`.
-    """
-    ticks = [
-        compute_y_at_middle_of_row(
-            height_index_from_top=i, y_min=y_min, y_max=y_max, height=height
-        )
-        if ((i % 4 == 0 and i != height - 2) or i == height - 1)
-        else None
-        for i in range(height)
-    ]
-
-    return _find_shortest_string_representation(ticks)
-
-
-def xaxis_ticks(x_min: float, x_max: float, width: int) -> str:
-    """
-    This will generate the x axis ticks marks.
-
-    It returns a string.
-    """
-    # TODO For now let's just render min and max at appropriate positions.
-    min_str, max_str = _find_shortest_string_representation([x_min, x_max])
-    buffer = int(round(width - len(min_str) - 0.5 * len(max_str) - 1))
-    if buffer > 1:
-        return f" {min_str}{' '*buffer}{max_str}"
-    return f" {min_str} up to {max_str}"
-
-
 def plot_title(title: str, width: int) -> str:
     """
     Returns the centered title string.

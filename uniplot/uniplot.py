@@ -37,9 +37,15 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
             continue_looping = False
 
         # Prepare y axis labels
-        y_axis_labels = elements.yaxis_ticks(
-            y_min=options.y_min, y_max=options.y_max, height=options.height
+        y_axis_labels = ["-error generating labels, sorry-"] * options.height
+        y_axis_label_set = extended_talbot_labels(
+            x_min=options.y_min,
+            x_max=options.y_max,
+            available_space=options.height,
+            vertical_direction=True,
         )
+        if y_axis_label_set is not None:
+            y_axis_labels = y_axis_label_set.render()
 
         # Prepare x axis labels
         x_axis_label_set = extended_talbot_labels(

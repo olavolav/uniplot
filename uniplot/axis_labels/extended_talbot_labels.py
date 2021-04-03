@@ -27,7 +27,7 @@ def extended_talbot_labels(
     base_exponent = int(np.log10(data_range))
 
     # HACK Set the preferred number of labels
-    preferred_number_of_labels = int(available_space / 2)
+    preferred_number_of_labels = int(available_space / 4)
     if vertical_direction is False:
         preferred_number_of_labels = int(available_space / 15)
 

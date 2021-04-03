@@ -46,33 +46,65 @@ class LabelSet:
             return
 
         str_labels = self._find_shortest_string_representation(self.labels)
-        line = ""
-        for i, label in enumerate(self.labels):
-            str_label = str_labels[i]
-            offset = max(
-                0,
-                discretize(
-                    label,
-                    x_min=self.x_min,
-                    x_max=self.x_max,
-                    steps=self.available_space,
+
+        if self.vertical_direction:
+            # So this is for the y axis case
+            lines: List[str] = [""] * self.available_space
+
+            for i, label in enumerate(self.labels):
+                str_label = str_labels[i]
+                index = (
+                    self.available_space
+                    - 1
+                    - min(
+                        max(
+                            0,
+                            discretize(
+                                label,
+                                x_min=self.x_min,
+                                x_max=self.x_max,
+                                steps=self.available_space,
+                            ),
+                        ),
+                        self.available_space - 1,
+                    )
                 )
-                - int(0.5 * len(str_label))
-                + LEFT_MARGIN_FOR_HORIZONTAL_AXIS,
-            )
-            buffer = offset - len(line)
-            if i == 0 and buffer < 0:
-                # This is bad and leads to wrong offsets
-                buffer = 0
-                self._render_does_overlap = True
-            elif i > 0 and buffer < 1:
-                # This is bad and leads to wrong offsets
-                buffer = 1
-                self._render_does_overlap = True
+                if lines[index] != "":
+                    # This is bad and leads to wrong offsets
+                    self._render_does_overlap = True
 
-            line = line + (" " * buffer) + str_label
+                lines[index] = str_label
 
-        self._rendered_result = [line]
+            self._rendered_result = lines
+        else:
+            # So this is for the x axis case
+            line = ""
+            for i, label in enumerate(self.labels):
+                str_label = str_labels[i]
+                offset = max(
+                    0,
+                    discretize(
+                        label,
+                        x_min=self.x_min,
+                        x_max=self.x_max,
+                        steps=self.available_space,
+                    )
+                    - int(0.5 * len(str_label))
+                    + LEFT_MARGIN_FOR_HORIZONTAL_AXIS,
+                )
+                buffer = offset - len(line)
+                if i == 0 and buffer < 0:
+                    # This is bad and leads to wrong offsets
+                    buffer = 0
+                    self._render_does_overlap = True
+                elif i > 0 and buffer < 1:
+                    # This is bad and leads to wrong offsets
+                    buffer = 1
+                    self._render_does_overlap = True
+
+                line = line + (" " * buffer) + str_label
+
+            self._rendered_result = [line]
         self._results_already_in_cache = True
 
     def _find_shortest_string_representation(
