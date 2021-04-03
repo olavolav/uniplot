@@ -3,6 +3,8 @@ from typing import List, Optional
 
 from uniplot.discretizer import discretize
 
+LEFT_MARGIN_FOR_HORIZONTAL_AXIS = 1
+
 
 class LabelSet:
     """
@@ -55,10 +57,15 @@ class LabelSet:
                     x_max=self.x_max,
                     steps=self.available_space,
                 )
-                - int(0.5 * len(str_label)),
+                - int(0.5 * len(str_label))
+                + LEFT_MARGIN_FOR_HORIZONTAL_AXIS,
             )
             buffer = offset - len(line)
-            if i > 0 and buffer < 1:
+            if i == 0 and buffer < 0:
+                # This is bad and leads to wrong offsets
+                buffer = 0
+                self._render_does_overlap = True
+            elif i > 0 and buffer < 1:
                 # This is bad and leads to wrong offsets
                 buffer = 1
                 self._render_does_overlap = True
@@ -75,12 +82,11 @@ class LabelSet:
         """
         This method will find the shortest numerical values for axis labels that are different from ech other.
         """
-        compact_abs_numbers = [abs(n) for n in numbers if n is not None]
-
         # We actually want to add one more digit than needed for uniqueness
         for nr_digits in range(10):
-            # The test for the right number of digits happens on the absolute numbers. See issue #5.
-            test_list = [self._float_format(n, nr_digits) for n in compact_abs_numbers]
+            test_list = [
+                self._float_format(n, nr_digits) for n in numbers if n is not None
+            ]
             if len(test_list) == len(set(test_list)):
                 return [
                     "" if n is None else self._float_format(n, nr_digits)
