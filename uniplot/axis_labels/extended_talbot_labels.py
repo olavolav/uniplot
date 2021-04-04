@@ -7,6 +7,8 @@ from uniplot.axis_labels.label_set import LabelSet
 Q_VALUES = [1, 5, 2, 2.5, 4, 3]
 # Weights to be able to combine the different scores
 WEIGHTS = np.array([0.2, 0.2, 0.4, 0.2])
+# The "depth" of the search
+MAX_SKIP_AMOUNT = 9
 
 
 def extended_talbot_labels(
@@ -34,16 +36,14 @@ def extended_talbot_labels(
     for exponent in [base_exponent, base_exponent - 1]:
         x_min_normalized = int(np.floor(x_min / 10 ** exponent))
         x_max_normalized = int(np.ceil(x_max / 10 ** exponent))
-        # print(f"DEBUG: exponent = {exponent}, x_min_normalized = {x_min_normalized}, x_max_normalized = {x_max_normalized}")
 
         # j is the "skip amount"
-        for j in range(1, 10):
+        for j in range(1, MAX_SKIP_AMOUNT + 1):
             # i is the index of the currently selected "nice" number q
             for i, q in enumerate(Q_VALUES):
                 q = Q_VALUES[i]
                 single_step_size = q / (10 ** int(np.log10(j * q)))
                 step_size = j * single_step_size
-                # print(f"DEBUG: j = {j}, q = {q}, step_size = {step_size}")
 
                 for offset in range(j):
                     labels = (
@@ -65,6 +65,16 @@ def extended_talbot_labels(
                     coverage = _compute_coverage_score(labels, x_min, x_max)
                     density = _compute_density_score(labels, preferred_number_of_labels)
 
+                    # Performance improvement
+                    if (
+                        result is not None
+                        and np.dot(
+                            np.array([simplicity, coverage, density, 1]), WEIGHTS
+                        )
+                        < best_score
+                    ):
+                        continue
+
                     # Generate `LabelSet` instance to compute remaining scores
                     current_set = LabelSet(
                         labels,
@@ -83,7 +93,6 @@ def extended_talbot_labels(
                         WEIGHTS,
                     )
 
-                    # TODO Performance optimizations like: if np.dot(np.array([s, 1, 1, 1]), WEIGHTS) < best_score:
                     if score > best_score:
                         if verbose:
                             print(
