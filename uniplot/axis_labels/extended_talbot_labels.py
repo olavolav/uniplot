@@ -6,7 +6,7 @@ from uniplot.axis_labels.label_set import LabelSet
 # Preference-ordered list of "nice" numbers
 Q_VALUES = [1, 5, 2, 2.5, 4, 3]
 # Weights to be able to combine the different scores
-WEIGHTS = np.array([0.2, 0.2, 0.4, 0.2])
+WEIGHTS = np.array([0.25, 0.25, 0.3, 0.2])
 # The "depth" of the search
 MAX_SKIP_AMOUNT = 9
 
