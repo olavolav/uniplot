@@ -12,9 +12,14 @@ def test_simple_labeling_case():
 
 def test_typical_labeling_case_with_small_range():
     """
-    This is the result when plotting [1, 2, 3] using the default settings.
+    This is the result when plotting [1, 2, 3] using the default settings. We are testing both axis here.
     """
     ls = extended_talbot_labels(
         x_min=0.97, x_max=3.03, available_space=60, vertical_direction=False
+    )
+    assert np.array_equal(ls.labels, [1.0, 2.0, 3.0])
+
+    ls = extended_talbot_labels(
+        x_min=0.97, x_max=3.03, available_space=17, vertical_direction=True
     )
     assert np.array_equal(ls.labels, [1.0, 2.0, 3.0])
