@@ -10,6 +10,10 @@ AUTO_WINDOW_ENLARGE_FACTOR = 1e-3
 def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Options:
     """
     This will check the keyword arguments passed to the `uniplot.plot` function, will transform them and will return them in form of an `Options` object.
+
+    The idea is to cast arguments into the right format to be used by the rest of the library, and to be as tolerant as possible for ease of use of the library.
+
+    As a result the somewhat hacky code below should at least be confined to this function, and not spread throughout uniplot.
     """
     # Set x bounds to show all points by default
     x_enlarge_delta = AUTO_WINDOW_ENLARGE_FACTOR * (series.x_max() - series.x_min())
@@ -35,6 +39,17 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
     if kwargs.get("legend_labels") is not None:
         kwargs["legend_labels"] = list(kwargs["legend_labels"])[0 : len(series)]
 
+    # By default, enable color for multiple series, disable color for a single one
     kwargs["color"] = kwargs.get("color", len(series) > 1)
+
+    # Set lines option for all series
+    if not kwargs.get("lines"):
+        # This will work for both unset lines option and `False`
+        kwargs["lines"] = [False] * len(series)
+    elif kwargs.get("lines") is True:
+        # This is used to expand a single `True`
+        kwargs["lines"] = [True] * len(series)
+    elif len(kwargs.get("lines")) != len(series):  # type: ignore
+        raise ValueError("Invalid 'lines' option.")
 
     return Options(**kwargs)

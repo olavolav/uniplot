@@ -80,7 +80,7 @@ In alphabetical order:
 * `height` - The height of the plotting region, in characters. Default is `17`.
 * `interactive` - Enable interactive mode. Defaults to `False`.
 * `legend_labels` - Labels for the series. Can be `None` or a list of strings. Defaults to `None`.
-* `lines` - Draw lines between points. Defaults to `False`.
+* `lines` - Enable lines between points. Can either be `True` or `False`, or a list of those values for plotting multiple series. Defaults to `False`.
 * `title` - The title of the plot. Defaults to `None`.
 * `width` - The width of the plotting region, in characters. Default is `60`.
 * `x_gridlines` - A list of x values that have a vertical line for better orientation. Defaults to `[0]`.

@@ -72,7 +72,7 @@ def render_points(xs: List[np.array], ys: List[np.array], options: Options) -> n
             # Unicode super-resolution :-)
             width=2 * options.width,
             height=2 * options.height,
-            lines=options.lines,
+            lines=options.lines[i],
         )
         if i == 0:
             matrix = next_matrix

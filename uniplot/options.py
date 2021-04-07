@@ -7,6 +7,10 @@ def _default_gridlines() -> List[float]:
     return [0.0]
 
 
+def _default_lines() -> List[bool]:
+    return [False]
+
+
 @dataclass
 class Options:
     # Color mode
@@ -18,7 +22,7 @@ class Options:
     # Labels for the series
     legend_labels: Optional[List[str]] = None
     # Draw lines between points
-    lines: bool = False
+    lines: List[bool] = field(default_factory=_default_lines)
     # Title of the plot
     title: Optional[str] = None
     # Width of the plotting region, in characters
