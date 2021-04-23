@@ -28,10 +28,9 @@ def extended_talbot_labels(
     data_range: float = x_max - x_min
     base_exponent = int(np.log10(data_range))
 
-    # HACK Set the preferred number of labels
-    preferred_number_of_labels = int(available_space / 4)
-    if vertical_direction is False:
-        preferred_number_of_labels = int(available_space / 15)
+    preferred_nr_labels = _compute_preferred_numer_of_labels(
+        available_space, vertical_direction
+    )
 
     for exponent in [base_exponent, base_exponent - 1]:
         x_min_normalized = int(np.floor(x_min / 10 ** exponent))
@@ -63,7 +62,7 @@ def extended_talbot_labels(
 
                     simplicity = _compute_simplicity_score(labels, i, j)
                     coverage = _compute_coverage_score(labels, x_min, x_max)
-                    density = _compute_density_score(labels, preferred_number_of_labels)
+                    density = _compute_density_score(labels, preferred_nr_labels)
 
                     # Performance improvement
                     if (
@@ -107,6 +106,19 @@ def extended_talbot_labels(
 ###########
 # private #
 ###########
+
+
+def _compute_preferred_numer_of_labels(
+    available_space: int, vertical_direction: bool
+) -> int:
+    """
+    Compute an estimate for the preferred number of labels.
+    """
+    preferred_number_of_labels = int(available_space / 5)
+    if vertical_direction is False:
+        preferred_number_of_labels = int(available_space / 15)
+
+    return max(2, min(20, preferred_number_of_labels))
 
 
 def _compute_simplicity_score(labels, i: int, j: int) -> float:
