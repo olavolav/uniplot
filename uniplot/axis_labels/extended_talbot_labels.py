@@ -114,9 +114,12 @@ def _compute_preferred_numer_of_labels(
     """
     Compute an estimate for the preferred number of labels.
     """
-    preferred_number_of_labels = int(available_space / 5)
-    if vertical_direction is False:
-        preferred_number_of_labels = int(available_space / 15)
+    # For horizontal direction (x axis)
+    preferred_number_of_labels = int(available_space / 15)
+
+    if vertical_direction:
+        # for y axis
+        preferred_number_of_labels = int(available_space / 5)
 
     return max(2, min(20, preferred_number_of_labels))
 

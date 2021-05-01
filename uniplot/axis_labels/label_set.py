@@ -112,7 +112,7 @@ class LabelSet:
         numbers: List[Optional[float]],
     ) -> List[str]:
         """
-        This method will find the shortest numerical values for axis labels that are different from ech other.
+        This method will find the shortest numerical values for axis labels that are different from each other.
         """
         # We actually want to add one more digit than needed for uniqueness
         for nr_digits in range(10):

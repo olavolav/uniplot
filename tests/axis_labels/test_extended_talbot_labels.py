@@ -23,3 +23,13 @@ def test_typical_labeling_case_with_small_range():
         x_min=0.97, x_max=3.03, available_space=17, vertical_direction=True
     )
     assert np.array_equal(ls.labels, [1.0, 2.0, 3.0])
+
+
+def test_vertical_labelling_case_of_some_konux_displacement_data():
+    ls = extended_talbot_labels(
+        x_min=-0.1089490667533125,
+        x_max=1.1452251006076242,
+        available_space=17,
+        vertical_direction=True,
+    )
+    assert 2 <= len(ls.labels) < 5
