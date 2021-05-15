@@ -1,7 +1,8 @@
 import numpy as np  # type: ignore
-from typing import List, Optional, Any
+from typing import Tuple, List, Optional, Any
 
 from uniplot.multi_series import MultiSeries
+from uniplot.options import Options
 import uniplot.layer_assembly as layer_assembly
 import uniplot.plot_elements as elements
 from uniplot.getch import getch
@@ -21,12 +22,12 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
       can either be a `None` or of the same shape as `ys`.
     - Any additional keyword arguments are passed to the `uniplot.options.Options` class.
     """
-    series = MultiSeries(xs=xs, ys=ys)
-    options = validate_and_transform_options(series=series, kwargs=kwargs)
+    series: MultiSeries = MultiSeries(xs=xs, ys=ys)
+    options: Options = validate_and_transform_options(series=series, kwargs=kwargs)
 
-    # Print title
-    if options.title is not None:
-        print(elements.plot_title(options.title, width=options.width))
+    # Print header
+    for line in _generate_header(options):
+        print(line)
 
     # Main loop for interactive mode. Will only be executed once when not in interactive # mode.
     continue_looping: bool = True
@@ -36,32 +37,11 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
         if not options.interactive:
             continue_looping = False
 
-        # Prepare y axis labels
-        y_axis_labels = ["-error generating labels, sorry-"] * options.height
-        y_axis_label_set = extended_talbot_labels(
-            x_min=options.y_min,
-            x_max=options.y_max,
-            available_space=options.height,
-            vertical_direction=True,
-        )
-        if y_axis_label_set is not None:
-            y_axis_labels = y_axis_label_set.render()
-
-        # Prepare x axis labels
-        x_axis_label_set = extended_talbot_labels(
-            x_min=options.x_min,
-            x_max=options.x_max,
-            available_space=options.width,
-            vertical_direction=False,
-        )
-        x_axis_labels = "-error generating labels, sorry-"
-        if x_axis_label_set is not None:
-            x_axis_labels = x_axis_label_set.render()[0]
-
-        # Prefare graph surface
-        pixel_character_matrix = layer_assembly.assemble_scatter_plot(
-            xs=series.xs, ys=series.ys, options=options
-        )
+        (
+            x_axis_labels,
+            y_axis_labels,
+            pixel_character_matrix,
+        ) = _generate_body_raw_elements(series, options)
 
         # Delete plot before we re-draw
         if loop_iteration > 0:
@@ -70,18 +50,10 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
                 nr_lines_to_erase += len(options.legend_labels)
             elements.erase_previous_lines(nr_lines_to_erase)
 
-        # Print plot (double resolution)
-        print(f"┌{'─'*options.width}┐")
-        for i in range(options.height):
-            row = pixel_character_matrix[i]
-            print(f"│{''.join(row)}│ {y_axis_labels[i]}")
-        print(f"└{'─'*options.width}┘")
-        print(x_axis_labels)
-
-        # Print legend if labels were specified
-        # TODO Fix erase during interactive mode
-        if options.legend_labels is not None:
-            print(elements.legend(options.legend_labels, width=options.width))
+        for line in _generate_body(
+            x_axis_labels, y_axis_labels, pixel_character_matrix, options
+        ):
+            print(line)
 
         if options.interactive:
             print("Move h/j/k/l, zoom u/n, or r to reset. ESC/q to quit")
@@ -133,6 +105,31 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
             loop_iteration += 1
 
 
+def plot_to_string(ys: Any, xs: Optional[Any] = None, **kwargs) -> List[str]:
+    """
+    Same as `plot`, but the return type is a list of strings. Ignores the `interactive` option.
+
+    Can be used to integrate uniplot in other applications, or if the output is desired to be not stdout.
+    """
+    series: MultiSeries = MultiSeries(xs=xs, ys=ys)
+    options: Options = validate_and_transform_options(series=series, kwargs=kwargs)
+
+    header = _generate_header(options)
+    (
+        x_axis_labels,
+        y_axis_labels,
+        pixel_character_matrix,
+    ) = _generate_body_raw_elements(series, options)
+
+    body = _generate_body(x_axis_labels, y_axis_labels, pixel_character_matrix, options)
+    return header + body
+
+
+#####################################
+# Experimental features, see Readme #
+#####################################
+
+
 def histogram(
     xs: Any,
     bins: int = 20,
@@ -166,17 +163,94 @@ def histogram(
     ys_histo_series = []
     for s in multi_series.ys:
         hist, bin_edges = np.histogram(s, bins=bins, range=(bins_min, bins_max))
+
+        # Draw vertical and horizontal lines to connect points
         xs_here = np.zeros(1 + 2 * bins + 1)
         ys_here = np.zeros(1 + 2 * bins + 1)
         xs_here[0] = bin_edges[0]
         xs_here[1::2] = bin_edges
         xs_here[2::2] = bin_edges[1:]
-        # ys_here[0] = 0
         ys_here[1:-1:2] = hist
         ys_here[2:-1:2] = hist
-        # ys_here[-1] = 0
 
         xs_histo_series.append(xs_here)
         ys_histo_series.append(ys_here)
 
     plot(xs=xs_histo_series, ys=ys_histo_series, **kwargs)
+
+
+###########
+# private #
+###########
+
+
+def _generate_header(options: Options) -> List[str]:
+    """
+    Generates the header of the plot, so everything above the first line of plottable area.
+    """
+    if options.title is None:
+        return []
+
+    return [elements.plot_title(options.title, width=options.width)]
+
+
+def _generate_body(
+    x_axis_labels: str,
+    y_axis_labels: List[str],
+    pixel_character_matrix: np.array,
+    options: Options,
+) -> List[str]:
+    """
+    Generates the body of the plot.
+    """
+    lines: List[str] = []
+
+    # Print plot (double resolution)
+    lines.append(f"┌{'─'*options.width}┐")
+    for i in range(options.height):
+        row = pixel_character_matrix[i]
+        lines.append(f"│{''.join(row)}│ {y_axis_labels[i]}")
+    lines.append(f"└{'─'*options.width}┘")
+    lines.append(x_axis_labels)
+
+    # Print legend if labels were specified
+    if options.legend_labels is not None:
+        lines.append(elements.legend(options.legend_labels, width=options.width))
+
+    return lines
+
+
+def _generate_body_raw_elements(
+    series: MultiSeries, options: Options
+) -> Tuple[str, List[str], np.array]:
+    """
+    Generates the x-axis labels, y-axis labels, and the pixel character matrix.
+    """
+    # Prepare y axis labels
+    y_axis_label_set = extended_talbot_labels(
+        x_min=options.y_min,
+        x_max=options.y_max,
+        available_space=options.height,
+        vertical_direction=True,
+    )
+    y_axis_labels = ["-error generating labels, sorry-"] * options.height
+    if y_axis_label_set is not None:
+        y_axis_labels = y_axis_label_set.render()
+
+    # Prepare x axis labels
+    x_axis_label_set = extended_talbot_labels(
+        x_min=options.x_min,
+        x_max=options.x_max,
+        available_space=options.width,
+        vertical_direction=False,
+    )
+    x_axis_labels = "-error generating labels, sorry-"
+    if x_axis_label_set is not None:
+        x_axis_labels = x_axis_label_set.render()[0]
+
+    # Prefare graph surface
+    pixel_character_matrix = layer_assembly.assemble_scatter_plot(
+        xs=series.xs, ys=series.ys, options=options
+    )
+
+    return (x_axis_labels, y_axis_labels, pixel_character_matrix)

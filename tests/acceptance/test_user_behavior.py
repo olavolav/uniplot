@@ -1,12 +1,17 @@
 import numpy as np  # type: ignore
 import math
 
-from uniplot import plot
+from uniplot import plot, plot_to_string
 
 
 def test_normal_plotting():
     x = [math.sin(i / 20) + i / 300 for i in range(600)]
     plot(xs=x, ys=x, title="Sine wave")
+
+
+def test_normal_plotting_to_string():
+    x = [math.sin(i / 20) + i / 300 for i in range(600)]
+    plot_to_string(xs=x, ys=x, title="Sine wave")
 
 
 def test_normal_plotting_with_x_series():

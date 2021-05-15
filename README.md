@@ -65,6 +65,7 @@ Please refer to [this page for a (incomplete) list of supported fonts](https://w
 The `plot` function accepts a number of parameters, all listed below. Note that only
 `ys` is required, all others are optional.
 
+There is also a `plot_to_string` function with the same signature, if you want the result as a list of strings, to include the output elsewhere.
 
 ### Data
 
