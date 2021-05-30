@@ -233,9 +233,21 @@ def _generate_body_raw_elements(
         available_space=options.height,
         vertical_direction=True,
     )
-    y_axis_labels = ["-error generating labels, sorry-"] * options.height
+    y_axis_labels = [""] * options.height
     if y_axis_label_set is not None:
         y_axis_labels = y_axis_label_set.render()
+
+    # Observe line_length_hard_cap
+    if options.line_length_hard_cap is not None:
+        options.reset_width()
+        # Determine maximum length of y axis label
+        max_y_label_length = max([len(l) for l in y_axis_labels])
+        # Make sure the total plot does not exceed `line_length_hard_cap`
+        if 2 + options.width + 1 + max_y_label_length > options.line_length_hard_cap:
+            # Overflow, so we need to reduce width of plot area
+            options.width = options.line_length_hard_cap - (2 + 1 + max_y_label_length)
+            if options.width < 1:
+                raise
 
     # Prepare x axis labels
     x_axis_label_set = extended_talbot_labels(
@@ -244,7 +256,7 @@ def _generate_body_raw_elements(
         available_space=options.width,
         vertical_direction=False,
     )
-    x_axis_labels = "-error generating labels, sorry-"
+    x_axis_labels = ""
     if x_axis_label_set is not None:
         x_axis_labels = x_axis_label_set.render()[0]
 

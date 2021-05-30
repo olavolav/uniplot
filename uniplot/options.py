@@ -23,6 +23,8 @@ class Options:
     legend_labels: Optional[List[str]] = None
     # Draw lines between points
     lines: List[bool] = field(default_factory=_default_lines)
+    # Enforce a hard limit on the number of characters per line. This may override the `width` option if there is not enough space.
+    line_length_hard_cap: Optional[int] = None
     # Title of the plot
     title: Optional[str] = None
     # Width of the plotting region, in characters
@@ -49,6 +51,10 @@ class Options:
 
         # Remember values for resetting later
         self._initial_bounds = (self.x_min, self.x_max, self.y_min, self.y_max)
+        self._initial_width = self.width
 
     def reset_view(self) -> None:
         (self.x_min, self.x_max, self.y_min, self.y_max) = self._initial_bounds
+
+    def reset_width(self) -> None:
+        self.width = self._initial_width

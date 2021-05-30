@@ -82,8 +82,9 @@ In alphabetical order:
 * `interactive` - Enable interactive mode. Defaults to `False`.
 * `legend_labels` - Labels for the series. Can be `None` or a list of strings. Defaults to `None`.
 * `lines` - Enable lines between points. Can either be `True` or `False`, or a list of those values for plotting multiple series. Defaults to `False`.
+* `line_length_hard_cap` - Enforce a hard limit on the number of characters per line of the plot area. This may override the `width` option if there is not enough space. Defaults to `None`.
 * `title` - The title of the plot. Defaults to `None`.
-* `width` - The width of the plotting region, in characters. Default is `60`.
+* `width` - The width of the plotting region, in characters. Default is `60`. Note that if the `line_length_hard_cap` option is used and there is not enough space, the actual width may be smaller.
 * `x_gridlines` - A list of x values that have a vertical line for better orientation. Defaults to `[0]`.
 * `x_max` - Maximum x value of the view. Defaults to a value that shows all data points.
 * `x_min` - Minimum x value of the view. Defaults to a value that shows all data points.
