@@ -29,7 +29,11 @@ fully supports the [Box-drawing character set](https://en.wikipedia.org/wiki/Box
 Please refer to [this page for a (incomplete) list of supported fonts](https://www.fileformat.info/info/unicode/block/block_elements/fontsupport.htm).
 
 
-## Example
+## Examples
+
+Note that all the examples are without color and plotting only a single series od data. For using color see the GIF example above.
+
+### Plot sine wave
 
 ```
 >>> import math
@@ -57,6 +61,74 @@ Please refer to [this page for a (incomplete) list of supported fonts](https://w
 │        ▙▄▛                                                 │
 └────────────────────────────────────────────────────────────┘
          100       200       300       400       500       600
+```
+
+### Plot global temperature data
+
+Here we're using Pandas to load and prepare gloabl temperature data from the [Our World in Data GitHub repository](https://github.com/owid/owid-datasets).
+
+First we load the data, rename a column and and filter the data:
+```
+>>> import pandas as pd
+>>> uri = "https://github.com/owid/owid-datasets/raw/master/datasets/Global%20average%20temperature%20anomaly%20-%20Hadley%20Centre/Global%20average%20temperature%20anomaly%20-%20Hadley%20Centre.csv"
+>>> data = pd.read_csv(uri)
+>>> data = data.rename(columns={"Global average temperature anomaly (Hadley Centre)": "Global"})
+>>> data = data[data.Entity == "median"]
+```
+
+Then we can plot it:
+```
+>>> from uniplot import plot
+>>> plot(xs=data.Year, ys=data.Global, lines=True, title="Global normalized land-sea temperature anomaly [C]", y_min=-0.8, y_max=0.8)
+      Global normalized land-sea temperature anomaly [C]
+┌────────────────────────────────────────────────────────────┐
+│                                                          ▞▀│ 0.8
+│                                                         ▐  │
+│                                           ▖     ▗   ▗  ▗▌  │
+│                                          ▗▜  ▞▀▄▘▀▚▐▘▚▄▘   │
+│                                          ▞▝▖▐      ▘ ▝     │ 0.4
+│                                    ▞▖  ▞▖▌ ▀▘              │
+│                              ▄  ▗▞▄▘▐ ▞ ▜                  │
+│    ▖                ▗    ▗▄▀▄▜  ▞ ▝  ▀▘                    │
+│▖──▞▐──▗▀▀▄▀▀▌───▗▚▖─▞▖──▙▞──▝─▙▞▘──────────────────────────│ 0
+│▝▖▞  ▌ ▐  ▘  ▚ ▞▀▞ ▚▐ ▌ ▐ ▘                                 │
+│ ▝   ▝▖▌     ▐▞    ▝▌ ▚▀▞                                   │
+│      ▝▘                ▘                                   │
+│                                                            │ -0.4
+│                                                            │
+│                                                            │
+│                                                            │
+│                                                            │ -0.8
+└────────────────────────────────────────────────────────────┘
+1,950    1,960    1,970   1,980    1,990    2,000   2,010
+```
+
+Next for example we might be interested to plot how far the most recent temperature value is outside of the distribution of pre-1970 values:
+```
+>>> temperature_pre1980 = data[data["Year"] <= 1980].Global
+>>> current_temperature = data.Global.iloc[-1]
+>>> histogram(temperature_pre1980, title="Distribution of pre-1980 values. Line indicates current", x_min=-1, x_max=1, bins=5, x_gridlines=[current_temperature])
+   Distribution of pre-1980 values. Line indicates current
+┌────────────────────────────────────────────────────────────┐
+│                            ▐▀▀▌                     │      │ 10
+│                            ▐  ▌                     │      │
+│                            ▐  ▌                     │      │
+│                          ▛▀▀  ▌                     │      │
+│                          ▌    ▌                     │      │
+│                       ▐▀▀▘    ▌                     │      │
+│                       ▐       ▌                     │      │
+│                       ▐       ▌                     │      │
+│                       ▐       ▀▀▜                   │      │
+│                       ▐         ▐                   │      │
+│                       ▐         ▐                   │      │
+│                    ▗▄▄▟         ▐                   │      │
+│                    ▐            ▐                   │      │
+│                    ▐            ▐                   │      │
+│                    ▐            ▐                   │      │
+│                    ▐            ▐                   │      │
+│▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▐▁▁▁▁▁▁▁▁▁▁▁▁▐▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁│▁▁▁▁▁▁│ 0
+└────────────────────────────────────────────────────────────┘
+-1                             0                             1
 ```
 
 
