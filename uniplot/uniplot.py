@@ -61,41 +61,17 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
 
             # TODO Move all of the below to the `Options` class
             if key_pressed == "h":
-                # Left
-                step = 0.1 * (options.x_max - options.x_min)
-                options.x_min = options.x_min - step
-                options.x_max = options.x_max - step
+                options.shift_view_left()
             elif key_pressed == "l":
-                # Right
-                step = 0.1 * (options.x_max - options.x_min)
-                options.x_min = options.x_min + step
-                options.x_max = options.x_max + step
+                options.shift_view_right()
             elif key_pressed == "j":
-                # Up
-                step = 0.1 * (options.y_max - options.y_min)
-                options.y_min = options.y_min - step
-                options.y_max = options.y_max - step
+                options.shift_view_down()
             elif key_pressed == "k":
-                # Down
-                step = 0.1 * (options.y_max - options.y_min)
-                options.y_min = options.y_min + step
-                options.y_max = options.y_max + step
+                options.shift_view_up()
             elif key_pressed == "u":
-                # Zoom in
-                step = 0.1 * (options.x_max - options.x_min)
-                options.x_min = options.x_min + step
-                options.x_max = options.x_max - step
-                step = 0.1 * (options.y_max - options.y_min)
-                options.y_min = options.y_min + step
-                options.y_max = options.y_max - step
+                options.zoom_in()
             elif key_pressed == "n":
-                # Zoom out
-                step = 0.1 * (options.x_max - options.x_min)
-                options.x_min = options.x_min - step
-                options.x_max = options.x_max + step
-                step = 0.1 * (options.y_max - options.y_min)
-                options.y_min = options.y_min - step
-                options.y_max = options.y_max + step
+                options.zoom_out()
             elif key_pressed == "r":
                 options.reset_view()
             elif key_pressed in ["q", "\x1b"]:

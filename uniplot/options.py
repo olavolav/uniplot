@@ -53,8 +53,51 @@ class Options:
         self._initial_bounds = (self.x_min, self.x_max, self.y_min, self.y_max)
         self._initial_width = self.width
 
+    def shift_view_left(self) -> None:
+        self.__shift_view_horizontal(factor=-1)
+
+    def shift_view_right(self) -> None:
+        self.__shift_view_horizontal(factor=1)
+
+    def shift_view_up(self) -> None:
+        self.__shift_view_vertical(factor=1)
+
+    def shift_view_down(self) -> None:
+        self.__shift_view_vertical(factor=-1)
+
+    def zoom_in(self) -> None:
+        self.__zoom_view(factor=1)
+
+    def zoom_out(self) -> None:
+        self.__zoom_view(factor=-1)
+
     def reset_view(self) -> None:
         (self.x_min, self.x_max, self.y_min, self.y_max) = self._initial_bounds
 
     def reset_width(self) -> None:
         self.width = self._initial_width
+
+    ###########
+    # private #
+    ###########
+
+    def __shift_view_horizontal(self, factor: int) -> None:
+        # TODO Make the step aligned with the characters on the screen
+        step: float = 0.1 * factor * (self.x_max - self.x_min)
+        self.x_min = self.x_min + step
+        self.x_max = self.x_max + step
+
+    def __shift_view_vertical(self, factor: int) -> None:
+        # TODO Make the step aligned with the characters on the screen
+        step: float = 0.1 * factor * (self.y_max - self.y_min)
+        self.y_min = self.y_min + step
+        self.y_max = self.y_max + step
+
+    def __zoom_view(self, factor: int) -> None:
+        step = 0.1 * factor * (self.x_max - self.x_min)
+        self.x_min = self.x_min + step
+        self.x_max = self.x_max - step
+
+        step = 0.1 * factor * (self.y_max - self.y_min)
+        self.y_min = self.y_min + step
+        self.y_max = self.y_max - step
