@@ -59,7 +59,6 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
             print("Move h/j/k/l, zoom u/n, or r to reset. ESC/q to quit")
             key_pressed = getch().lower()
 
-            # TODO Move all of the below to the `Options` class
             if key_pressed == "h":
                 options.shift_view_left()
             elif key_pressed == "l":
