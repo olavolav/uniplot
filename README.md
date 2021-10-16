@@ -5,7 +5,7 @@
 
 Lightweight plotting to the terminal. 4x resolution via Unicode.
 
-[![uniplot demo GIF](https://github.com/olavolav/uniplot/raw/master/resource/uniplot-demo.gif)](https://asciinema.org/a/Ldgn5pHOgxPJmIf2ZvlfIPR3L)
+![uniplot demo GIF](https://github.com/olavolav/uniplot/raw/master/resource/uniplot-demo.gif)
 
 When working with production data science code it can be handy to have plotting
 tool that does not rely on graphics dependencies or works only in a Jupyter notebook.
@@ -103,7 +103,7 @@ Then we can plot it:
 1,950    1,960    1,970   1,980    1,990    2,000   2,010
 ```
 
-Next for example we might be interested to plot how far the most recent temperature value is outside of the distribution of pre-1970 values:
+Next for example we might be interested to plot how far the most recent temperature value is outside of the distribution of pre-1980 values:
 ```
 >>> temperature_pre1980 = data[data["Year"] <= 1980].Global
 >>> current_temperature = data.Global.iloc[-1]
