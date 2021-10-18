@@ -36,10 +36,14 @@ Note that all the examples are without color and plotting only a single series o
 ### Plot sine wave
 
 ```
->>> import math
->>> x = [math.sin(i/20)+i/300 for i in range(600)]
->>> from uniplot import plot
->>> plot(x, title="Sine wave")
+import math
+x = [math.sin(i/20)+i/300 for i in range(600)]
+from uniplot import plot
+plot(x, title="Sine wave")
+```
+
+Result:
+```
                           Sine wave
 ┌────────────────────────────────────────────────────────────┐
 │                                                    ▟▀▚     │
@@ -69,66 +73,42 @@ Here we're using Pandas to load and prepare gloabl temperature data from the [Ou
 
 First we load the data, rename a column and and filter the data:
 ```
->>> import pandas as pd
->>> uri = "https://github.com/owid/owid-datasets/raw/master/datasets/Global%20average%20temperature%20anomaly%20-%20Hadley%20Centre/Global%20average%20temperature%20anomaly%20-%20Hadley%20Centre.csv"
->>> data = pd.read_csv(uri)
->>> data = data.rename(columns={"Global average temperature anomaly (Hadley Centre)": "Global"})
->>> data = data[data.Entity == "median"]
+import pandas as pd
+uri = "https://github.com/owid/owid-datasets/raw/master/datasets/Global%20average%20temperature%20anomaly%20-%20Hadley%20Centre/Global%20average%20temperature%20anomaly%20-%20Hadley%20Centre.csv"
+data = pd.read_csv(uri)
+data = data.rename(columns={"Global average temperature anomaly (Hadley Centre)": "Global"})
+data = data[data.Entity == "median"]
 ```
 
 Then we can plot it:
 ```
->>> from uniplot import plot
->>> plot(xs=data.Year, ys=data.Global, lines=True, title="Global normalized land-sea temperature anomaly [C]", y_min=-0.8, y_max=0.8)
-      Global normalized land-sea temperature anomaly [C]
-┌────────────────────────────────────────────────────────────┐
-│                                                          ▞▀│ 0.8
-│                                                         ▐  │
-│                                           ▖     ▗   ▗  ▗▌  │
-│                                          ▗▜  ▞▀▄▘▀▚▐▘▚▄▘   │
-│                                          ▞▝▖▐      ▘ ▝     │ 0.4
-│                                    ▞▖  ▞▖▌ ▀▘              │
-│                              ▄  ▗▞▄▘▐ ▞ ▜                  │
-│    ▖                ▗    ▗▄▀▄▜  ▞ ▝  ▀▘                    │
-│▖──▞▐──▗▀▀▄▀▀▌───▗▚▖─▞▖──▙▞──▝─▙▞▘──────────────────────────│ 0
-│▝▖▞  ▌ ▐  ▘  ▚ ▞▀▞ ▚▐ ▌ ▐ ▘                                 │
-│ ▝   ▝▖▌     ▐▞    ▝▌ ▚▀▞                                   │
-│      ▝▘                ▘                                   │
-│                                                            │ -0.4
-│                                                            │
-│                                                            │
-│                                                            │
-│                                                            │ -0.8
-└────────────────────────────────────────────────────────────┘
-1,950    1,960    1,970   1,980    1,990    2,000   2,010
+from uniplot import plot
+plot(xs=data.Year, ys=data.Global, lines=True, title="Global normalized land-sea temperature anomaly [C]", y_min=-0.8, y_max=0.8)
 ```
 
-Next for example we might be interested to plot how far the most recent temperature value is outside of the distribution of pre-1980 values:
+Result:
 ```
->>> temperature_pre1980 = data[data["Year"] <= 1980].Global
->>> current_temperature = data.Global.iloc[-1]
->>> histogram(temperature_pre1980, title="Distribution of pre-1980 values. Line indicates current", x_min=-1, x_max=1, bins=5, x_gridlines=[current_temperature])
-   Distribution of pre-1980 values. Line indicates current
+      Global normalized land-sea temperature anomaly [C]
 ┌────────────────────────────────────────────────────────────┐
-│                            ▐▀▀▌                     │      │ 10
-│                            ▐  ▌                     │      │
-│                            ▐  ▌                     │      │
-│                          ▛▀▀  ▌                     │      │
-│                          ▌    ▌                     │      │
-│                       ▐▀▀▘    ▌                     │      │
-│                       ▐       ▌                     │      │
-│                       ▐       ▌                     │      │
-│                       ▐       ▀▀▜                   │      │
-│                       ▐         ▐                   │      │
-│                       ▐         ▐                   │      │
-│                    ▗▄▄▟         ▐                   │      │
-│                    ▐            ▐                   │      │
-│                    ▐            ▐                   │      │
-│                    ▐            ▐                   │      │
-│                    ▐            ▐                   │      │
-│▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▐▁▁▁▁▁▁▁▁▁▁▁▁▐▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁│▁▁▁▁▁▁│ 0
+│                                                          ▞▀│
+│                                                         ▐  │
+│                                                         ▐  │
+│                                                     ▗   ▌  │ 0.6
+│                                           ▙  ▗▄ ▛▄▖▗▘▌ ▞   │
+│                                          ▗▜  ▌ ▜  ▚▞ ▚▞    │
+│                                          ▐▝▖▐      ▘       │
+│                                    ▗   ▗ ▌ ▙▌              │ 0.3
+│                                    ▛▖  ▞▙▘  ▘              │
+│                              ▖  ▗▄▗▘▐ ▐▘▜                  │
+│                            ▟ █  ▞ ▜ ▝▄▘                    │
+│   ▗▚   ▗    ▖       ▗   ▖▗▞ █▐  ▌    ▘                     │
+│▁▁▁▞▐▁▁▗▘▜▗▀▀▌▁▁▁▁▙▁▁▟▁▁▁▙▐▁▁▜▁▌▞▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁│ 0
+│▚ ▐ ▝▖ ▐  ▛  ▌ ▗▄▐ ▌▗▘▌ ▐▝▌    ▝▘                           │
+│ ▌▌  ▌ ▞     ▐▗▘ ▛ ▐▞ ▌ ▐                                   │
+│ ▝   ▝▖▌     ▐▞    ▝▌ ▚▜▐                                   │
+│      ▗▌     ▝        ▝ ▌                                   │
 └────────────────────────────────────────────────────────────┘
--1                             0                             1
+1,950    1,960    1,970   1,980    1,990    2,000   2,010
 ```
 
 
@@ -176,10 +156,14 @@ When calling the `histogram` function, the `lines` option is `True` by default.
 Example:
 
 ```
->>> import numpy as np
->>> x = np.sin(np.linspace(1, 1000))
->>> from uniplot import histogram
->>> histogram(x)
+import numpy as np
+x = np.sin(np.linspace(1, 1000))
+from uniplot import histogram
+histogram(x)
+```
+
+Result:
+```
 ┌────────────────────────────────────────────────────────────┐
 │   ▛▀▀▌                       │                   ▐▀▀▜      │ 5
 │   ▌  ▌                       │                   ▐  ▐      │
