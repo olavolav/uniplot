@@ -17,11 +17,13 @@ class LabelSet:
         x_min: float,
         x_max: float,
         available_space: int,
+        unit: str = "",
         vertical_direction: bool = False,
     ):
         self.labels = labels
         self.x_min = x_min
         self.x_max = x_max
+        self.unit = unit
         self.available_space = available_space
         self.vertical_direction = vertical_direction
         self._results_already_in_cache: bool = False
@@ -73,7 +75,7 @@ class LabelSet:
                     # This is bad and leads to wrong offsets
                     self._render_does_overlap = True
 
-                lines[index] = str_label
+                lines[index] = str_label + self.unit
 
             self._rendered_result = lines
         else:
@@ -102,7 +104,8 @@ class LabelSet:
                     buffer = 1
                     self._render_does_overlap = True
 
-                line = line + (" " * buffer) + str_label
+                # Compose string for this line
+                line = line + (" " * buffer) + str_label + self.unit
 
             self._rendered_result = [line]
         self._results_already_in_cache = True

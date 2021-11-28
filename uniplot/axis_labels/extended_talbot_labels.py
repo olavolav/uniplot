@@ -16,6 +16,7 @@ def extended_talbot_labels(
     x_max: float,
     available_space: int,
     vertical_direction: bool = False,
+    unit: str = "",
     verbose: bool = False,
 ) -> Optional[LabelSet]:
     """
@@ -80,6 +81,7 @@ def extended_talbot_labels(
                         x_min=x_min,
                         x_max=x_max,
                         available_space=available_space,
+                        unit=unit,
                         vertical_direction=vertical_direction,
                     )
 

@@ -35,12 +35,16 @@ class Options:
     x_max: float = 1.0
     # Minimum x value of the current view
     x_min: float = 0.0
+    # Units of x axis
+    x_unit: str = ""
     # Horizontal gridlines
     y_gridlines: List[float] = field(default_factory=_default_gridlines)
     # Maximum y value of the current view
     y_max: float = 1.0
     # Minimum y value of the current view
     y_min: float = 0.0
+    # Units of y axis
+    y_unit: str = ""
 
     def __post_init__(self):
         # Validate values

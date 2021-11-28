@@ -21,3 +21,20 @@ def test_redering_detects_overlap():
         labels, x_min=-0.5, x_max=2.5, available_space=3, vertical_direction=False
     )
     assert ls.compute_if_render_does_overlap() is True
+
+
+def test_redering_to_string_with_unit():
+    labels = np.array([0, 1, 2])
+    ls = LabelSet(
+        labels,
+        x_min=-0.5,
+        x_max=2.5,
+        available_space=30,
+        unit=" apples",
+        vertical_direction=False,
+    )
+    render = ls.render()
+    assert len(render) == 1
+    assert len(render[0]) >= 15
+    assert " 0 apples" in render[0]
+    assert ls.compute_if_render_does_overlap() is False

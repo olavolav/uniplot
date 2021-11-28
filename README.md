@@ -83,26 +83,26 @@ data = data[data.Entity == "median"]
 Then we can plot it:
 ```
 from uniplot import plot
-plot(xs=data.Year, ys=data.Global, lines=True, title="Global normalized land-sea temperature anomaly [C]", y_min=-0.8, y_max=0.8)
+plot(xs=data.Year, ys=data.Global, lines=True, title="Global normalized land-sea temperature anomaly", y_unit=" °C")
 ```
 
 Result:
 ```
-      Global normalized land-sea temperature anomaly [C]
+        Global normalized land-sea temperature anomaly
 ┌────────────────────────────────────────────────────────────┐
 │                                                          ▞▀│
 │                                                         ▐  │
 │                                                         ▐  │
-│                                                     ▗   ▌  │ 0.6
+│                                                     ▗   ▌  │ 0.6 °C
 │                                           ▙  ▗▄ ▛▄▖▗▘▌ ▞   │
 │                                          ▗▜  ▌ ▜  ▚▞ ▚▞    │
 │                                          ▐▝▖▐      ▘       │
-│                                    ▗   ▗ ▌ ▙▌              │ 0.3
+│                                    ▗   ▗ ▌ ▙▌              │ 0.3 °C
 │                                    ▛▖  ▞▙▘  ▘              │
 │                              ▖  ▗▄▗▘▐ ▐▘▜                  │
 │                            ▟ █  ▞ ▜ ▝▄▘                    │
 │   ▗▚   ▗    ▖       ▗   ▖▗▞ █▐  ▌    ▘                     │
-│▁▁▁▞▐▁▁▗▘▜▗▀▀▌▁▁▁▁▙▁▁▟▁▁▁▙▐▁▁▜▁▌▞▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁│ 0
+│▁▁▁▞▐▁▁▗▘▜▗▀▀▌▁▁▁▁▙▁▁▟▁▁▁▙▐▁▁▜▁▌▞▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁│ 0 °C
 │▚ ▐ ▝▖ ▐  ▛  ▌ ▗▄▐ ▌▗▘▌ ▐▝▌    ▝▘                           │
 │ ▌▌  ▌ ▞     ▐▗▘ ▛ ▐▞ ▌ ▐                                   │
 │ ▝   ▝▖▌     ▐▞    ▝▌ ▚▜▐                                   │
@@ -140,9 +140,11 @@ In alphabetical order:
 * `x_gridlines` - A list of x values that have a vertical line for better orientation. Defaults to `[0]`.
 * `x_max` - Maximum x value of the view. Defaults to a value that shows all data points.
 * `x_min` - Minimum x value of the view. Defaults to a value that shows all data points.
+* `x_unit` - Unit of the x axis. This is a string that is appended to the axis labels. Defaults to `""`.
 * `y_gridlines` - A list of y values that have a horizontal line for better orientation. Defaults to `[0]`.
 * `y_max` - Maximum y value of the view. Defaults to a value that shows all data points.
 * `y_min` - Minimum y value of the view. Defaults to a value that shows all data points.
+* `y_unit` - Unit of the y axis. This is a string that is appended to the axis labels. Defaults to `""`.
 
 
 ## Experimental features
