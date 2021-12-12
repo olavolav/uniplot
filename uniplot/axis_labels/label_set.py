@@ -91,7 +91,7 @@ class LabelSet:
                         x_max=self.x_max,
                         steps=self.available_space,
                     )
-                    - int(0.5 * len(str_label))
+                    - int(0.5 * (len(str_label) + len(self.unit)))
                     + LEFT_MARGIN_FOR_HORIZONTAL_AXIS,
                 )
                 buffer = offset - len(line)
