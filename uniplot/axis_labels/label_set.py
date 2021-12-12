@@ -131,7 +131,7 @@ class LabelSet:
         # Fallback to naive string conversion
         return ["" if n is None else str(n) for n in numbers]
 
-    def _float_format(self, n: float, nr_digits: int):
+    def _float_format(self, n: float, nr_digits: int) -> str:
         """
         Format a number to a specified precision.
 

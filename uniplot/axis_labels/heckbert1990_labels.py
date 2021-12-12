@@ -1,10 +1,9 @@
 import numpy as np  # type: ignore
-from typing import List
 
 
 def restricted_heckbert_ticks(x_min: float, x_max: float, nr_ticks: int) -> np.array:
     best_ticks = None
-    for i in range(2, 10):
+    for _ in range(2, 10):
         raw_ticks = heckbert_ticks(x_min=x_min, x_max=x_max, nr_ticks=nr_ticks)
         filtered_ticks = raw_ticks[(raw_ticks >= x_min) & (raw_ticks <= x_max)]
         if best_ticks is None or (

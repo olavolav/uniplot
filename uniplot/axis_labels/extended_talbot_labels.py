@@ -1,5 +1,5 @@
 import numpy as np  # type: ignore
-from typing import List, Optional
+from typing import Optional
 
 from uniplot.axis_labels.label_set import LabelSet
 
