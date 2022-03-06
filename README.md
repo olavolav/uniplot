@@ -35,7 +35,7 @@ Note that all the examples are without color and plotting only a single series o
 
 ### Plot sine wave
 
-```
+```python
 import math
 x = [math.sin(i/20)+i/300 for i in range(600)]
 from uniplot import plot
@@ -72,7 +72,8 @@ Result:
 Here we're using Pandas to load and prepare gloabl temperature data from the [Our World in Data GitHub repository](https://github.com/owid/owid-datasets).
 
 First we load the data, rename a column and and filter the data:
-```
+
+```python
 import pandas as pd
 uri = "https://github.com/owid/owid-datasets/raw/master/datasets/Global%20average%20temperature%20anomaly%20-%20Hadley%20Centre/Global%20average%20temperature%20anomaly%20-%20Hadley%20Centre.csv"
 data = pd.read_csv(uri)
@@ -81,7 +82,8 @@ data = data[data.Entity == "median"]
 ```
 
 Then we can plot it:
-```
+
+```python
 from uniplot import plot
 plot(xs=data.Year, ys=data.Global, lines=True, title="Global normalized land-sea temperature anomaly", y_unit=" °C")
 ```
@@ -157,7 +159,7 @@ When calling the `histogram` function, the `lines` option is `True` by default.
 
 Example:
 
-```
+```python
 import numpy as np
 x = np.sin(np.linspace(1, 1000))
 from uniplot import histogram
