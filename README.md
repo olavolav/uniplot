@@ -127,6 +127,8 @@ There is also a `plot_to_string` function with the same signature, if you want t
 `ys`.
 * `ys` - The y coordinates of the points to plot. Can either be a list or NumPy array for plotting a single series, or a list of those for plotting multiple series.
 
+In both cases, NaN values are silently ignored.
+
 ### Options
 
 In alphabetical order:

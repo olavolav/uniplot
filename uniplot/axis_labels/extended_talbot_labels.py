@@ -34,8 +34,8 @@ def extended_talbot_labels(
     )
 
     for exponent in [base_exponent, base_exponent - 1]:
-        x_min_normalized = int(np.floor(x_min / 10 ** exponent))
-        x_max_normalized = int(np.ceil(x_max / 10 ** exponent))
+        x_min_normalized = int(np.floor(x_min / 10**exponent))
+        x_max_normalized = int(np.ceil(x_max / 10**exponent))
 
         # j is the "skip amount"
         for j in range(1, MAX_SKIP_AMOUNT + 1):
@@ -52,7 +52,7 @@ def extended_talbot_labels(
                             x_max_normalized + 1,
                             step=step_size,
                         )
-                        * 10 ** exponent
+                        * 10**exponent
                     )
                     # Crop labels
                     labels = labels[(labels >= x_min) & (labels <= x_max)]
