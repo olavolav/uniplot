@@ -356,6 +356,31 @@ def test_lines_with_steep_ends_due_to_point_near_pixel_edges():
     np.testing.assert_array_equal(pixels, desired_pixels)
 
 
+def test_should_plot_no_lines_where_nan_values_are():
+    xs = np.array([1.0, 2.0, 3.0])
+    ys = np.array([1.0, np.nan, 3.0])
+    pixels = render(
+        xs=xs,
+        ys=ys,
+        x_min=0.9,
+        y_min=0.9,
+        x_max=3.1,
+        y_max=3.1,
+        width=3,
+        height=3,
+        lines=True,
+    )
+
+    desired_pixels = np.array(
+        [
+            [0, 0, 1],
+            [0, 0, 0],
+            [1, 0, 0],
+        ]
+    )
+    np.testing.assert_array_equal(pixels, desired_pixels)
+
+
 #########################
 # Testing: merge_on_top #
 #########################

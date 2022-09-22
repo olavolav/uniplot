@@ -18,7 +18,16 @@ def _cast_as_numpy_floats(array) -> Any:
     numpy_array = np.array(array)
     if np.issubdtype(numpy_array.dtype, np.number):
         return numpy_array
+    # If it not already intitializes as a numeric type, then all we can do is attempt to cast to float (including NaNs)
     return numpy_array.astype(float)
+
+
+def _safe_max(array) -> float:
+    return array[~np.isnan(array)].max()
+
+
+def _safe_min(array) -> float:
+    return array[~np.isnan(array)].min()
 
 
 class MultiSeries:
@@ -47,15 +56,6 @@ class MultiSeries:
             else:
                 self.xs = [_cast_as_numpy_floats(xs)]
 
-        # Get rid of (ignore) NAN points. The goal here is to mimick the NAN-tolerance of NumPy or Apache Spark: Plotting should silently ignore NAN values.
-        for i in range(len(self.ys)):
-            invalid_indices = np.isnan(self.xs[i]) | np.isnan(self.ys[i])
-            self.xs[i] = self.xs[i][~invalid_indices]
-            self.ys[i] = self.ys[i][~invalid_indices]
-
-            if len(self.xs[i]) == 0 or len(self.ys[i]) == 0:
-                raise ValueError("Length of series must not be zero.")
-
     def __len__(self) -> int:
         """Return the number of time series."""
         return len(self.ys)
@@ -65,13 +65,13 @@ class MultiSeries:
         return [len(ys_row) for ys_row in self.ys]
 
     def y_max(self) -> float:
-        return max([ys_row.max() for ys_row in self.ys])
+        return max([_safe_max(ys_row) for ys_row in self.ys])
 
     def y_min(self) -> float:
-        return min([ys_row.min() for ys_row in self.ys])
+        return min([_safe_min(ys_row) for ys_row in self.ys])
 
     def x_max(self) -> float:
-        return max([xs_row.max() for xs_row in self.xs])
+        return max([_safe_max(xs_row) for xs_row in self.xs])
 
     def x_min(self) -> float:
-        return min([xs_row.min() for xs_row in self.xs])
+        return min([_safe_min(xs_row) for xs_row in self.xs])

@@ -31,21 +31,9 @@ def test_min_and_max():
     assert series.y_max() == 222
 
 
-def test_occasional_nans_should_be_ignored():
+def test_occasional_nans_should_be_tolerated():
     xs = [[3.0, 2.5, np.nan, 1.0, 1.5]]
     ys = [[13.0, 22.5, 22.9, np.nan, 41.0]]
     series = MultiSeries(xs=xs, ys=ys)
 
-    assert series.shape() == [3]
-    # This is not 1.0 because we need both x and y coordinate to be numerical (not NaN) for it to be avalid point
-    assert series.x_min() == 1.5
-    assert series.x_max() == 3.0
-    assert series.y_min() == 13.0
-    assert series.y_max() == 41.0
-
-
-# def test_only_nan_series_should_be_ignored():
-#     xs = [[3.0, 2.5, np.nan, 1.0, 1.5], [2.0, np.nan]]
-#     ys = [[13.0, 22.5, 22.9, np.nan, 41.0], [np.nan, 15.0]]
-#     series = MultiSeries(xs=xs, ys=ys)
-#     assert series.shape() == [3, 0]
+    assert series.shape() == [5]

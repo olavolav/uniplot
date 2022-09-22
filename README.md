@@ -69,7 +69,7 @@ Result:
 
 ### Plot global temperature data
 
-Here we're using Pandas to load and prepare gloabl temperature data from the [Our World in Data GitHub repository](https://github.com/owid/owid-datasets).
+Here we're using Pandas to load and prepare global temperature data from the [Our World in Data GitHub repository](https://github.com/owid/owid-datasets).
 
 First we load the data, rename a column and and filter the data:
 
@@ -127,7 +127,7 @@ There is also a `plot_to_string` function with the same signature, if you want t
 `ys`.
 * `ys` - The y coordinates of the points to plot. Can either be a list or NumPy array for plotting a single series, or a list of those for plotting multiple series.
 
-In both cases, NaN values are silently ignored.
+In both cases, NaN values are ignored.
 
 ### Options
 

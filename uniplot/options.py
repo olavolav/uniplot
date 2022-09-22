@@ -48,8 +48,6 @@ class Options:
 
     def __post_init__(self):
         # Validate values
-        assert self.x_max > self.x_min
-        assert self.y_max > self.y_min
         assert self.width > 0
         assert self.height > 0
 

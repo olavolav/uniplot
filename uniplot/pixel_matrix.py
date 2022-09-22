@@ -57,6 +57,11 @@ def render(
             (xy_indices[:-1], xys[:-1], xy_indices[1:], xys[1:]), axis=1
         ).astype(float)
 
+        # Filter any line segments where any coordinatwe is NaN
+        xy_line_endpoints = xy_line_endpoints[
+            ~np.isnan(xy_line_endpoints).any(axis=2).any(axis=1)
+        ]
+
         # Filter out of view line segments
         xy_line_endpoints = xy_line_endpoints[
             (
@@ -92,7 +97,7 @@ def render(
 
         # TODO This can likely be optimized by assembling all segments and computing the
         # pixels of all lines together, or at least of each half split by slope
-        # for segment in np.nditer(xy_line_endpoints): # TODO use this
+        # for segment in np.nditer(xy_line_endpoints)
         for segment in xy_line_endpoints:
             [
                 [x_index_start, y_index_start],
