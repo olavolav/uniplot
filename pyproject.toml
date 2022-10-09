@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "uniplot"
+version = "0.7.0"
+description = "Lightweight plotting to the terminal. 4x resolution via Unicode."
+authors = ["Olav Stetter <olav.stetter@googlemail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "uniplot"}, {include = "uniplot.axis_labels"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+numpy = "^1.23.3"
+
+[tool.poetry.dev-dependencies]
+pytest = ">=6.0.1"
+mypy = "*"
+black = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

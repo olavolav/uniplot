@@ -1,4 +1,5 @@
-import numpy as np  # type: ignore
+import numpy as np
+from numpy.typing import NDArray
 from typing import List, Optional
 
 from uniplot.discretizer import discretize
@@ -13,7 +14,7 @@ class LabelSet:
 
     def __init__(
         self,
-        labels: np.array,
+        labels: NDArray,
         x_min: float,
         x_max: float,
         available_space: int,
@@ -112,7 +113,7 @@ class LabelSet:
 
     def _find_shortest_string_representation(
         self,
-        numbers: List[Optional[float]],
+        numbers: NDArray,
     ) -> List[str]:
         """
         This method will find the shortest numerical values for axis labels that are different from each other.

@@ -8,14 +8,14 @@ echo "##############"
 echo "# Code style #"
 echo "##############"
 
-black *.py uniplot/**/*.py tests/**/*.py
+black uniplot/**/*.py tests/**/*.py
 
 echo ""
 echo "##############"
 echo "# Type check #"
 echo "##############"
 
-mypy --namespace-packages *.py uniplot/**/*.py tests/**/*.py
+mypy --namespace-packages uniplot/**/*.py tests/**/*.py
 
 echo ""
 echo "################"

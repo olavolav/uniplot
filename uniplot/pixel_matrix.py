@@ -1,12 +1,18 @@
-import numpy as np  # type: ignore
+import numpy as np
+from numpy.typing import NDArray
 from typing import Optional
 
-from uniplot.discretizer import discretize, invert_discretize
+from uniplot.discretizer import (
+    discretize,
+    discretize_array,
+    invert_discretize,
+    invert_discretize_array,
+)
 
 
 def render(
-    xs: np.array,
-    ys: np.array,
+    xs: NDArray,
+    ys: NDArray,
     x_min: float,
     x_max: float,
     y_min: float,
@@ -14,7 +20,7 @@ def render(
     width: int,
     height: int,
     lines: bool = False,
-) -> np.array:
+) -> NDArray:
     """
     Turn a list of 2D points into a raster matrix.
 
@@ -34,8 +40,8 @@ def render(
 
     pixels = np.zeros((height, width), dtype=int)
 
-    x_indices = discretize(xs, x_min, x_max, steps=width)
-    y_indices = discretize(ys, y_min, y_max, steps=height)
+    x_indices = discretize_array(xs, x_min, x_max, steps=width)
+    y_indices = discretize_array(ys, y_min, y_max, steps=height)
 
     # Invert y direction to optimize for plotting later
     y_indices = (height - 1) - y_indices
@@ -154,7 +160,7 @@ def render(
                 y_indices_of_line = np.arange(
                     y_index_start, y_index_stop + step, step=step
                 )
-                ys_of_line = invert_discretize(
+                ys_of_line = invert_discretize_array(
                     height - 1 - y_indices_of_line,
                     minimum=y_min,
                     maximum=y_max,
@@ -166,7 +172,7 @@ def render(
                 #   xs_of_line - x_start = (ys_of_line - y_start) / slope
                 #   xs_of_line = (ys_of_line - y_start) / slope + x_start
                 xs_of_line = (ys_of_line - y_start) / slope + x_start
-                x_indices_of_line = discretize(
+                x_indices_of_line = discretize_array(
                     xs_of_line, x_min=x_min, x_max=x_max, steps=width
                 )
 
@@ -179,7 +185,7 @@ def render(
                 x_indices_of_line = np.arange(
                     x_index_start, x_index_stop + step, step=step
                 )
-                xs_of_line = invert_discretize(
+                xs_of_line = invert_discretize_array(
                     x_indices_of_line, minimum=x_min, maximum=x_max, nr_bins=width
                 )
 
@@ -188,7 +194,9 @@ def render(
                 y_indices_of_line = (
                     height
                     - 1
-                    - discretize(ys_of_line, x_min=y_min, x_max=y_max, steps=height)
+                    - discretize_array(
+                        ys_of_line, x_min=y_min, x_max=y_max, steps=height
+                    )
                 )
 
             # Finally, draw pixels (if needed)
@@ -224,12 +232,12 @@ def render(
 
 
 def merge_on_top(
-    low_layer: np.array,
-    high_layer: np.array,
+    low_layer: NDArray,
+    high_layer: NDArray,
     width: int,
     height: int,
     with_shadow: bool = False,
-) -> np.array:
+) -> NDArray:
     """
     Put a pixel matrix on top of another, with an optional single solid line of "shadow",
     including diagonal fields.

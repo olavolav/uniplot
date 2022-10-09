@@ -2,8 +2,10 @@ import numpy as np  # type: ignore
 
 from uniplot.discretizer import (
     discretize,
+    discretize_array,
     compute_y_at_middle_of_row,
     invert_discretize,
+    invert_discretize_array,
 )
 
 
@@ -19,7 +21,7 @@ def test_correct_discretization_for_number():
 
 def test_correct_discretization_for_array():
     vector_float = np.array([0.01, 0.99, 1.01, 1.5, 1.99, 9.99])
-    vector_integer = discretize(x=vector_float, x_min=0, x_max=10, steps=10)
+    vector_integer = discretize_array(x=vector_float, x_min=0, x_max=10, steps=10)
     assert (vector_integer == np.array([0, 0, 1, 1, 1, 9])).all()
 
 
@@ -56,7 +58,7 @@ def test_invert_discretize_with_single_index():
 
 
 def test_invert_discretize_with_list_of_indices():
-    levels = invert_discretize([0, 9, 1], minimum=0, maximum=10, nr_bins=10)
+    levels = invert_discretize_array([0, 9, 1], minimum=0, maximum=10, nr_bins=10)
     levels_as_designed = [1 / 2, 9 + 1 / 2, 3 / 2]
 
     assert abs(levels[0] - levels_as_designed[0]) < 0.01

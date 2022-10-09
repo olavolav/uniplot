@@ -1,4 +1,5 @@
-import numpy as np  # type: ignore
+import numpy as np
+from numpy.typing import NDArray
 from typing import Tuple, List, Optional, Any
 
 from uniplot.multi_series import MultiSeries
@@ -137,7 +138,7 @@ def histogram(
     xs_histo_series = []
     ys_histo_series = []
     for s in multi_series.ys:
-        hist, bin_edges = np.histogram(s, bins=bins, range=(bins_min, bins_max))
+        hist, bin_edges = np.histogram(s, bins=bins)
 
         # Draw vertical and horizontal lines to connect points
         xs_here = np.zeros(1 + 2 * bins + 1)
@@ -172,7 +173,7 @@ def _generate_header(options: Options) -> List[str]:
 def _generate_body(
     x_axis_labels: str,
     y_axis_labels: List[str],
-    pixel_character_matrix: np.array,
+    pixel_character_matrix: NDArray,
     options: Options,
 ) -> List[str]:
     """
@@ -197,7 +198,7 @@ def _generate_body(
 
 def _generate_body_raw_elements(
     series: MultiSeries, options: Options
-) -> Tuple[str, List[str], np.array]:
+) -> Tuple[str, List[str], NDArray]:
     """
     Generates the x-axis labels, y-axis labels, and the pixel character matrix.
     """
@@ -237,7 +238,7 @@ def _generate_body_raw_elements(
     if x_axis_label_set is not None:
         x_axis_labels = x_axis_label_set.render()[0]
 
-    # Prefare graph surface
+    # Prepare graph surface
     pixel_character_matrix = layer_assembly.assemble_scatter_plot(
         xs=series.xs, ys=series.ys, options=options
     )

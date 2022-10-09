@@ -1,4 +1,5 @@
-import numpy as np  # type: ignore
+import numpy as np
+from numpy.typing import NDArray
 from typing import List
 
 import uniplot.pixel_matrix as pixel_matrix
@@ -10,14 +11,14 @@ from uniplot.discretizer import discretize
 Y_GRIDLINE_CHARACTERS = ["▔", "─", "▁"]
 
 
-def blank_character_matrix(width: int, height: int) -> np.array:
+def blank_character_matrix(width: int, height: int) -> NDArray:
     """
     Initialize an empty character matrix as a NumPy array.
     """
     return _init_character_matrix(width, height, value=" ")
 
 
-def render_horizontal_gridline(y: float, options: Options) -> np.array:
+def render_horizontal_gridline(y: float, options: Options) -> NDArray:
     """
     Render the pixel matrix that only consists of a line where the `y` value is.
 
@@ -43,7 +44,7 @@ def render_horizontal_gridline(y: float, options: Options) -> np.array:
     return pixels
 
 
-def render_vertical_gridline(x: float, options: Options) -> np.array:
+def render_vertical_gridline(x: float, options: Options) -> NDArray:
     """
     Render the pixel matrix that only consists of a line where the `x` value is.
     """
@@ -60,7 +61,7 @@ def render_vertical_gridline(x: float, options: Options) -> np.array:
     return pixels
 
 
-def render_points(xs: List[np.array], ys: List[np.array], options: Options) -> np.array:
+def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDArray:
     for i in range(len(ys)):
         next_matrix = (i + 1) * pixel_matrix.render(
             xs=xs[i],
@@ -95,7 +96,7 @@ def render_points(xs: List[np.array], ys: List[np.array], options: Options) -> n
     return pixels
 
 
-def print_raw_pixel_matrix(pixels: np.array, verbose: bool = False) -> None:
+def print_raw_pixel_matrix(pixels: NDArray, verbose: bool = False) -> None:
     """
     Just print the pixels.
 
@@ -111,5 +112,5 @@ def print_raw_pixel_matrix(pixels: np.array, verbose: bool = False) -> None:
 ###########
 
 
-def _init_character_matrix(width: int, height: int, value: str = "") -> np.array:
+def _init_character_matrix(width: int, height: int, value: str = "") -> NDArray:
     return np.full((height, width), fill_value=value, dtype="<U15")

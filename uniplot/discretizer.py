@@ -2,13 +2,19 @@
 A collection of functions for discretizing continuous data.
 """
 
-import numpy as np  # type: ignore
+import numpy as np
+from numpy.typing import NDArray
 from typing import Union
 
 
-def discretize(
-    x: Union[float, np.array], x_min: float, x_max: float, steps: int
-) -> Union[int, np.array]:
+def discretize(x: float, x_min: float, x_max: float, steps: int) -> int:
+    """
+    Returns a discretized integer.
+    """
+    return int(((x - x_min) / (x_max - x_min)) * steps)
+
+
+def discretize_array(x: NDArray, x_min: float, x_max: float, steps: int) -> NDArray:
     """
     Returns a discretized integer.
     """
@@ -31,9 +37,21 @@ def compute_y_at_middle_of_row(
     )
 
 
-def invert_discretize(
-    i: Union[int, np.array], minimum: float, maximum: float, nr_bins: int
-) -> Union[int, np.array]:
+def invert_discretize(i: int, minimum: float, maximum: float, nr_bins: int) -> float:
+    """
+    Returns the level at the middle of the specified bin.
+
+    This is the inverse of `discretizer.discretize`.
+    """
+    assert maximum > minimum
+
+    step_size = (maximum - minimum) / nr_bins
+    return float((i + 0.5) * step_size + minimum)
+
+
+def invert_discretize_array(
+    i: NDArray, minimum: float, maximum: float, nr_bins: int
+) -> NDArray:
     """
     Returns the level at the middle of the specified bin.
 

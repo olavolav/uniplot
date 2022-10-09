@@ -1,6 +1,7 @@
 import sys
 import re
-import numpy as np  # type: ignore
+import numpy as np
+from numpy.typing import NDArray
 from typing import List, Optional
 
 from uniplot.discretizer import compute_y_at_middle_of_row
@@ -40,7 +41,7 @@ COLOR_RESET_CODE = "\033[0m"
 COLOR_CODE_REGEX = re.compile(r"\033\[\d+m")
 
 
-def character_for_2by2_pixels(square: np.array, color_mode: bool = False) -> str:
+def character_for_2by2_pixels(square: NDArray, color_mode: bool = False) -> str:
     """
     Convert 2x2 matrix (non-negative integers) to unicode character representation for plotting.
     """

@@ -1,5 +1,7 @@
-import numpy as np  # type: ignore
-from typing import List, Any
+import numpy as np
+from numpy.typing import NDArray
+
+from typing import List, Optional
 
 
 def _is_multi_dimensional(series) -> bool:
@@ -33,8 +35,8 @@ def _safe_min(array) -> float:
 class MultiSeries:
     def __init__(self, ys, xs=None):
         # Init types
-        self.xs: List[Any] = []
-        self.ys: List[Any] = []
+        self.xs: List[NDArray] = []
+        self.ys: List[NDArray] = []
 
         # First check if the input is multi-dim
         we_have_input_of_multiple_series = _is_multi_dimensional(ys)
