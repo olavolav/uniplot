@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.typing import NDArray
 
-from typing import List, Optional
+from typing import List, Any
 
 
 def _is_multi_dimensional(series) -> bool:
@@ -13,7 +13,7 @@ def _is_multi_dimensional(series) -> bool:
         return False
 
 
-def _cast_as_numpy_floats(array) -> Any:
+def _cast_as_numpy_floats(array) -> NDArray:
     """
     Attempts to make a numeric NumPy array from enumerable input. If simply casting into a NumPy array yields one of numeric type, it returns the array. Otherwise, it attempts to cast it as NumPy float.
     """

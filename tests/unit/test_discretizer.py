@@ -25,6 +25,12 @@ def test_correct_discretization_for_array():
     assert (vector_integer == np.array([0, 0, 1, 1, 1, 9])).all()
 
 
+def test_correct_discretization_for_array_with_nans_should_be_negative_one():
+    vector_float = np.array([0.1, np.nan, 9.9])
+    vector_integer = discretize_array(x=vector_float, x_min=0, x_max=10, steps=10)
+    assert (vector_integer == np.array([0, -1, 9])).all()
+
+
 ####################################
 # Test: compute_y_at_middle_of_row #
 ####################################

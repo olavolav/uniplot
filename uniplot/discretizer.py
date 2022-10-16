@@ -4,7 +4,6 @@ A collection of functions for discretizing continuous data.
 
 import numpy as np
 from numpy.typing import NDArray
-from typing import Union
 
 
 def discretize(x: float, x_min: float, x_max: float, steps: int) -> int:
@@ -16,9 +15,12 @@ def discretize(x: float, x_min: float, x_max: float, steps: int) -> int:
 
 def discretize_array(x: NDArray, x_min: float, x_max: float, steps: int) -> NDArray:
     """
-    Returns a discretized integer.
+    Returns a NumPy array of discretized integer values. NaN values will return -1.
+
+    Note that the integer values are not bound to the rande defined by `steps`.
     """
-    return (((np.asarray(x) - x_min) / (x_max - x_min)) * steps).astype(int)
+    array = ((np.asarray(x) - x_min) / (x_max - x_min)) * steps
+    return np.nan_to_num(array, nan=-1).astype(int)
 
 
 def compute_y_at_middle_of_row(

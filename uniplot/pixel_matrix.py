@@ -3,9 +3,7 @@ from numpy.typing import NDArray
 from typing import Optional
 
 from uniplot.discretizer import (
-    discretize,
     discretize_array,
-    invert_discretize,
     invert_discretize_array,
 )
 
@@ -216,7 +214,7 @@ def render(
                 xy_indices_of_line = xy_indices_of_line.T
                 pixels[xy_indices_of_line[1], xy_indices_of_line[0]] = 1
 
-    # Filter out of view pixels
+    # Filter out NaN and out of view pixels
     xy_indices = xy_indices[
         (xy_indices[:, 0] >= 0)
         & (xy_indices[:, 0] < width)
