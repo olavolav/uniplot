@@ -5,11 +5,11 @@ description = "Lightweight plotting to the terminal. 4x resolution via Unicode."
 authors = ["Olav Stetter <olav.stetter@googlemail.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "uniplot"}, {include = "uniplot.axis_labels"}]
+packages = [{include = "uniplot"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
-numpy = "^1.23.3"
+python = ">=3.7"
+numpy = ">=1.20.0"
 
 [tool.poetry.dev-dependencies]
 pytest = ">=6.0.1"
