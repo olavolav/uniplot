@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
-import numpy as np  # type: ignore
 
 
 def _default_gridlines() -> List[float]:

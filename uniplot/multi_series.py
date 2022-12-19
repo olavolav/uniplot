@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.typing import NDArray
 
-from typing import List, Any
+from typing import List
 
 
 def _is_multi_dimensional(series) -> bool:

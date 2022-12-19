@@ -1,5 +1,5 @@
 import numpy as np  # type: ignore
-from typing import Dict, Tuple, List, Optional, Any
+from typing import Dict
 
 from uniplot.multi_series import MultiSeries
 from uniplot.options import Options
