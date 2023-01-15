@@ -33,7 +33,7 @@ def _safe_min(array) -> float:
 
 
 class MultiSeries:
-    def __init__(self, ys, xs=None):
+    def __init__(self, ys, xs=None) -> None:
         # Init types
         self.xs: List[NDArray] = []
         self.ys: List[NDArray] = []

@@ -1,6 +1,5 @@
-import numpy as np
 from numpy.typing import NDArray
-from typing import List, Optional
+from typing import List
 
 from uniplot.discretizer import discretize
 
@@ -51,14 +50,13 @@ class LabelSet:
             return
 
         str_labels = self._find_shortest_string_representation(self.labels)
-        log_label: str = "10^" if self.log else ""
 
         if self.vertical_direction:
             # So this is for the y axis case
             lines: List[str] = [""] * self.available_space
 
             for i, label in enumerate(self.labels):
-                str_label = str_labels[i]
+                str_label = self._add_log_to_label(str_labels[i]) + self.unit
                 index = (
                     self.available_space
                     - 1
@@ -79,14 +77,14 @@ class LabelSet:
                     # This is bad and leads to wrong offsets
                     self._render_does_overlap = True
 
-                lines[index] = log_label + str_label + self.unit
+                lines[index] = str_label
 
             self._rendered_result = lines
         else:
             # So this is for the x axis case
             line = ""
             for i, label in enumerate(self.labels):
-                str_label = str_labels[i]
+                str_label = self._add_log_to_label(str_labels[i]) + self.unit
                 offset = max(
                     0,
                     discretize(
@@ -95,7 +93,7 @@ class LabelSet:
                         x_max=self.x_max,
                         steps=self.available_space,
                     )
-                    - int(0.5 * (len(log_label) + len(str_label) + len(self.unit)))
+                    - int(0.5 * len(str_label))
                     + LEFT_MARGIN_FOR_HORIZONTAL_AXIS,
                 )
                 buffer = offset - len(line)
@@ -109,7 +107,7 @@ class LabelSet:
                     self._render_does_overlap = True
 
                 # Compose string for this line
-                line = line + (" " * buffer) + log_label + str_label + self.unit
+                line = line + (" " * buffer) + str_label
 
             self._rendered_result = [line]
         self._results_already_in_cache = True
@@ -144,3 +142,18 @@ class LabelSet:
         if nr_digits == 0:
             return ("{:,d}").format(int(n))
         return ("{:,." + str(nr_digits) + "g}").format(float(n))
+
+    def _add_log_to_label(self, label) -> str:
+        if not self.log:
+            return label
+
+        # What follows is a bit of a hack
+        if label == "0":
+            return "1"
+        if label == "1":
+            return "10"
+        if label == "2":
+            return "100"
+        if label == "-1":
+            return "0.1"
+        return "10^" + label
