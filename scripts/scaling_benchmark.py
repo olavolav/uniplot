@@ -2,14 +2,11 @@ import numpy as np
 from time import time
 from uniplot import plot
 
-expo: int = 0
-expos = []
 sizes = []
 times = []
 times_with_lines = []
 
-for expo in range(9):
-    expos.append(expo)
+for expo in range(8):
     size = 10**expo
     sizes.append(size)
     ys = np.random.uniform(size=size)
@@ -29,12 +26,29 @@ for expo in range(9):
 
 print("Benchmarking done.")
 
-print(f"expos = {expos}")
 print(f"sizes = {sizes}")
 print(f"times = {times}")
 print(f"times_with_lines = {times_with_lines}")
 
-plot(xs=sizes, ys=times, lines=True, title="sizes versus plotting time", y_unit=" s")
+print("### Plotting time without lines ###")
+plot(
+    xs=sizes,
+    ys=times,
+    lines=True,
+    title="sizes versus plotting time, without lines",
+    y_unit=" s",
+)
+plot(
+    xs=sizes,
+    ys=times,
+    lines=True,
+    title="sizes versus plotting time, without lines",
+    y_unit=" s",
+    x_as_log=True,
+    y_as_log=True,
+)
+
+print("### Plotting time with lines ###")
 plot(
     xs=sizes,
     ys=times_with_lines,
@@ -42,18 +56,12 @@ plot(
     title="sizes versus plotting time, with lines",
     y_unit=" s",
 )
-plot(xs=expos, ys=times, lines=True, title="expos versus plotting time", y_unit=" s")
 plot(
-    xs=expos,
+    xs=sizes,
     ys=times_with_lines,
     lines=True,
-    title="expos versus plotting time, with lines",
+    title="sizes versus plotting time, with lines",
     y_unit=" s",
-)
-plot(xs=expos, ys=np.log(times), lines=True, title="expos versus log plotting time")
-plot(
-    xs=expos,
-    ys=np.log(times_with_lines),
-    lines=True,
-    title="expos versus log plotting time, with lines",
+    x_as_log=True,
+    y_as_log=True,
 )

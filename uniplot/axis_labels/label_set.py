@@ -19,12 +19,14 @@ class LabelSet:
         x_max: float,
         available_space: int,
         unit: str = "",
+        log: bool = False,
         vertical_direction: bool = False,
     ):
         self.labels = labels
         self.x_min = x_min
         self.x_max = x_max
         self.unit = unit
+        self.log = log
         self.available_space = available_space
         self.vertical_direction = vertical_direction
         self._results_already_in_cache: bool = False
@@ -49,6 +51,7 @@ class LabelSet:
             return
 
         str_labels = self._find_shortest_string_representation(self.labels)
+        log_label: str = "10^" if self.log else ""
 
         if self.vertical_direction:
             # So this is for the y axis case
@@ -76,7 +79,7 @@ class LabelSet:
                     # This is bad and leads to wrong offsets
                     self._render_does_overlap = True
 
-                lines[index] = str_label + self.unit
+                lines[index] = log_label + str_label + self.unit
 
             self._rendered_result = lines
         else:
@@ -92,7 +95,7 @@ class LabelSet:
                         x_max=self.x_max,
                         steps=self.available_space,
                     )
-                    - int(0.5 * (len(str_label) + len(self.unit)))
+                    - int(0.5 * (len(log_label) + len(str_label) + len(self.unit)))
                     + LEFT_MARGIN_FOR_HORIZONTAL_AXIS,
                 )
                 buffer = offset - len(line)
@@ -106,7 +109,7 @@ class LabelSet:
                     self._render_does_overlap = True
 
                 # Compose string for this line
-                line = line + (" " * buffer) + str_label + self.unit
+                line = line + (" " * buffer) + log_label + str_label + self.unit
 
             self._rendered_result = [line]
         self._results_already_in_cache = True

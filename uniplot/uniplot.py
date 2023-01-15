@@ -208,6 +208,7 @@ def _generate_body_raw_elements(
         x_max=options.y_max,
         available_space=options.height,
         unit=options.y_unit,
+        log=options.y_as_log,
         vertical_direction=True,
     )
     y_axis_labels = [""] * options.height
@@ -232,6 +233,7 @@ def _generate_body_raw_elements(
         x_max=options.x_max,
         available_space=options.width,
         unit=options.x_unit,
+        log=options.x_as_log,
         vertical_direction=False,
     )
     x_axis_labels = ""

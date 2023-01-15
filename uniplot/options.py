@@ -28,12 +28,16 @@ class Options:
     title: Optional[str] = None
     # Width of the plotting region, in characters
     width: int = 60
+    # Plot x axis with log scale
+    x_as_log: bool = False
     # Vertical gridlines
     x_gridlines: List[float] = field(default_factory=_default_gridlines)
     # Maximum x value of the current view
     x_max: float = 1.0
     # Minimum x value of the current view
     x_min: float = 0.0
+    # Plot y axis with log scale
+    y_as_log: bool = False
     # Units of x axis
     x_unit: str = ""
     # Horizontal gridlines

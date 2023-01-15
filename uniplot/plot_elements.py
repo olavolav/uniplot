@@ -2,9 +2,7 @@ import sys
 import re
 import numpy as np
 from numpy.typing import NDArray
-from typing import List, Optional
-
-from uniplot.discretizer import compute_y_at_middle_of_row
+from typing import List
 
 UNICODE_SQUARES = {
     0: "",
@@ -96,7 +94,7 @@ def plot_title(title: str, width: int) -> str:
 
 
 def erase_previous_lines(nr_lines: int) -> None:
-    for i in range(nr_lines):
+    for _ in range(nr_lines):
         sys.stdout.write(ERASE_LINE)
         sys.stdout.write(CURSOR_UP_ONE)
         sys.stdout.write(ERASE_LINE)
@@ -105,29 +103,6 @@ def erase_previous_lines(nr_lines: int) -> None:
 ###########
 # private #
 ###########
-
-
-def _find_shortest_string_representation(numbers: List[Optional[float]]) -> List[str]:
-    """
-    This method will find the shortest numerical values for axis labels that are different from ech other.
-    """
-    compact_abs_numbers = [abs(n) for n in numbers if n is not None]
-
-    # We actually want to add one more digit than needed for uniqueness
-    for nr_digits in range(10):
-        # The test for the right number of digits happens on the absolute numbers. See issue #5.
-        test_list = [_float_format(n, nr_digits) for n in compact_abs_numbers]
-        if len(test_list) == len(set(test_list)):
-            return ["" if n is None else _float_format(n, nr_digits) for n in numbers]
-
-    # Fallback to naive string conversion
-    return ["" if n is None else str(n) for n in numbers]
-
-
-def _float_format(n: float, nr_digits: int):
-    if nr_digits == 0:
-        return ("{:,d}").format(int(n))
-    return ("{:,." + str(nr_digits) + "f}").format(float(n))
 
 
 def _center_if_possible(text: str, width: int) -> str:

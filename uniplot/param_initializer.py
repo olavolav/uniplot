@@ -15,6 +15,11 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
 
     As a result the somewhat hacky code below should at least be confined to this function, and not spread throughout uniplot.
     """
+    if kwargs.get("x_as_log"):
+        series.xs = [np.log10(x) for x in series.xs]
+    if kwargs.get("y_as_log"):
+        series.ys = [np.log10(y) for y in series.ys]
+
     # Set x bounds to show all points by default
     x_enlarge_delta = AUTO_WINDOW_ENLARGE_FACTOR * (series.x_max() - series.x_min())
     kwargs["x_min"] = kwargs.get("x_min", series.x_min() - x_enlarge_delta)
