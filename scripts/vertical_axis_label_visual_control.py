@@ -7,11 +7,13 @@ for i in range(150):
     x_max = x_max * 1.05
     space = 17
 
-    ls = extended_talbot_labels(x_min=x_min, x_max=x_max, available_space=space, vertical_direction=True)
+    ls = extended_talbot_labels(
+        x_min=x_min, x_max=x_max, available_space=space, vertical_direction=True
+    )
     strings = ls.render()
 
     print("┐")
     for s in strings:
-        print("| "+s)
+        print("| " + s)
     print("┘")
     print()

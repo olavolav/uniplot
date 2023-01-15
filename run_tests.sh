@@ -8,7 +8,7 @@ echo "##############"
 echo "# Code style #"
 echo "##############"
 
-black uniplot/**/*.py tests/**/*.py
+black uniplot/**/*.py tests/**/*.py scripts/*.py
 
 echo ""
 echo "##############"
