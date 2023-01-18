@@ -141,7 +141,7 @@ class LabelSet:
         """
         if nr_digits == 0:
             return ("{:,d}").format(int(n))
-        return ("{:,." + str(nr_digits) + "g}").format(float(n))
+        return ("{:,." + str(nr_digits) + "f}").format(float(n))
 
     def _add_log_to_label(self, label) -> str:
         if not self.log:

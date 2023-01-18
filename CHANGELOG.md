@@ -5,6 +5,10 @@ All notable changes to uniplot will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Fixed
+- Fixed a rare issue with displaying the wrong number of digits of axis labels.
+
 ## [0.8.1] - 2022-12-19
 ### Security
 - Upgraded NumPy, and then Python to >= 3.8 with it, to avoid allowing older NumPy versions with known vulnerabilites.
