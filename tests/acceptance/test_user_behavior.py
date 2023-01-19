@@ -1,4 +1,4 @@
-import numpy as np  # type: ignore
+import numpy as np
 import math
 
 from uniplot import plot, plot_to_string
@@ -17,6 +17,12 @@ def test_normal_plotting_to_string():
 def test_normal_plotting_with_x_series():
     x = [math.sin(i / 20) + i / 300 for i in range(600)]
     plot(xs=x, ys=x, title="Diagonal")
+
+
+def test_logarithmic_plotting():
+    xs = np.arange(1, 1000, 20)
+    ys = np.power(xs, 2) + 1e-6
+    plot(xs=xs, ys=ys, x_as_log=True, y_as_log=True)
 
 
 def test_multi_series_plotting():
