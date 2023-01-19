@@ -30,37 +30,21 @@ print(f"sizes = {sizes}")
 print(f"times = {times}")
 print(f"times_with_lines = {times_with_lines}")
 
-print("### Plotting time without lines ###")
 plot(
     xs=sizes,
     ys=times,
     lines=True,
-    title="sizes versus plotting time, without lines",
-    y_unit=" s",
-)
-plot(
-    xs=sizes,
-    ys=times,
-    lines=True,
-    title="sizes versus plotting time, without lines",
+    title="Sample size versus plotting time, without lines, log-log",
     y_unit=" s",
     x_as_log=True,
     y_as_log=True,
 )
 
-print("### Plotting time with lines ###")
 plot(
     xs=sizes,
     ys=times_with_lines,
     lines=True,
-    title="sizes versus plotting time, with lines",
-    y_unit=" s",
-)
-plot(
-    xs=sizes,
-    ys=times_with_lines,
-    lines=True,
-    title="sizes versus plotting time, with lines",
+    title="Sample size versus plotting time, with lines, log-log",
     y_unit=" s",
     x_as_log=True,
     y_as_log=True,
