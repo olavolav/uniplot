@@ -141,11 +141,13 @@ In alphabetical order:
 * `line_length_hard_cap` - Enforce a hard limit on the number of characters per line of the plot area. This may override the `width` option if there is not enough space. Defaults to `None`.
 * `title` - The title of the plot. Defaults to `None`.
 * `width` - The width of the plotting region, in characters. Default is `60`. Note that if the `line_length_hard_cap` option is used and there is not enough space, the actual width may be smaller.
-* `x_gridlines` - A list of x values that have a vertical line for better orientation. Defaults to `[0]`.
+* `x_as_log` - Plot the x axis as logarithmic scale. Defaults to `False`.
+* `x_gridlines` - A list of x values that have a vertical line for better orientation. Defaults to `[0]`, or to `[]` if `x_as_log` is enabled.
 * `x_max` - Maximum x value of the view. Defaults to a value that shows all data points.
 * `x_min` - Minimum x value of the view. Defaults to a value that shows all data points.
 * `x_unit` - Unit of the x axis. This is a string that is appended to the axis labels. Defaults to `""`.
-* `y_gridlines` - A list of y values that have a horizontal line for better orientation. Defaults to `[0]`.
+* `y_as_log` - Plot the y axis as logarithmic scale. Defaults to `False`.
+* `y_gridlines` - A list of y values that have a horizontal line for better orientation. Defaults to `[0]`, or to `[]` if `y_as_log` is enabled.
 * `y_max` - Maximum y value of the view. Defaults to a value that shows all data points.
 * `y_min` - Minimum y value of the view. Defaults to a value that shows all data points.
 * `y_unit` - Unit of the y axis. This is a string that is appended to the axis labels. Defaults to `""`.
@@ -207,7 +209,6 @@ pip install uniplot
 Coming up:
 
 * Fill area under curve
-* Log scales
 * Add generated page with list of supported fonts
 * Auto-detect color mode depending on terminal capabilities
 * Possibly: Fallback to ASCII characters
@@ -217,6 +218,6 @@ Input is always welcome, let me know what is most needed for this to be as usefu
 
 ## Contributing
 
-Clone this repository, and install dependecies via `pip3 install -e .\[dev\]`.
-You can run the tests vie `./run_tests` to make sure your setup is good. Then
-proceed with issues, PRs etc. the usual way.
+Clone this repository, and install dependecies via `poetry install`.
+
+You can run the tests vie `poetry run ./run_tests` to make sure your setup is good. Then proceed with issues, PRs etc. the usual way.
