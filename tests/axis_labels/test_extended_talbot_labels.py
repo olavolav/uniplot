@@ -37,3 +37,25 @@ def test_vertical_labelling_case_of_some_konux_displacement_data():
     )
     assert ls is not None
     assert 2 <= len(ls.labels) < 5
+
+
+def test_weird_offset_case1():
+    ls = extended_talbot_labels(
+        x_min=0.14,
+        x_max=1.9,
+        available_space=60,
+        vertical_direction=False,
+        verbose=True,
+    )
+    assert np.array_equal(ls.labels, [0.5, 1.0, 1.5])
+
+
+def test_weird_offset_case2():
+    ls = extended_talbot_labels(
+        x_min=-1.846526999372103,
+        x_max=-0.1651564799721942,
+        available_space=17,
+        vertical_direction=True,
+        verbose=True,
+    )
+    assert np.array_equal(ls.labels, [-1.5, -1.0, -0.5])

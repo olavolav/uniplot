@@ -6,7 +6,7 @@ from uniplot.axis_labels.label_set import LabelSet
 # Preference-ordered list of "nice" numbers
 Q_VALUES = [1, 5, 2, 2.5, 4, 3]
 # Weights to be able to combine the different scores
-WEIGHTS = np.array([0.25, 0.25, 0.3, 0.2])
+WEIGHTS = np.array([0.4, 0.25, 0.3, 0.2])
 # The "depth" of the search
 MAX_SKIP_AMOUNT = 9
 
@@ -30,79 +30,70 @@ def extended_talbot_labels(
     data_range: float = x_max - x_min
     base_exponent = int(np.log10(data_range))
 
-    preferred_nr_labels = _compute_preferred_numer_of_labels(
+    preferred_nr_labels = _compute_preferred_number_of_labels(
         available_space, vertical_direction
     )
 
     for exponent in [base_exponent, base_exponent - 1]:
-        x_min_normalized = int(np.floor(x_min / 10**exponent))
-        x_max_normalized = int(np.ceil(x_max / 10**exponent))
+        # Find closest "zero" and thus the start of the label generation
+        f = x_min / 10 ** (exponent + 1)
+        label_start = np.floor(f) * 10 ** (exponent + 1)
 
         # j is the "skip amount"
         for j in range(1, MAX_SKIP_AMOUNT + 1):
             # i is the index of the currently selected "nice" number q
             for i, q in enumerate(Q_VALUES):
-                q = Q_VALUES[i]
-                single_step_size = q / (10 ** int(np.log10(j * q)))
-                step_size = j * single_step_size
+                step_size = q * j
 
-                for offset in range(j):
-                    labels = (
-                        np.arange(
-                            x_min_normalized + offset,
-                            x_max_normalized + 1,
-                            step=step_size,
-                        )
-                        * 10**exponent
+                labels = np.arange(
+                    start=label_start,
+                    stop=x_max,
+                    step=step_size * 10**exponent,
+                )
+                # Crop labels
+                labels = labels[(labels >= x_min) & (labels <= x_max)]
+                if len(labels) < 2:
+                    continue
+
+                simplicity = _compute_simplicity_score(labels, i, j)
+                coverage = _compute_coverage_score(labels, x_min, x_max)
+                density = _compute_density_score(labels, preferred_nr_labels)
+
+                # Performance improvement
+                score_approx = np.dot(
+                    np.array([simplicity, coverage, density, 1]), WEIGHTS
+                )
+                if (result is not None) and (score_approx < best_score):
+                    continue
+
+                # Generate `LabelSet` instance to compute remaining scores
+                current_set = LabelSet(
+                    labels,
+                    x_min=x_min,
+                    x_max=x_max,
+                    available_space=available_space,
+                    unit=unit,
+                    log=log,
+                    vertical_direction=vertical_direction,
+                )
+
+                # TODO Simplistic grid alignment score is used, needs refinement
+                grid_alignment = 1 - 100 * int(
+                    current_set.compute_if_render_does_overlap()
+                )
+                score = np.dot(
+                    np.array([simplicity, coverage, density, grid_alignment]),
+                    WEIGHTS,
+                )
+                if verbose:
+                    print(
+                        f"Testing labels: {labels} => simplicity = {simplicity}, coverage = {coverage}, density = {density}, grid_alignment => {grid_alignment}, score = {score}"
                     )
-                    # Crop labels
-                    labels = labels[(labels >= x_min) & (labels <= x_max)]
-
-                    # Skipping is less than two labels
-                    if len(labels) < 2:
-                        continue
-
-                    simplicity = _compute_simplicity_score(labels, i, j)
-                    coverage = _compute_coverage_score(labels, x_min, x_max)
-                    density = _compute_density_score(labels, preferred_nr_labels)
-
-                    # Performance improvement
-                    if (
-                        result is not None
-                        and np.dot(
-                            np.array([simplicity, coverage, density, 1]), WEIGHTS
-                        )
-                        < best_score
-                    ):
-                        continue
-
-                    # Generate `LabelSet` instance to compute remaining scores
-                    current_set = LabelSet(
-                        labels,
-                        x_min=x_min,
-                        x_max=x_max,
-                        available_space=available_space,
-                        unit=unit,
-                        log=log,
-                        vertical_direction=vertical_direction,
-                    )
-
-                    # TODO Simplistic grid alignment score is used, needs refinement
-                    grid_alignment = 1 - 100 * int(
-                        current_set.compute_if_render_does_overlap()
-                    )
-                    score = np.dot(
-                        np.array([simplicity, coverage, density, grid_alignment]),
-                        WEIGHTS,
-                    )
-
-                    if score > best_score:
-                        if verbose:
-                            print(
-                                f"DEBUG: simplicity = {simplicity}, coverage = {coverage}, density = {density}, grid_alignment = {grid_alignment} => New best score 😀 = {score} with labels = {labels}"
-                            )
-                        best_score = score
-                        result = current_set
+                if score > best_score:
+                    if verbose:
+                        print("=> New best score 😀")
+                    best_score = score
+                    result = current_set
 
     return result
 
@@ -112,7 +103,7 @@ def extended_talbot_labels(
 ###########
 
 
-def _compute_preferred_numer_of_labels(
+def _compute_preferred_number_of_labels(
     available_space: int, vertical_direction: bool
 ) -> int:
     """
@@ -123,7 +114,7 @@ def _compute_preferred_numer_of_labels(
 
     if vertical_direction:
         # for y axis
-        preferred_number_of_labels = int(available_space / 5)
+        preferred_number_of_labels = int(available_space / 5.6)
 
     return max(2, min(20, preferred_number_of_labels))
 
