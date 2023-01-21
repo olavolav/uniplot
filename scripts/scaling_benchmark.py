@@ -2,6 +2,8 @@ import numpy as np
 from time import time
 from uniplot import plot
 
+NOTICEABLE_DELAY_SECONDS = 0.2
+
 sizes = []
 times = []
 times_with_lines = []
@@ -38,6 +40,7 @@ plot(
     y_unit=" s",
     x_as_log=True,
     y_as_log=True,
+    y_gridlines=[NOTICEABLE_DELAY_SECONDS],
 )
 
 plot(
@@ -48,4 +51,18 @@ plot(
     y_unit=" s",
     x_as_log=True,
     y_as_log=True,
+    y_gridlines=[NOTICEABLE_DELAY_SECONDS],
+)
+
+# Combined plot
+plot(
+    xs=[sizes, sizes],
+    ys=[times, times_with_lines],
+    lines=True,
+    title="Sample size versus plotting time, log-log",
+    legend_labels=["dots only", "dots + lines"],
+    y_unit=" s",
+    x_as_log=True,
+    y_as_log=True,
+    y_gridlines=[NOTICEABLE_DELAY_SECONDS],
 )
