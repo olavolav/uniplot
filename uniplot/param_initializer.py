@@ -21,12 +21,20 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
             kwargs["x_gridlines"] = []
         else:
             kwargs["x_gridlines"] = list(np.log10(np.array(kwargs["x_gridlines"])))
+        if kwargs.get("x_min"):
+            kwargs["x_min"] = np.log10(kwargs["x_min"])
+        if kwargs.get("x_max"):
+            kwargs["x_max"] = np.log10(kwargs["x_max"])
     if kwargs.get("y_as_log"):
         series.ys = [np.log10(y) for y in series.ys]
         if not kwargs.get("y_gridlines"):
             kwargs["y_gridlines"] = []
         else:
             kwargs["y_gridlines"] = list(np.log10(np.array(kwargs["y_gridlines"])))
+        if kwargs.get("y_min"):
+            kwargs["y_min"] = np.log10(kwargs["y_min"])
+        if kwargs.get("y_max"):
+            kwargs["y_max"] = np.log10(kwargs["y_max"])
 
     # Set x bounds to show all points by default
     x_enlarge_delta = AUTO_WINDOW_ENLARGE_FACTOR * (series.x_max() - series.x_min())

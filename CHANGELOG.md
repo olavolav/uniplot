@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unrelease
 ### Fixed
 - Labels were not correctly aligned to zero.
+- Manual view options are now working correctly when using log scales.
 
 ## [0.9.0] - 2023-01-19
 ### Added
