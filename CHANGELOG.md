@@ -6,9 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## Unrelease
+## [0.9.1] - 2023-01-24
 ### Fixed
-- Labels were not correctly aligned to zero.
+- Labels are now correctly aligned to zero.
 - Manual view options are now working correctly when using log scales.
 
 ## [0.9.0] - 2023-01-19
