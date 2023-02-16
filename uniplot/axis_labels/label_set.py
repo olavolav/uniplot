@@ -1,7 +1,8 @@
+import numpy as np
 from numpy.typing import NDArray
 from typing import List
 
-from uniplot.discretizer import discretize
+from uniplot.discretizer import discretize, discretize_array
 
 LEFT_MARGIN_FOR_HORIZONTAL_AXIS = 1
 
@@ -21,7 +22,7 @@ class LabelSet:
         log: bool = False,
         vertical_direction: bool = False,
     ):
-        self.labels = labels
+        self.labels: NDArray = labels
         self.x_min = x_min
         self.x_max = x_max
         self.unit = unit
@@ -31,6 +32,7 @@ class LabelSet:
         self._results_already_in_cache: bool = False
         self._rendered_result: List[str] = []
         self._render_does_overlap: bool = False
+        self._spacing_is_regular: bool = True
 
     def render(self) -> List[str]:
         self._render_and_measure_to_cache()
@@ -39,6 +41,10 @@ class LabelSet:
     def compute_if_render_does_overlap(self) -> bool:
         self._render_and_measure_to_cache()
         return self._render_does_overlap
+
+    def compute_if_spacing_is_regular(self) -> bool:
+        self._render_and_measure_to_cache()
+        return self._spacing_is_regular
 
     ###########
     # private #
@@ -55,29 +61,33 @@ class LabelSet:
             # So this is for the y axis case
             lines: List[str] = [""] * self.available_space
 
-            for i, label in enumerate(self.labels):
-                str_label = self._add_log_to_label(str_labels[i]) + self.unit
-                index = (
-                    self.available_space
-                    - 1
-                    - min(
-                        max(
-                            0,
-                            discretize(
-                                label,
-                                x_min=self.x_min,
-                                x_max=self.x_max,
-                                steps=self.available_space,
-                            ),
+            indices = (
+                self.available_space
+                - 1
+                - np.minimum(
+                    np.maximum(
+                        0,
+                        discretize_array(
+                            self.labels,
+                            x_min=self.x_min,
+                            x_max=self.x_max,
+                            steps=self.available_space,
                         ),
-                        self.available_space - 1,
-                    )
+                    ),
+                    self.available_space - 1,
                 )
+            )
+            self._spacing_is_regular = self._compute_spacing_of_indices_is_regular(
+                indices
+            )
+
+            for i, str_label in enumerate(str_labels):
+                full_label = self._add_log_to_label(str_label) + self.unit
+                index = indices[i]
                 if lines[index] != "":
                     # This is bad and leads to wrong offsets
                     self._render_does_overlap = True
-
-                lines[index] = str_label
+                lines[index] = full_label
 
             self._rendered_result = lines
         else:
@@ -157,3 +167,6 @@ class LabelSet:
         if label == "-1":
             return "0.1"
         return "10^" + label
+
+    def _compute_spacing_of_indices_is_regular(self, indices: NDArray) -> bool:
+        return len(np.unique(np.diff(indices))) == 1

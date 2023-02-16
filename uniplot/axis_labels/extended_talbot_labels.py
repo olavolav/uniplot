@@ -34,7 +34,7 @@ def extended_talbot_labels(
         available_space, vertical_direction
     )
 
-    for exponent in [base_exponent, base_exponent - 1]:
+    for exponent in [base_exponent, base_exponent-1]:
         # Find closest "zero" and thus the start of the label generation
         f = x_min / 10 ** (exponent + 1)
         label_start = np.floor(f) * 10 ** (exponent + 1)
@@ -77,10 +77,10 @@ def extended_talbot_labels(
                     vertical_direction=vertical_direction,
                 )
 
-                # TODO Simplistic grid alignment score is used, needs refinement
-                grid_alignment = 1 - 100 * int(
-                    current_set.compute_if_render_does_overlap()
-                )
+                grid_alignment = int(
+                    current_set.compute_if_spacing_is_regular()
+                ) - 2 * int(current_set.compute_if_render_does_overlap())
+
                 score = np.dot(
                     np.array([simplicity, coverage, density, grid_alignment]),
                     WEIGHTS,
