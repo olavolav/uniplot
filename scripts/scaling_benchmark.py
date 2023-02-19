@@ -8,6 +8,30 @@ sizes = []
 times = []
 times_with_lines = []
 
+# Historical data
+historical_version = "v0.9.1"
+historical_sizes = [1, 10, 100, 1000, 10000, 100000, 1000000, 10000000]
+historical_times = [
+    0.014598846435546875,
+    0.016776084899902344,
+    0.010040044784545898,
+    0.010375261306762695,
+    0.0107879638671875,
+    0.018589019775390625,
+    0.06313228607177734,
+    0.6484909057617188,
+]
+historical_times_with_lines = [
+    0.02862381935119629,
+    0.010422945022583008,
+    0.01305389404296875,
+    0.01655888557434082,
+    0.05128192901611328,
+    0.3673999309539795,
+    3.5426928997039795,
+    36.34388995170593,
+]
+
 for expo in range(8):
     size = 10**expo
     sizes.append(size)
@@ -33,10 +57,11 @@ print(f"times = {times}")
 print(f"times_with_lines = {times_with_lines}")
 
 plot(
-    xs=sizes,
-    ys=times,
+    xs=[historical_sizes, sizes],
+    ys=[historical_times, times],
     lines=True,
-    title="Sample size versus plotting time, without lines, log-log",
+    title="Sample size versus plotting time, dots only, log-log",
+    legend_labels=[historical_version, "current"],
     y_unit=" s",
     x_as_log=True,
     y_as_log=True,
@@ -44,10 +69,11 @@ plot(
 )
 
 plot(
-    xs=sizes,
-    ys=times_with_lines,
+    xs=[historical_sizes, sizes],
+    ys=[historical_times_with_lines, times_with_lines],
     lines=True,
-    title="Sample size versus plotting time, with lines, log-log",
+    title="Sample size versus plotting time, dots + lines, log-log",
+    legend_labels=[historical_version, "current"],
     y_unit=" s",
     x_as_log=True,
     y_as_log=True,
@@ -59,7 +85,7 @@ plot(
     xs=[sizes, sizes],
     ys=[times, times_with_lines],
     lines=True,
-    title="Sample size versus plotting time, log-log",
+    title="Sample size versus plotting time, log-log, current cersion",
     legend_labels=["dots only", "dots + lines"],
     y_unit=" s",
     x_as_log=True,
