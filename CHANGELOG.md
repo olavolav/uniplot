@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Changed
 - Vertical axis labels with equal line spacing are now preferred, for a cleaner look.
+- Fixed many of the rare cases with blank axis labels.
 
 ## [0.9.1] - 2023-01-24
 ### Fixed

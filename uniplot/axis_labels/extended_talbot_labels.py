@@ -34,7 +34,7 @@ def extended_talbot_labels(
         available_space, vertical_direction
     )
 
-    for exponent in [base_exponent, base_exponent-1]:
+    for exponent in [base_exponent, base_exponent - 1, base_exponent - 2]:
         # Find closest "zero" and thus the start of the label generation
         f = x_min / 10 ** (exponent + 1)
         label_start = np.floor(f) * 10 ** (exponent + 1)
@@ -59,11 +59,11 @@ def extended_talbot_labels(
                 coverage = _compute_coverage_score(labels, x_min, x_max)
                 density = _compute_density_score(labels, preferred_nr_labels)
 
-                # Performance improvement
                 score_approx = np.dot(
                     np.array([simplicity, coverage, density, 1]), WEIGHTS
                 )
                 if (result is not None) and (score_approx < best_score):
+                    # The current set cannot be better than the currently best set
                     continue
 
                 # Generate `LabelSet` instance to compute remaining scores
