@@ -55,15 +55,21 @@ def character_for_2by2_pixels(square: NDArray, color_mode: bool = False) -> str:
             max_color - 1
         )
 
-    # binary_square = np.clip(square, a_min=0, a_max=1)
     integer_encoding = np.multiply(binary_square, BINARY_ENCODING_MATRIX).sum()
     char = UNICODE_SQUARES[integer_encoding]
 
+    # We are done if the result is a blank character, or if the result is not blank and we do not need to colorize it
     if char == "" or not color_mode:
         return char
+    return _colorize_char(char, square.max())
 
-    color_code = list(COLOR_CODES.values())[(square.max() - 1) % len(COLOR_CODES)]
-    return f"{color_code}{char}{COLOR_RESET_CODE}"
+
+def character_for_ascii_pixel(nr: int, color_mode: bool = False) -> str:
+    if nr < 1:
+        return ""
+    if not color_mode:
+        return "█"
+    return _colorize_char("█", nr)
 
 
 def legend(legend_labels: List[str], width: int) -> str:
@@ -119,3 +125,8 @@ def _center_if_possible(text: str, width: int) -> str:
 
 def _text_without_control_chars(text: str):
     return COLOR_CODE_REGEX.sub("", text)
+
+
+def _colorize_char(char: str, color: int) -> str:
+    color_code = list(COLOR_CODES.values())[(color - 1) % len(COLOR_CODES)]
+    return color_code + char + COLOR_RESET_CODE

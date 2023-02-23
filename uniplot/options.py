@@ -14,6 +14,8 @@ def _default_lines() -> List[bool]:
 class Options:
     # Color mode
     color: bool = False
+    # Force ASCII characters for plotting only
+    force_ascii: bool = False
     # Height of the plotting region, in lines
     height: int = 17
     # Interactive mode

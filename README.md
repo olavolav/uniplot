@@ -134,6 +134,7 @@ In both cases, NaN values are ignored.
 In alphabetical order:
 
 * `color` - Draw series in color. Defaults to `False` when plotting a single series, and to `True` when plotting multiple.
+* `force_ascii` - Force ASCII characters for plotting only. This can be useful for compatibility, for example when using uniplot inside of CI/CD systems that do not support Unicode. Defaults to `False`.
 * `height` - The height of the plotting region, in characters. Default is `17`.
 * `interactive` - Enable interactive mode. Defaults to `False`.
 * `legend_labels` - Labels for the series. Can be `None` or a list of strings. Defaults to `None`.
@@ -202,18 +203,6 @@ Install via pip using:
 ```
 pip install uniplot
 ```
-
-
-## Roadmap
-
-Coming up:
-
-* Fill area under curve
-* Add generated page with list of supported fonts
-* Auto-detect color mode depending on terminal capabilities
-* Possibly: Fallback to ASCII characters
-
-Input is always welcome, let me know what is most needed for this to be as useful as possible.
 
 
 ## Contributing

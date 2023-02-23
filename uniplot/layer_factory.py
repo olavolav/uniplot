@@ -29,17 +29,27 @@ def render_horizontal_gridline(y: float, options: Options) -> NDArray:
     if y < options.y_min or y >= options.y_max:
         return pixels
 
-    y_index_superresolution = (
-        3 * options.height
-        - 1
-        - discretize(
-            x=y, x_min=options.y_min, x_max=options.y_max, steps=3 * options.height
+    if options.force_ascii:
+        y_index = (
+            options.height
+            - 1
+            - discretize(
+                x=y, x_min=options.y_min, x_max=options.y_max, steps=options.height
+            )
         )
-    )
-    y_index = int(y_index_superresolution / 3)
+        pixels[y_index, :] = "─"
+    else:
+        y_index_superresolution = (
+            3 * options.height
+            - 1
+            - discretize(
+                x=y, x_min=options.y_min, x_max=options.y_max, steps=3 * options.height
+            )
+        )
+        y_index = int(y_index_superresolution / 3)
 
-    character = Y_GRIDLINE_CHARACTERS[y_index_superresolution % 3]
-    pixels[y_index, :] = character
+        character = Y_GRIDLINE_CHARACTERS[y_index_superresolution % 3]
+        pixels[y_index, :] = character
 
     return pixels
 
@@ -62,6 +72,9 @@ def render_vertical_gridline(x: float, options: Options) -> NDArray:
 
 
 def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDArray:
+    # Determine if we use Unicode super-resolution :-) or not
+    scaling_factor: int = 2 - int(options.force_ascii)
+
     for i in range(len(ys)):
         next_matrix = (i + 1) * pixel_matrix.render(
             xs=xs[i],
@@ -70,9 +83,8 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
             x_max=options.x_max,
             y_min=options.y_min,
             y_max=options.y_max,
-            # Unicode super-resolution :-)
-            width=2 * options.width,
-            height=2 * options.height,
+            width=scaling_factor * options.width,
+            height=scaling_factor * options.height,
             lines=options.lines[i],
         )
         if i == 0:
@@ -81,17 +93,23 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
             matrix = pixel_matrix.merge_on_top(
                 low_layer=matrix,
                 high_layer=next_matrix,
-                width=2 * options.width,
-                height=2 * options.height,
+                width=scaling_factor * options.width,
+                height=scaling_factor * options.height,
             )
 
     pixels = _init_character_matrix(width=options.width, height=options.height)
     for row in range(options.height):
         for col in range(options.width):
-            pixels[row, col] = elements.character_for_2by2_pixels(
-                matrix[2 * row : 2 * row + 2, 2 * col : 2 * col + 2],
-                color_mode=options.color,
-            )
+            if options.force_ascii:
+                pixels[row, col] = elements.character_for_ascii_pixel(
+                    matrix[row, col],
+                    color_mode=options.color,
+                )
+            else:
+                pixels[row, col] = elements.character_for_2by2_pixels(
+                    matrix[2 * row : 2 * row + 2, 2 * col : 2 * col + 2],
+                    color_mode=options.color,
+                )
 
     return pixels
 
