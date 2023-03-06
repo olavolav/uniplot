@@ -14,6 +14,12 @@ def test_normal_plotting_to_string():
     plot_to_string(xs=x, ys=x, title="Sine wave")
 
 
+def test_plotting_with_forced_ascii():
+    x = [1, 3, -2]
+    strs = plot_to_string(xs=x, ys=x, title="Sine wave in ASCII", force_ascii=True)
+    assert "█" in "".join(strs)
+
+
 def test_normal_plotting_with_x_series():
     x = [math.sin(i / 20) + i / 300 for i in range(600)]
     plot(xs=x, ys=x, title="Diagonal")
