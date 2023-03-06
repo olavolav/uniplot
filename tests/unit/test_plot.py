@@ -1,6 +1,4 @@
 import math
-import time
-import numpy as np  # type: ignore
 
 from uniplot.uniplot import plot
 

@@ -1,4 +1,4 @@
-import numpy as np  # type: ignore
+import numpy as np
 
 from uniplot.plot_elements import character_for_2by2_pixels
 

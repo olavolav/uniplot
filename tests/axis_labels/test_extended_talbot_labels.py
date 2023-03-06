@@ -1,4 +1,4 @@
-import numpy as np  # type: ignore
+import numpy as np
 
 from uniplot.axis_labels.extended_talbot_labels import extended_talbot_labels
 

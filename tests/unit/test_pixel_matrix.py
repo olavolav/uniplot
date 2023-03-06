@@ -1,4 +1,4 @@
-import numpy as np  # type: ignore
+import numpy as np
 
 from uniplot.pixel_matrix import render, merge_on_top
 

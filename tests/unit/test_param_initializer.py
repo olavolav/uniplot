@@ -1,5 +1,4 @@
 import pytest
-import numpy as np  # type: ignore
 
 from uniplot.param_initializer import validate_and_transform_options
 from uniplot.multi_series import MultiSeries

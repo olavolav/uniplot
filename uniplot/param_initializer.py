@@ -1,4 +1,4 @@
-import numpy as np  # type: ignore
+import numpy as np
 from typing import Dict
 
 from uniplot.multi_series import MultiSeries
