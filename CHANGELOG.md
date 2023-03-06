@@ -5,6 +5,10 @@ All notable changes to uniplot will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Fixed
+- Added `__all__` statement to fix language server complaint when using `from uniplot import plot` thanks to @h0uter
+
 ## [0.9.2] - 2023-02-19
 ### Changed
 - Vertical axis labels with equal line spacing are now preferred, for a cleaner look.
