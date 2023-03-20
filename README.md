@@ -209,4 +209,4 @@ pip install uniplot
 
 Clone this repository, and install dependecies via `poetry install`.
 
-You can run the tests vie `poetry run ./run_tests` to make sure your setup is good. Then proceed with issues, PRs etc. the usual way.
+You can run the tests via `poetry run ./run_tests` to make sure your setup is good. Then proceed with issues, PRs etc. the usual way.
