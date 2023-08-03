@@ -15,12 +15,16 @@ def _is_multi_dimensional(series) -> bool:
 
 def _cast_as_numpy_floats(array) -> NDArray:
     """
-    Attempts to make a numeric NumPy array from enumerable input. If simply casting into a NumPy array yields one of numeric type, it returns the array. Otherwise, it attempts to cast it as NumPy float.
+    Attempts to make a numeric NumPy array from enumerable input.
+
+    If simply casting into a NumPy array yields one of `numpy.inexact` floating-point
+    type, it returns the array. Otherwise, it attempts to cast it as NumPy float.
     """
     numpy_array = np.array(array)
-    if np.issubdtype(numpy_array.dtype, np.number):
+    if np.issubdtype(numpy_array.dtype, np.inexact):
         return numpy_array
-    # If it not already intitializes as a numeric type, then all we can do is attempt to cast to float (including NaNs)
+    # If it not already intitializes as a numeric type, then all we can do is attempt to
+    # cast to float (including NaNs)
     return numpy_array.astype(float)
 
 

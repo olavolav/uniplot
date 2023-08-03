@@ -31,6 +31,11 @@ def test_logarithmic_plotting():
     plot(xs=xs, ys=ys, x_as_log=True, y_as_log=True)
 
 
+def test_logarithmic_plotting_should_silently_ignore_negative_and_zero_values():
+    ys = np.array([-1.0, 0.0, 1.0, 20.09])
+    plot(ys=ys, y_as_log=True)
+
+
 def test_multi_series_plotting():
     ys = [
         [math.sin(i / (10 + i / 50)) - math.sin(i / 100) for i in range(1000)],

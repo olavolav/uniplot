@@ -30,7 +30,8 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
     for line in _generate_header(options):
         print(line)
 
-    # Main loop for interactive mode. Will only be executed once when not in interactive # mode.
+    # Main loop for interactive mode. Will only be executed once when not in interactive
+    # mode.
     continue_looping: bool = True
     loop_iteration: int = 0
     while continue_looping:

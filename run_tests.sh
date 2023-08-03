@@ -31,4 +31,4 @@ echo "##############"
 echo "# Unit tests #"
 echo "##############"
 
-python3 -m pytest
+python3 -m pytest tests/
