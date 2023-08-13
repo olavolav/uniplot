@@ -70,8 +70,8 @@ Result:
 
 ### Plot global temperature data
 
-Here we're using Pandas to load and prepare global temperature data from the [Our World in
-Data GitHub repository](https://github.com/owid/owid-datasets).
+Here we are using Pandas to load and prepare global temperature data from the [Our World
+in Data GitHub repository](https://github.com/owid/owid-datasets).
 
 First we load the data, rename a column and and filter the data:
 
@@ -156,6 +156,20 @@ In alphabetical order:
 * `y_min` - Minimum y value of the view. Defaults to a value that shows all data points.
 * `y_unit` - Unit of the y axis. This is a string that is appended to the axis labels. Defaults to `""`.
 
+### Changing default parameters
+
+uniplot does not store a state of the configuration parameters. However, you can define a
+new plot funtion with new defaults by defining a `partial`:
+
+```python
+from functools import partial
+from uniplot import plot as default_plot
+plot = partial(default_plot, height=25, width=80)
+```
+
+This defines a new `plot` function that is identical to the original, except the default
+values for `width` and `height` are now different.
+
 
 ## Experimental features
 
@@ -203,7 +217,7 @@ Result:
 
 Install via pip using:
 
-```
+```sh
 pip install uniplot
 ```
 
