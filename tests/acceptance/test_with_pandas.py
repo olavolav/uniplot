@@ -33,5 +33,5 @@ def test_grouped_plotting():
         ys=[group["vertical_rms"] for (_, group) in grouped_data],
         x_unit=" km/h",
         y_unit=" g",
-        lines=True
+        lines=True,
     )
