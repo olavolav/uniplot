@@ -15,8 +15,6 @@ numpy = ">=1.22.0"
 pytest = ">=6.0.1"
 mypy = "*"
 black = "*"
-
-[tool.poetry.group.dev.dependencies]
 pandas = "^2.0.3"
 
 [build-system]
