@@ -5,12 +5,19 @@ from typing import List
 
 
 def _is_multi_dimensional(series) -> bool:
+    """
+    Check if the object is multi-dimensional.
+
+    Ref.: https://stackoverflow.com/questions/1952464/in-python-how-do-i-determine-if-an-object-is-iterable
+    """
     try:
-        # HACK
-        series[0][0]
-        return True
-    except:
+        [iter(x) for x in series]
+    except TypeError:
+        print("DEBUG: Single-dim")
         return False
+    else:
+        print("DEBUG: Multi-dim")
+        return True
 
 
 def _cast_as_numpy_floats(array) -> NDArray:
