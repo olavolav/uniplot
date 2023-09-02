@@ -13,10 +13,8 @@ def _is_multi_dimensional(series) -> bool:
     try:
         [iter(x) for x in series]
     except TypeError:
-        print("DEBUG: Single-dim")
         return False
     else:
-        print("DEBUG: Multi-dim")
         return True
 
 
@@ -50,10 +48,10 @@ class MultiSeries:
         self.ys: List[NDArray] = []
 
         # First check if the input is multi-dim
-        we_have_input_of_multiple_series = _is_multi_dimensional(ys)
+        self.is_multi_dimensional: bool = _is_multi_dimensional(ys)
 
         # Initialize y series
-        if we_have_input_of_multiple_series:
+        if self.is_multi_dimensional:
             self.ys = [_cast_as_numpy_floats(ys_row) for ys_row in ys]
         else:
             self.ys = [_cast_as_numpy_floats(ys)]
@@ -64,7 +62,7 @@ class MultiSeries:
                 np.arange(1, len(ys_row) + 1, step=1, dtype=int) for ys_row in self.ys
             ]
         else:
-            if we_have_input_of_multiple_series:
+            if self.is_multi_dimensional:
                 self.xs = [_cast_as_numpy_floats(xs_row) for xs_row in xs]
             else:
                 self.xs = [_cast_as_numpy_floats(xs)]
