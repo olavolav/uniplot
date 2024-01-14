@@ -37,3 +37,29 @@ def test_occasional_nans_should_be_tolerated():
     series = MultiSeries(xs=xs, ys=ys)
 
     assert series.shape() == [5]
+
+
+def test_setting_x_axis_to_logarithmic():
+    xs = [1.0, 10.0, np.nan, 100.0, -1000.0, 0.0]
+    ys = [13.0, 22.5, 22.9, np.nan, 41.0, np.nan]
+    series = MultiSeries(xs=xs, ys=ys)
+    series.set_x_axis_to_log10()
+
+    # X axis should now be logarithmic
+    desired = np.array([0.0, 1.0, np.nan, 2.0, np.nan, np.nan])
+    np.testing.assert_array_equal(series.xs, [desired])
+    # Y axis should not be changed
+    np.testing.assert_array_equal(series.ys, [ys])
+
+
+def test_setting_y_axis_to_logarithmic():
+    xs = [13.0, 22.5, 22.9, np.nan, 41.0, np.nan]
+    ys = [1.0, 10.0, np.nan, 100.0, -1000.0, 0.0]
+    series = MultiSeries(xs=xs, ys=ys)
+    series.set_y_axis_to_log10()
+
+    # X axis should not be changed
+    np.testing.assert_array_equal(series.xs, [xs])
+    # X axis should now be logarithmic
+    desired = np.array([0.0, 1.0, np.nan, 2.0, np.nan, np.nan])
+    np.testing.assert_array_equal(series.ys, [desired])

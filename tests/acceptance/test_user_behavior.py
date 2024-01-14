@@ -1,4 +1,5 @@
 import math
+import numpy as np
 from random import random
 
 from uniplot import plot, plot_to_string
@@ -31,9 +32,14 @@ def test_logarithmic_plotting():
     plot(xs=xs, ys=ys, x_as_log=True, y_as_log=True)
 
 
-def test_logarithmic_plotting_should_silently_ignore_negative_and_zero_values():
-    ys = [-1.0, 0.0, 1.0, 20.09]
-    plot(ys, y_as_log=True)
+def test_logarithmic_plotting_should_silently_ignore_invalid_values():
+    ys = [-1.0, 0.0, 1.0, np.nan, 20.09, None, 12.2]
+    plot(xs=ys, ys=ys, x_as_log=True, y_as_log=True)
+
+
+def test_logarithmic_plotting_should_silently_ignore_invalid_values_even_in_2dim_case():
+    ys = [-1.0, 0.0, 1.0, np.nan, 20.09, None, 12.2]
+    plot([ys, ys], x_as_log=True, y_as_log=True)
 
 
 def test_multi_series_plotting():

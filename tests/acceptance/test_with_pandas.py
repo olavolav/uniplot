@@ -4,6 +4,7 @@ it works nicely with uniplot. Thus these tests.
 """
 
 import pandas as pd  # type: ignore
+import numpy as np  # type: ignore
 
 from uniplot import plot
 
@@ -17,6 +18,17 @@ def test_normal_plotting():
         }
     )
     plot(xs=data["speed"], ys=data["vertical_rms"], x_unit=" km/h", y_unit=" g")
+
+
+def test_logarithmic_plotting():
+    data = pd.DataFrame(
+        data={
+            "asset": ["asset1", "asset1", "asset2", "asset3"],
+            "speed": [20.0, 50.0, 75.6, 12.6],
+            "vertical_rms": [12.4, 23.5, -55.3, np.nan],
+        }
+    )
+    plot(xs=data["speed"], ys=data["vertical_rms"])
 
 
 def test_that_pandas_series_is_interpreted_as_single_dim_array():

@@ -16,7 +16,7 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
     As a result the somewhat hacky code below should at least be confined to this function, and not spread throughout uniplot.
     """
     if kwargs.get("x_as_log"):
-        series.xs = [_safe_log10(x) for x in series.xs]
+        series.set_x_axis_to_log10()
         if not kwargs.get("x_gridlines"):
             kwargs["x_gridlines"] = []
         else:
@@ -26,7 +26,7 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
         if kwargs.get("x_max"):
             kwargs["x_max"] = np.log10(kwargs["x_max"])
     if kwargs.get("y_as_log"):
-        series.ys = [_safe_log10(y) for y in series.ys]
+        series.set_y_axis_to_log10()
         if not kwargs.get("y_gridlines"):
             kwargs["y_gridlines"] = []
         else:
@@ -74,13 +74,3 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
         raise ValueError("Invalid 'lines' option.")
 
     return Options(**kwargs)
-
-
-###########
-# private #
-###########
-
-
-def _safe_log10(a):
-    a[a <= 0] = np.nan
-    return np.log10(a)
