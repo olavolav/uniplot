@@ -106,14 +106,12 @@ def render(
         y_indices_of_line: NDArray = np.array([])
         indices_slope: Optional[float] = None
         slope: Optional[float] = None
-        for segment in xy_line_endpoints:
-            [
-                [x_index_start, y_index_start],
-                [x_start, y_start],
-                [x_index_stop, y_index_stop],
-                [x_stop, y_stop],
-            ] = segment
-
+        for [
+            [x_index_start, y_index_start],
+            [x_start, y_start],
+            [x_index_stop, y_index_stop],
+            [x_stop, y_stop],
+        ] in xy_line_endpoints:
             # Convert back to integers (not very efficient)
             x_index_start = int(round(x_index_start))
             x_index_stop = int(round(x_index_stop))
