@@ -85,7 +85,7 @@ plot(
     xs=[sizes, sizes],
     ys=[times, times_with_lines],
     lines=True,
-    title="Sample size versus plotting time, log-log, current cersion",
+    title="Sample size versus plotting time, log-log, current version",
     legend_labels=["dots only", "dots + lines"],
     y_unit=" s",
     x_as_log=True,

@@ -102,6 +102,10 @@ def render(
         # TODO This can likely be optimized by assembling all segments and computing the
         # pixels of all lines together, or at least of each half split by slope
         # for segment in np.nditer(xy_line_endpoints)
+        x_indices_of_line: NDArray = np.array([])
+        y_indices_of_line: NDArray = np.array([])
+        indices_slope: Optional[float] = None
+        slope: Optional[float] = None
         for segment in xy_line_endpoints:
             [
                 [x_index_start, y_index_start],
@@ -123,12 +127,12 @@ def render(
             y_index_bigger = max(y_index_start, y_index_stop)
 
             # Slope is inverted because y indices are inverted
-            indices_slope: Optional[float] = None
+            indices_slope = None
             if x_index_start != x_index_stop:
                 indices_slope = (
                     -1 * (y_index_stop - y_index_start) / (x_index_stop - x_index_start)
                 )
-            slope: Optional[float] = None
+            slope = None
             if x_start != x_stop:
                 slope = (y_stop - y_start) / (x_stop - x_start)
 
