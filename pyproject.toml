@@ -16,6 +16,7 @@ pytest = ">=6.0.1"
 mypy = "*"
 black = "*"
 pandas = "^2.0.3"
+polars = "^0.20.5"
 
 [build-system]
 requires = ["poetry-core"]
