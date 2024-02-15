@@ -6,6 +6,7 @@ from uniplot.options import Options
 
 AUTO_WINDOW_ENLARGE_FACTOR = 1e-3
 
+
 def floatify(x: Any) -> float:
     try:
         if np.issubdtype(x.dtype, np.datetime64):
@@ -13,6 +14,7 @@ def floatify(x: Any) -> float:
         return float(x)
     except:
         return float(x)
+
 
 def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Options:
     """

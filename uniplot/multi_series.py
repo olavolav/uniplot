@@ -6,9 +6,11 @@ from typing import List
 
 class MultiSeries:
     """
-    A `MultiSeries` is an object that contains multiple series of numeric values in both x and y direction.
+    A `MultiSeries` is an object that contains multiple series of numeric
+    values in both x and y direction.
 
-    If no `xs` parameter is supplied, then we generate x axis values as a serial index integer value.
+    If no `xs` parameter is supplied, then we generate x axis values as a
+    serial index integer value.
     """
 
     def __init__(self, ys, xs=None) -> None:
@@ -32,7 +34,7 @@ class MultiSeries:
             self.xs = [np.arange(1, len(y) + 1, step=1, dtype=int) for y in self.ys]
         else:
             if self.is_multi_dimensional:
-                # check if all x series are time series
+                # Check if all x series are time series
                 # TODO Do that for y as well
                 self.x_is_time_series = all([_is_time_series(x) for x in xs])
 
@@ -47,7 +49,6 @@ class MultiSeries:
                     self.xs = [_cast_as_numpy_time_series(xs)]
                 else:
                     self.xs = [_cast_as_numpy_floats(xs)]
-        print(f"DEBUG: x_is_time_series = {self.x_is_time_series}")
 
     def __len__(self) -> int:
         """Return the number of time series."""
@@ -109,17 +110,12 @@ def _is_time_series(series) -> bool:
     Check if the object is datetime-like. This might be a pandas DateTime, a
     list of datetimes, or a list of date(s).
     """
+    np_array = np.array(series)
+    if np.issubdtype(np_array.dtype, np.number):
+        return False
     try:
-        np.array(series, dtype="datetime64[ns]")
+        np_array.astype("datetime64")
         return True
-    # if series.dtype == "datetime64[ns]":
-    #     return True
-    # elif isinstance(series, list):
-    #     if all(isinstance(x, datetime.date) for x in series):
-    #         return True
-    #     elif all(isinstance(x, datetime.datetime) for x in series):
-    #         return True
-
     except:
         return False
 
@@ -142,13 +138,12 @@ def _cast_as_numpy_floats(array) -> NDArray:
 
 def _cast_as_numpy_time_series(series) -> NDArray:
     """
-    Converts to a numpy floating-point array, of unix epoch timestamps,
-    with nano-second precision.
-    """
-    # series = series.astype(np.int64) // 10**9
+    Converts to a numpy floating-point array, of unix epoch timestamps, with
+    nano-second precision.
 
-    # finally, convert to numpy array
-    # return series  # .values
+    We assume that at this point we have already checked that the conversion is
+    possible.
+    """
     return np.array(series, dtype="datetime64[ns]")
 
 
