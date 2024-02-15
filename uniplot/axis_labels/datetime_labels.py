@@ -1,12 +1,12 @@
 import numpy as np
-from typing import Optional, Any
+from typing import Optional
 
 from uniplot.axis_labels.datetime_label_set import DatetimeLabelSet
 
 
 def datetime_labels(
-    x_min: Any,
-    x_max: Any,
+    x_min: float,
+    x_max: float,
     available_space: int,
     vertical_direction: bool = False,
     unit: str = "",

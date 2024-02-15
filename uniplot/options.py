@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Optional, Any
+from typing import List, Optional
 
 
 def _default_gridlines() -> List[float]:
@@ -12,6 +12,13 @@ def _default_lines() -> List[bool]:
 
 @dataclass
 class Options:
+    """
+    This object holds the options of this run.
+
+    Implementation note: The minima, maxima and gridlines are all stores as
+    `float` values, regardless of the data type that is being plotted.
+    """
+
     # Color mode
     color: bool = False
     # Force ASCII characters for plotting only
@@ -33,21 +40,21 @@ class Options:
     # Plot x axis with log scale
     x_as_log: bool = False
     # Vertical gridlines
-    x_gridlines: List[Any] = field(default_factory=_default_gridlines)
+    x_gridlines: List[float] = field(default_factory=_default_gridlines)
     # Maximum x value of the current view
-    x_max: Any = 1.0
+    x_max: float = 1.0
     # Minimum x value of the current view
-    x_min: Any = 0.0
+    x_min: float = 0.0
     # Plot y axis with log scale
     y_as_log: bool = False
     # Units of x axis
     x_unit: str = ""
     # Horizontal gridlines
-    y_gridlines: List[Any] = field(default_factory=_default_gridlines)
+    y_gridlines: List[float] = field(default_factory=_default_gridlines)
     # Maximum y value of the current view
-    y_max: Any = 1.0
+    y_max: float = 1.0
     # Minimum y value of the current view
-    y_min: Any = 0.0
+    y_min: float = 0.0
     # Units of y axis
     y_unit: str = ""
 
@@ -101,7 +108,7 @@ class Options:
         self.y_max = self.y_max + step
 
     def __zoom_view(self, factor: int) -> None:
-        step = 0.1 * factor * (self.x_max - self.x_min)
+        step: float = 0.1 * factor * (self.x_max - self.x_min)
         self.x_min = self.x_min + step
         self.x_max = self.x_max - step
 

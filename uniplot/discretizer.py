@@ -15,7 +15,8 @@ def discretize(x: float, x_min: float, x_max: float, steps: int) -> int:
 
 def discretize_array(x: NDArray, x_min: float, x_max: float, steps: int) -> NDArray:
     """
-    Returns a NumPy array of discretized integer values. NaN values will return -1.
+    Returns a NumPy array of discretized integer values. NaN values will return
+    -1.
 
     Note that the integer values are not bound to the rande defined by `steps`.
     """
