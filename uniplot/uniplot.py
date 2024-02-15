@@ -9,6 +9,7 @@ import uniplot.plot_elements as elements
 from uniplot.getch import getch
 from uniplot.param_initializer import validate_and_transform_options
 from uniplot.axis_labels.extended_talbot_labels import extended_talbot_labels
+from uniplot.axis_labels.datetime_labels import datetime_labels
 
 
 def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
@@ -229,14 +230,25 @@ def _generate_body_raw_elements(
                 raise
 
     # Prepare x axis labels
-    x_axis_label_set = extended_talbot_labels(
-        x_min=options.x_min,
-        x_max=options.x_max,
-        available_space=options.width,
-        unit=options.x_unit,
-        log=options.x_as_log,
-        vertical_direction=False,
-    )
+    x_axis_label_set: Any = None
+    if series.x_is_time_series:  # HACK
+        x_axis_label_set = datetime_labels(
+            x_min=options.x_min,
+            x_max=options.x_max,
+            available_space=options.width,
+            unit=options.x_unit,
+            log=options.x_as_log,
+            vertical_direction=False,
+        )
+    else:
+        x_axis_label_set = extended_talbot_labels(
+            x_min=options.x_min,
+            x_max=options.x_max,
+            available_space=options.width,
+            unit=options.x_unit,
+            log=options.x_as_log,
+            vertical_direction=False,
+        )
     x_axis_labels = ""
     if x_axis_label_set is not None:
         x_axis_labels = x_axis_label_set.render()[0]

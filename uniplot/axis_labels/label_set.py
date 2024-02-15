@@ -1,6 +1,6 @@
 import numpy as np
 from numpy.typing import NDArray
-from typing import List
+from typing import List, Any
 
 from uniplot.discretizer import discretize, discretize_array
 
@@ -15,8 +15,8 @@ class LabelSet:
     def __init__(
         self,
         labels: NDArray,
-        x_min: float,
-        x_max: float,
+        x_min: Any,
+        x_max: Any,
         available_space: int,
         unit: str = "",
         log: bool = False,

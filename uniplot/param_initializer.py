@@ -1,19 +1,31 @@
 import numpy as np
-from typing import Dict
+from typing import Dict, Any
 
 from uniplot.multi_series import MultiSeries
 from uniplot.options import Options
 
 AUTO_WINDOW_ENLARGE_FACTOR = 1e-3
 
+def floatify(x: Any) -> float:
+    try:
+        if np.issubdtype(x.dtype, np.datetime64):
+            return x.astype(float)
+        return float(x)
+    except:
+        return float(x)
 
 def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Options:
     """
-    This will check the keyword arguments passed to the `uniplot.plot` function, will transform them and will return them in form of an `Options` object.
+    This will check the keyword arguments passed to the `uniplot.plot`
+    function, will transform them and will return them in form of an `Options`
+    object.
 
-    The idea is to cast arguments into the right format to be used by the rest of the library, and to be as tolerant as possible for ease of use of the library.
+    The idea is to cast arguments into the right format to be used by the rest
+    of the library, and to be as tolerant as possible for ease of use of the
+    library.
 
-    As a result the somewhat hacky code below should at least be confined to this function, and not spread throughout uniplot.
+    As a result the somewhat hacky code below should at least be confined to
+    this function, and not spread throughout uniplot.
     """
     if kwargs.get("x_as_log"):
         series.set_x_axis_to_log10()
@@ -42,7 +54,7 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
     kwargs["x_max"] = kwargs.get("x_max", series.x_max() + x_enlarge_delta)
 
     # Fallback for only a single data point, or multiple with single x coordinate
-    if float(kwargs["x_min"]) == float(kwargs["x_max"]):
+    if floatify(kwargs["x_min"]) == floatify(kwargs["x_max"]):
         kwargs["x_min"] = kwargs["x_min"] - 1
         kwargs["x_max"] = kwargs["x_max"] + 1
 

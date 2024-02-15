@@ -1,6 +1,6 @@
 import numpy as np
 from numpy.typing import NDArray
-from typing import List
+from typing import List, Any
 
 import uniplot.pixel_matrix as pixel_matrix
 import uniplot.plot_elements as elements
@@ -54,12 +54,12 @@ def render_horizontal_gridline(y: float, options: Options) -> NDArray:
     return pixels
 
 
-def render_vertical_gridline(x: float, options: Options) -> NDArray:
+def render_vertical_gridline(x: Any, options: Options) -> NDArray:
     """
     Render the pixel matrix that only consists of a line where the `x` value is.
     """
     pixels = _init_character_matrix(width=options.width, height=options.height)
-    if x < options.x_min or x >= options.x_max:
+    if float(x) < float(options.x_min) or float(x) >= float(options.x_max):
         return pixels
 
     x_index = discretize(

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import List, Optional, Any
 
 
 def _default_gridlines() -> List[float]:
@@ -33,21 +33,21 @@ class Options:
     # Plot x axis with log scale
     x_as_log: bool = False
     # Vertical gridlines
-    x_gridlines: List[float] = field(default_factory=_default_gridlines)
+    x_gridlines: List[Any] = field(default_factory=_default_gridlines)
     # Maximum x value of the current view
-    x_max: float = 1.0
+    x_max: Any = 1.0
     # Minimum x value of the current view
-    x_min: float = 0.0
+    x_min: Any = 0.0
     # Plot y axis with log scale
     y_as_log: bool = False
     # Units of x axis
     x_unit: str = ""
     # Horizontal gridlines
-    y_gridlines: List[float] = field(default_factory=_default_gridlines)
+    y_gridlines: List[Any] = field(default_factory=_default_gridlines)
     # Maximum y value of the current view
-    y_max: float = 1.0
+    y_max: Any = 1.0
     # Minimum y value of the current view
-    y_min: float = 0.0
+    y_min: Any = 0.0
     # Units of y axis
     y_unit: str = ""
 
