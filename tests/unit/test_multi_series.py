@@ -69,7 +69,7 @@ def test_normal_series_without_xs_should_not_be_time_series():
     ys = [1, 2, 3]
     series = MultiSeries(ys=ys)
 
-    assert series.x_is_time_series == False
+    assert not series.x_is_time_series
 
 
 def test_normal_series_with_xs_should_not_be_time_series():
@@ -77,7 +77,7 @@ def test_normal_series_with_xs_should_not_be_time_series():
     ys = [1, 2, 3]
     series = MultiSeries(xs=xs, ys=ys)
 
-    assert series.x_is_time_series == False
+    assert not series.x_is_time_series
 
 
 def test_time_series_should_be_detected_as_such():
@@ -85,4 +85,4 @@ def test_time_series_should_be_detected_as_such():
     ys = [1, 2, 3, 4]
     series = MultiSeries(xs=dates, ys=ys)
 
-    assert series.x_is_time_series == True
+    assert series.x_is_time_series

@@ -205,6 +205,7 @@ def _generate_body_raw_elements(
     Generates the x-axis labels, y-axis labels, and the pixel character matrix.
     """
     # Prepare y axis labels
+    # TODO Allow for time series
     y_axis_label_set = extended_talbot_labels(
         x_min=options.y_min,
         x_max=options.y_max,
@@ -230,25 +231,15 @@ def _generate_body_raw_elements(
                 raise
 
     # Prepare x axis labels
-    x_axis_label_set: Any = None
-    if series.x_is_time_series:  # HACK
-        x_axis_label_set = datetime_labels(
-            x_min=options.x_min,
-            x_max=options.x_max,
-            available_space=options.width,
-            unit=options.x_unit,
-            log=options.x_as_log,
-            vertical_direction=False,
-        )
-    else:
-        x_axis_label_set = extended_talbot_labels(
-            x_min=options.x_min,
-            x_max=options.x_max,
-            available_space=options.width,
-            unit=options.x_unit,
-            log=options.x_as_log,
-            vertical_direction=False,
-        )
+    label_fn = datetime_labels if series.x_is_time_series else extended_talbot_labels
+    x_axis_label_set = label_fn(
+        x_min=options.x_min,
+        x_max=options.x_max,
+        available_space=options.width,
+        unit=options.x_unit,
+        log=options.x_as_log,
+        vertical_direction=False,
+    )
     x_axis_labels = ""
     if x_axis_label_set is not None:
         x_axis_labels = x_axis_label_set.render()[0]
