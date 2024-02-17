@@ -1,6 +1,7 @@
 import math
 import numpy as np
 from random import random
+import datetime
 
 from uniplot import plot, plot_to_string
 
@@ -78,3 +79,16 @@ def test_plotting_time_series_with_bounds_set_manually():
 def test_plotting_time_series_with_auto_bounds():
     dates = np.arange("2024-02-17T09:21", 4 * 60, 60, dtype="M8[m]")
     plot(xs=dates, ys=[1, 2, 3, 2], x_min=dates[0], x_max=dates[-1])
+
+
+def test_plotting_time_series_with_python_date_objects():
+    dates = [datetime.date(year=2024, month=2, day=i) for i in range(1, 5)]
+    plot(xs=dates, ys=[1, 2, 3, 2])
+
+
+def test_plotting_time_series_with_python_datetime_objects():
+    dates = [
+        datetime.datetime(year=2024, month=2, day=i, hour=10, minute=5)
+        for i in range(1, 5)
+    ]
+    plot(xs=dates, ys=[1, 2, 3, 2])

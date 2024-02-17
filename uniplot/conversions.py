@@ -1,4 +1,5 @@
 import numpy as np
+import datetime
 from typing import Any
 
 
@@ -17,4 +18,6 @@ def floatify(x: Any) -> float:
             return x.astype("datetime64[s]").astype(float)
         return float(x)
     except:
+        if isinstance(x, datetime.datetime) or isinstance(x, datetime.date):
+            return np.datetime64(x).astype("datetime64[s]").astype(float)
         return float(x)
