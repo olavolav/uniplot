@@ -155,7 +155,7 @@ def _cast_as_numpy_time_series(series: Any) -> NDArray:
     # or a different type like "datetime64[m]" means that the conversion to
     # floating point will depend on the input format, which will lead to
     # unexpected behavior.
-    return np.array(series).astype("datetime64[s]")
+    return np.array(series).astype("datetime64[s]").astype(float)
 
 
 def _safe_max(array: NDArray) -> float:

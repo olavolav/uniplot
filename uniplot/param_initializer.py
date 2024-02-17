@@ -28,6 +28,9 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
     # TODO y gridlines
     if "x_gridlines" in kwargs:
         kwargs["x_gridlines"] = [floatify(x) for x in kwargs["x_gridlines"]]
+    elif series.x_is_time_series:
+        # Default to no x gridlines
+        kwargs["x_gridlines"] = []
 
     if kwargs.get("x_as_log"):
         series.set_x_axis_to_log10()
