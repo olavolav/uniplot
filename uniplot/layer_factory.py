@@ -59,7 +59,7 @@ def render_vertical_gridline(x: float, options: Options) -> NDArray:
     Render the pixel matrix that only consists of a line where the `x` value is.
     """
     pixels = _init_character_matrix(width=options.width, height=options.height)
-    if x < options.x_min or x >= options.x_max:
+    if float(x) < float(options.x_min) or float(x) >= float(options.x_max):
         return pixels
 
     x_index = discretize(
@@ -74,6 +74,7 @@ def render_vertical_gridline(x: float, options: Options) -> NDArray:
 def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDArray:
     # Determine if we use Unicode super-resolution :-) or not
     scaling_factor: int = 2 - int(options.force_ascii)
+    matrix: NDArray = np.array([])
 
     for i in range(len(ys)):
         next_matrix = (i + 1) * pixel_matrix.render(

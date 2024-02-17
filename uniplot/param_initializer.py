@@ -3,18 +3,35 @@ from typing import Dict
 
 from uniplot.multi_series import MultiSeries
 from uniplot.options import Options
+from uniplot.conversions import floatify
 
-AUTO_WINDOW_ENLARGE_FACTOR = 1e-3
+AUTO_WINDOW_ENLARGE_FACTOR = 0.001
 
 
 def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Options:
     """
-    This will check the keyword arguments passed to the `uniplot.plot` function, will transform them and will return them in form of an `Options` object.
+    This will check the keyword arguments passed to the `uniplot.plot`
+    function, will transform them and will return them in form of an `Options`
+    object.
 
-    The idea is to cast arguments into the right format to be used by the rest of the library, and to be as tolerant as possible for ease of use of the library.
+    The idea is to cast arguments into the right format to be used by the rest
+    of the library, and to be as tolerant as possible for ease of use of the
+    library.
 
-    As a result the somewhat hacky code below should at least be confined to this function, and not spread throughout uniplot.
+    As a result the somewhat hacky code below should at least be confined to
+    this function, and not spread throughout uniplot.
     """
+    # First, some cleanup, including converting datetimes to float
+    for key in ["x_min", "x_max", "y_min", "y_max"]:
+        if key in kwargs:
+            kwargs[key] = floatify(kwargs[key])
+    # TODO y gridlines
+    if "x_gridlines" in kwargs:
+        kwargs["x_gridlines"] = [floatify(x) for x in kwargs["x_gridlines"]]
+    elif series.x_is_time_series:
+        # Default to no x gridlines
+        kwargs["x_gridlines"] = []
+
     if kwargs.get("x_as_log"):
         series.set_x_axis_to_log10()
         if not kwargs.get("x_gridlines"):
@@ -37,12 +54,18 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
             kwargs["y_max"] = np.log10(kwargs["y_max"])
 
     # Set x bounds to show all points by default
-    x_enlarge_delta = AUTO_WINDOW_ENLARGE_FACTOR * (series.x_max() - series.x_min())
-    kwargs["x_min"] = kwargs.get("x_min", series.x_min() - x_enlarge_delta)
-    kwargs["x_max"] = kwargs.get("x_max", series.x_max() + x_enlarge_delta)
+    x_enlarge_delta = AUTO_WINDOW_ENLARGE_FACTOR * (
+        floatify(series.x_max()) - floatify(series.x_min())
+    )
+    kwargs["x_min"] = floatify(
+        kwargs.get("x_min", floatify(series.x_min()) - x_enlarge_delta)
+    )
+    kwargs["x_max"] = floatify(
+        kwargs.get("x_max", floatify(series.x_max()) + x_enlarge_delta)
+    )
 
     # Fallback for only a single data point, or multiple with single x coordinate
-    if float(kwargs["x_min"]) == float(kwargs["x_max"]):
+    if kwargs["x_min"] == kwargs["x_max"]:
         kwargs["x_min"] = kwargs["x_min"] - 1
         kwargs["x_max"] = kwargs["x_max"] + 1
 
@@ -73,4 +96,12 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
     elif len(kwargs.get("lines")) != len(series):  # type: ignore
         raise ValueError("Invalid 'lines' option.")
 
-    return Options(**kwargs)
+    options = Options(**kwargs)
+
+    # Check for invalid or unsupported combinations
+    if series.x_is_time_series and options.x_as_log:
+        raise ValueError(
+            "We currently do not support using timestamps on a log scale. We suggest to convert the timestamps to numbers first."
+        )
+
+    return options

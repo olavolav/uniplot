@@ -12,6 +12,13 @@ def _default_lines() -> List[bool]:
 
 @dataclass
 class Options:
+    """
+    This object holds the options of this run.
+
+    Implementation note: The minima, maxima and gridlines are all stores as
+    `float` values, regardless of the data type that is being plotted.
+    """
+
     # Color mode
     color: bool = False
     # Force ASCII characters for plotting only
@@ -101,7 +108,7 @@ class Options:
         self.y_max = self.y_max + step
 
     def __zoom_view(self, factor: int) -> None:
-        step = 0.1 * factor * (self.x_max - self.x_min)
+        step: float = 0.1 * factor * (self.x_max - self.x_min)
         self.x_min = self.x_min + step
         self.x_max = self.x_max - step
 

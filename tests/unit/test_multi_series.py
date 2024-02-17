@@ -63,3 +63,26 @@ def test_setting_y_axis_to_logarithmic():
     # X axis should now be logarithmic
     desired = np.array([0.0, 1.0, np.nan, 2.0, np.nan, np.nan])
     np.testing.assert_array_equal(series.ys, [desired])
+
+
+def test_normal_series_without_xs_should_not_be_time_series():
+    ys = [1, 2, 3]
+    series = MultiSeries(ys=ys)
+
+    assert not series.x_is_time_series
+
+
+def test_normal_series_with_xs_should_not_be_time_series():
+    xs = [-1, 2, 30]
+    ys = [1, 2, 3]
+    series = MultiSeries(xs=xs, ys=ys)
+
+    assert not series.x_is_time_series
+
+
+def test_time_series_should_be_detected_as_such():
+    dates = np.arange("2002-10-27T04:30", 4 * 60, 60, dtype="M8[m]")
+    ys = [1, 2, 3, 4]
+    series = MultiSeries(xs=dates, ys=ys)
+
+    assert series.x_is_time_series

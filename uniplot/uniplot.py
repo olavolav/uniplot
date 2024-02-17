@@ -9,6 +9,7 @@ import uniplot.plot_elements as elements
 from uniplot.getch import getch
 from uniplot.param_initializer import validate_and_transform_options
 from uniplot.axis_labels.extended_talbot_labels import extended_talbot_labels
+from uniplot.axis_labels.datetime_labels import datetime_labels
 
 
 def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
@@ -17,11 +18,13 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
 
     Parameters:
 
-    - `ys` are the y coordinates of the points to plot. This parameter is mandatory and
-      can either be a list or a list of lists, or the equivalent NumPy array.
-    - `xs` are the x coordinates of the points to plot. This parameter is optional and
-      can either be a `None` or of the same shape as `ys`.
-    - Any additional keyword arguments are passed to the `uniplot.options.Options` class.
+    - `ys` are the y coordinates of the points to plot. This parameter is
+      mandatory and can either be a list or a list of lists, or the equivalent
+      NumPy array.
+    - `xs` are the x coordinates of the points to plot. This parameter is
+      optional and can either be a `None` or of the same shape as `ys`.
+    - Any additional keyword arguments are passed to the
+      `uniplot.options.Options` class.
     """
     series: MultiSeries = MultiSeries(xs=xs, ys=ys)
     options: Options = validate_and_transform_options(series=series, kwargs=kwargs)
@@ -84,9 +87,11 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
 
 def plot_to_string(ys: Any, xs: Optional[Any] = None, **kwargs) -> List[str]:
     """
-    Same as `plot`, but the return type is a list of strings. Ignores the `interactive` option.
+    Same as `plot`, but the return type is a list of strings. Ignores the
+    `interactive` option.
 
-    Can be used to integrate uniplot in other applications, or if the output is desired to be not stdout.
+    Can be used to integrate uniplot in other applications, or if the output is
+    desired to be not stdout.
     """
     series: MultiSeries = MultiSeries(xs=xs, ys=ys)
     options: Options = validate_and_transform_options(series=series, kwargs=kwargs)
@@ -119,9 +124,11 @@ def histogram(
 
     Parameters:
 
-    - `xs` are the values of the points to plot. This parameter is mandatory and
-      can either be a list or a list of lists, or the equivalent NumPy array.
-    - Any additional keyword arguments are passed to the `uniplot.options.Options` class.
+    - `xs` are the values of the points to plot. This parameter is mandatory
+      and can either be a list or a list of lists, or the equivalent NumPy
+      array.
+    - Any additional keyword arguments are passed to the
+      `uniplot.options.Options` class.
     """
     # HACK Use the `MultiSeries` constructor to cast values to uniform format
     multi_series = MultiSeries(ys=xs)
@@ -163,7 +170,8 @@ def histogram(
 
 def _generate_header(options: Options) -> List[str]:
     """
-    Generates the header of the plot, so everything above the first line of plottable area.
+    Generates the header of the plot, so everything above the first line of
+    plottable area.
     """
     if options.title is None:
         return []
@@ -204,6 +212,7 @@ def _generate_body_raw_elements(
     Generates the x-axis labels, y-axis labels, and the pixel character matrix.
     """
     # Prepare y axis labels
+    # TODO Allow for time series
     y_axis_label_set = extended_talbot_labels(
         x_min=options.y_min,
         x_max=options.y_max,
@@ -229,7 +238,8 @@ def _generate_body_raw_elements(
                 raise
 
     # Prepare x axis labels
-    x_axis_label_set = extended_talbot_labels(
+    label_fn = datetime_labels if series.x_is_time_series else extended_talbot_labels
+    x_axis_label_set = label_fn(
         x_min=options.x_min,
         x_max=options.x_max,
         available_space=options.width,

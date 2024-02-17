@@ -1,14 +1,14 @@
-import numpy as np  # type: ignore
-from typing import Optional
+import numpy as np
+from typing import Optional, Final
 
 from uniplot.axis_labels.label_set import LabelSet
 
 # Preference-ordered list of "nice" numbers
-Q_VALUES = [1, 5, 2, 2.5, 4, 3]
+Q_VALUES: Final = [1, 5, 2, 2.5, 4, 3]
 # Weights to be able to combine the different scores
-WEIGHTS = np.array([0.4, 0.25, 0.3, 0.2])
+WEIGHTS: Final = np.array([0.4, 0.25, 0.3, 0.2])
 # The "depth" of the search
-MAX_SKIP_AMOUNT = 9
+MAX_SKIP_AMOUNT: Final = 9
 
 
 def extended_talbot_labels(
@@ -21,8 +21,10 @@ def extended_talbot_labels(
     verbose: bool = False,
 ) -> Optional[LabelSet]:
     """
-    The following is based on the paper Talbot, J., Lin, S. & Hanrahan, P. An Extension of Wilkinson’s Algorithm for Positioning Tick Labels on Axes. IEEE T Vis Comput Gr 16, 1036–1043 (2010).
-    We have further exteded the algorithm to account for the discrete nature of terminal output.
+    The following is based on the paper Talbot, J., Lin, S. & Hanrahan, P. An
+    Extension of Wilkinson’s Algorithm for Positioning Tick Labels on Axes.
+    IEEE T Vis Comput Gr 16, 1036–1043 (2010). We have further exteded the
+    algorithm to account for the discrete nature of terminal output.
     """
     result: Optional[LabelSet] = None
     best_score: float = -2.0

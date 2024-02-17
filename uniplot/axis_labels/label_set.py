@@ -9,7 +9,9 @@ LEFT_MARGIN_FOR_HORIZONTAL_AXIS = 1
 
 class LabelSet:
     """
-    This class represents a list of possible axis labels. It can render them to a string, or list of strings. It also provides metrics about the rendering result.
+    This class represents a list of possible axis labels. It can render them to
+    a string, or list of strings. It also provides metrics about the rendering
+    result.
     """
 
     def __init__(
@@ -127,7 +129,8 @@ class LabelSet:
         numbers: NDArray,
     ) -> List[str]:
         """
-        This method will find the shortest numerical values for axis labels that are different from each other.
+        This method will find the shortest numerical values for axis labels
+        that are different from each other.
         """
         # We actually want to add one more digit than needed for uniqueness
         for nr_digits in range(10):

@@ -4,22 +4,26 @@ A collection of functions for discretizing continuous data.
 
 import numpy as np
 from numpy.typing import NDArray
+from typing import Any
+
+from uniplot.conversions import floatify
 
 
-def discretize(x: float, x_min: float, x_max: float, steps: int) -> int:
+def discretize(x: Any, x_min: float, x_max: float, steps: int) -> int:
     """
     Returns a discretized integer.
     """
-    return int(((x - x_min) / (x_max - x_min)) * steps)
+    return int(((floatify(x) - x_min) / (x_max - x_min)) * steps)
 
 
 def discretize_array(x: NDArray, x_min: float, x_max: float, steps: int) -> NDArray:
     """
-    Returns a NumPy array of discretized integer values. NaN values will return -1.
+    Returns a NumPy array of discretized integer values. NaN values will return
+    -1.
 
     Note that the integer values are not bound to the rande defined by `steps`.
     """
-    array = ((np.asarray(x) - x_min) / (x_max - x_min)) * steps
+    array = ((np.asarray(x).astype(float) - x_min) / (x_max - x_min)) * steps
     return np.nan_to_num(array, nan=-1).astype(int)
 
 
@@ -62,4 +66,4 @@ def invert_discretize_array(
     assert maximum > minimum
 
     step_size = (maximum - minimum) / nr_bins
-    return ((np.asarray(i) + 0.5) * step_size + minimum).astype(float)
+    return ((np.asarray(i).astype(float) + 0.5) * step_size + minimum).astype(float)
