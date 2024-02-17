@@ -4,11 +4,11 @@ from typing import List, Final
 
 from uniplot.axis_labels.label_set import LabelSet
 
-DATETIME_PRECISION_LABELS: Final = [
+NICE_DATETIME_UNITS: Final = [
     "Y",
     "M",
     "D",
-    "h",
+    # "h", looks weird
     "m",
     "s",
     "ms",
@@ -38,10 +38,9 @@ class DatetimeLabelSet(LabelSet):
 
         Note: The implementation here is only a starting point.
         """
-        if self._spread_greater_than(10, "Y"):
-            return list(np.datetime_as_string(numbers, unit="Y"))
-        if self._spread_greater_than(10, "D"):
-            return list(np.datetime_as_string(numbers, unit="D"))
+        for unit in NICE_DATETIME_UNITS:
+            if self._spread_greater_than(10, unit):
+                return list(np.datetime_as_string(numbers, unit=unit))  # type: ignore
         # Remove the date if it is the same in all labels
         test_list = list(np.datetime_as_string(numbers, unit="auto"))
         if len(set(np.datetime_as_string(numbers, unit="D"))) == 1:
