@@ -42,7 +42,7 @@ class DatetimeLabelSet(LabelSet):
         test_list = list(np.datetime_as_string(numbers, unit="auto"))
 
         # TODO Do this properly, here is just a quick hack to get started
-        # Remove the date is it is the same in all labels
+        # Remove the date if it is the same in all labels
         if len(set(np.datetime_as_string(numbers, unit="D"))) == 1:
             return [t[11:] for t in test_list]
         # Once they are all unique, we have found sufficient precision

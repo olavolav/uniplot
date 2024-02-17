@@ -23,9 +23,8 @@ def extended_talbot_labels(
     """
     The following is based on the paper Talbot, J., Lin, S. & Hanrahan, P. An
     Extension of Wilkinson’s Algorithm for Positioning Tick Labels on Axes.
-    IEEE T Vis Comput Gr 16, 1036–1043 (2010).
-    We have further exteded the algorithm to account for the discrete nature of
-    terminal output.
+    IEEE T Vis Comput Gr 16, 1036–1043 (2010). We have further exteded the
+    algorithm to account for the discrete nature of terminal output.
     """
     result: Optional[LabelSet] = None
     best_score: float = -2.0

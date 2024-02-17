@@ -93,4 +93,12 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
     elif len(kwargs.get("lines")) != len(series):  # type: ignore
         raise ValueError("Invalid 'lines' option.")
 
-    return Options(**kwargs)
+    options = Options(**kwargs)
+
+    # Check for invalid or unsupported combinations
+    if series.x_is_time_series and options.x_as_log:
+        raise ValueError(
+            "We currently do not support using timestamps on a log scale. We suggest to convert the timestamps to numbers first."
+        )
+
+    return options
