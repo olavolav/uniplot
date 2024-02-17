@@ -18,11 +18,13 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
 
     Parameters:
 
-    - `ys` are the y coordinates of the points to plot. This parameter is mandatory and
-      can either be a list or a list of lists, or the equivalent NumPy array.
-    - `xs` are the x coordinates of the points to plot. This parameter is optional and
-      can either be a `None` or of the same shape as `ys`.
-    - Any additional keyword arguments are passed to the `uniplot.options.Options` class.
+    - `ys` are the y coordinates of the points to plot. This parameter is
+      mandatory and can either be a list or a list of lists, or the equivalent
+      NumPy array.
+    - `xs` are the x coordinates of the points to plot. This parameter is
+      optional and can either be a `None` or of the same shape as `ys`.
+    - Any additional keyword arguments are passed to the
+      `uniplot.options.Options` class.
     """
     series: MultiSeries = MultiSeries(xs=xs, ys=ys)
     options: Options = validate_and_transform_options(series=series, kwargs=kwargs)
@@ -85,9 +87,11 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
 
 def plot_to_string(ys: Any, xs: Optional[Any] = None, **kwargs) -> List[str]:
     """
-    Same as `plot`, but the return type is a list of strings. Ignores the `interactive` option.
+    Same as `plot`, but the return type is a list of strings. Ignores the
+    `interactive` option.
 
-    Can be used to integrate uniplot in other applications, or if the output is desired to be not stdout.
+    Can be used to integrate uniplot in other applications, or if the output is
+    desired to be not stdout.
     """
     series: MultiSeries = MultiSeries(xs=xs, ys=ys)
     options: Options = validate_and_transform_options(series=series, kwargs=kwargs)
@@ -120,9 +124,11 @@ def histogram(
 
     Parameters:
 
-    - `xs` are the values of the points to plot. This parameter is mandatory and
-      can either be a list or a list of lists, or the equivalent NumPy array.
-    - Any additional keyword arguments are passed to the `uniplot.options.Options` class.
+    - `xs` are the values of the points to plot. This parameter is mandatory
+      and can either be a list or a list of lists, or the equivalent NumPy
+      array.
+    - Any additional keyword arguments are passed to the
+      `uniplot.options.Options` class.
     """
     # HACK Use the `MultiSeries` constructor to cast values to uniform format
     multi_series = MultiSeries(ys=xs)
@@ -164,7 +170,8 @@ def histogram(
 
 def _generate_header(options: Options) -> List[str]:
     """
-    Generates the header of the plot, so everything above the first line of plottable area.
+    Generates the header of the plot, so everything above the first line of
+    plottable area.
     """
     if options.title is None:
         return []

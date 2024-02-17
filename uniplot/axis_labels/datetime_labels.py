@@ -16,12 +16,15 @@ def datetime_labels(
     """
     A simple way to get started with datetime labelling.
     """
+    if verbose:
+        print(
+            f"datetime_labels: x_min={x_min}, x_max={x_max}, vertical_direction={vertical_direction}"
+        )
     # Try in decending order of number of labels.
     for nr_labels in range(8, 0, -1):
         d = (x_max - x_min) / nr_labels
-        labels = np.array(
-            [x_min + (i + 0.5) * d for i in range(nr_labels)], dtype="datetime64[ns]"
-        )
+        float_datetimes = [x_min + (i + 0.5) * d for i in range(nr_labels)]
+        labels = np.array(float_datetimes, dtype="datetime64[s]")
         dls = DatetimeLabelSet(
             labels=labels,
             x_min=x_min,

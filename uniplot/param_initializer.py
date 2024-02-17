@@ -1,19 +1,11 @@
 import numpy as np
-from typing import Dict, Any
+from typing import Dict
 
 from uniplot.multi_series import MultiSeries
 from uniplot.options import Options
+from uniplot.conversions import floatify
 
 AUTO_WINDOW_ENLARGE_FACTOR = 1e-3
-
-
-def floatify(x: Any) -> float:
-    try:
-        if np.issubdtype(x.dtype, np.datetime64):
-            return x.astype(float)
-        return float(x)
-    except:
-        return float(x)
 
 
 def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Options:
@@ -29,6 +21,14 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
     As a result the somewhat hacky code below should at least be confined to
     this function, and not spread throughout uniplot.
     """
+    # First, some cleanup, including converting datetimes to float
+    for key in ["x_min", "x_max", "y_min", "y_max"]:
+        if key in kwargs:
+            kwargs[key] = floatify(kwargs[key])
+    # TODO y gridlines
+    if "x_gridlines" in kwargs:
+        kwargs["x_gridlines"] = [floatify(x) for x in kwargs["x_gridlines"]]
+
     if kwargs.get("x_as_log"):
         series.set_x_axis_to_log10()
         if not kwargs.get("x_gridlines"):
@@ -56,7 +56,7 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
     kwargs["x_max"] = kwargs.get("x_max", series.x_max() + x_enlarge_delta)
 
     # Fallback for only a single data point, or multiple with single x coordinate
-    if floatify(kwargs["x_min"]) == floatify(kwargs["x_max"]):
+    if kwargs["x_min"] == kwargs["x_max"]:
         kwargs["x_min"] = kwargs["x_min"] - 1
         kwargs["x_max"] = kwargs["x_max"] + 1
 

@@ -54,6 +54,9 @@ class MultiSeries:
         """Return the number of time series."""
         return len(self.ys)
 
+    def __str__(self) -> str:
+        return f"MultiSeries(xs={self.xs}, ys={self.ys}, is_multi_dimensional={self.is_multi_dimensional}, x_is_time_series={self.x_is_time_series})"
+
     def shape(self) -> List[int]:
         """Return a list with the length of the time series."""
         return [len(ys_row) for ys_row in self.ys]
@@ -114,7 +117,7 @@ def _is_time_series(series) -> bool:
     if np.issubdtype(np_array.dtype, np.number):
         return False
     try:
-        np_array.astype("datetime64")
+        np_array.astype("datetime64[s]")
         return True
     except:
         return False
@@ -144,7 +147,12 @@ def _cast_as_numpy_time_series(series) -> NDArray:
     We assume that at this point we have already checked that the conversion is
     possible.
     """
-    return np.array(series, dtype="datetime64[ns]")
+    # NOTE It is really important that throughout the library we use the
+    # "datetime64[s]" NumPy format consistently. Using only `np.datetime`
+    # or a different type like "datetime64[m]" means that the conversion to
+    # floating point will depend on the input format, which will lead to
+    # unexpected behavior.
+    return np.array(series).astype("datetime64[s]")
 
 
 def _safe_max(array) -> float:
