@@ -24,7 +24,7 @@ def datetime_labels(
     for nr_labels in range(8, 0, -1):
         d = (x_max - x_min) / nr_labels
         float_datetimes = [x_min + (i + 0.5) * d for i in range(nr_labels)]
-        labels = np.array(float_datetimes, dtype="datetime64[s]")
+        labels = np.array(float_datetimes).astype("datetime64[s]")
         dls = DatetimeLabelSet(
             labels=labels,
             x_min=x_min,

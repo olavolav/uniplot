@@ -5,7 +5,7 @@ from uniplot.multi_series import MultiSeries
 from uniplot.options import Options
 from uniplot.conversions import floatify
 
-AUTO_WINDOW_ENLARGE_FACTOR = 1e-3
+AUTO_WINDOW_ENLARGE_FACTOR = 0.001
 
 
 def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Options:
@@ -51,9 +51,15 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
             kwargs["y_max"] = np.log10(kwargs["y_max"])
 
     # Set x bounds to show all points by default
-    x_enlarge_delta = AUTO_WINDOW_ENLARGE_FACTOR * (series.x_max() - series.x_min())
-    kwargs["x_min"] = kwargs.get("x_min", series.x_min() - x_enlarge_delta)
-    kwargs["x_max"] = kwargs.get("x_max", series.x_max() + x_enlarge_delta)
+    x_enlarge_delta = AUTO_WINDOW_ENLARGE_FACTOR * (
+        floatify(series.x_max()) - floatify(series.x_min())
+    )
+    kwargs["x_min"] = floatify(
+        kwargs.get("x_min", floatify(series.x_min()) - x_enlarge_delta)
+    )
+    kwargs["x_max"] = floatify(
+        kwargs.get("x_max", floatify(series.x_max()) + x_enlarge_delta)
+    )
 
     # Fallback for only a single data point, or multiple with single x coordinate
     if kwargs["x_min"] == kwargs["x_max"]:

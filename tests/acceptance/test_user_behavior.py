@@ -68,3 +68,13 @@ def test_random_line_plotting():
     xs = [random() for _ in range(100)]
     ys = [random() for _ in range(100)]
     plot(xs=xs, ys=ys, lines=True)
+
+
+def test_plotting_time_series_with_bounds_set_manually():
+    dates = np.arange("2024-02-17T09:21", 4 * 60, 60, dtype="M8[m]")
+    plot(xs=dates, ys=[1, 2, 3, 2], x_min=dates[0], x_max=dates[-1])
+
+
+def test_plotting_time_series_with_auto_bounds():
+    dates = np.arange("2024-02-17T09:21", 4 * 60, 60, dtype="M8[m]")
+    plot(xs=dates, ys=[1, 2, 3, 2], x_min=dates[0], x_max=dates[-1])

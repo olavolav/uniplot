@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.typing import NDArray
 
-from typing import List
+from typing import List, Any
 
 
 class MultiSeries:
@@ -94,7 +94,7 @@ class MultiSeries:
 ###########
 
 
-def _is_multi_dimensional(series) -> bool:
+def _is_multi_dimensional(series: Any) -> bool:
     """
     Check if the object is multi-dimensional.
 
@@ -108,7 +108,7 @@ def _is_multi_dimensional(series) -> bool:
         return True
 
 
-def _is_time_series(series) -> bool:
+def _is_time_series(series: Any) -> bool:
     """
     Check if the object is datetime-like. This might be a pandas DateTime, a
     list of datetimes, or a list of date(s).
@@ -117,13 +117,16 @@ def _is_time_series(series) -> bool:
     if np.issubdtype(np_array.dtype, np.number):
         return False
     try:
-        np_array.astype("datetime64[s]")
+        # Here we can omit the `[s]` to not cause unnecessary conversion work,
+        # as the convertion to "datetime64[s]" is guaranteed to work later on,
+        # if "datetime64" works.
+        np_array.astype("datetime64")
         return True
     except:
         return False
 
 
-def _cast_as_numpy_floats(array) -> NDArray:
+def _cast_as_numpy_floats(array: Any) -> NDArray:
     """
     Attempts to make a numeric NumPy array from enumerable input.
 
@@ -139,7 +142,7 @@ def _cast_as_numpy_floats(array) -> NDArray:
     return numpy_array.astype(float)
 
 
-def _cast_as_numpy_time_series(series) -> NDArray:
+def _cast_as_numpy_time_series(series: Any) -> NDArray:
     """
     Converts to a numpy floating-point array, of unix epoch timestamps, with
     nano-second precision.
@@ -155,11 +158,11 @@ def _cast_as_numpy_time_series(series) -> NDArray:
     return np.array(series).astype("datetime64[s]")
 
 
-def _safe_max(array) -> float:
+def _safe_max(array: NDArray) -> float:
     return array[~np.isnan(array)].max()
 
 
-def _safe_min(array) -> float:
+def _safe_min(array: NDArray) -> float:
     return array[~np.isnan(array)].min()
 
 
