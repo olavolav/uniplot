@@ -173,9 +173,12 @@ values for `width` and `height` are now different.
 
 ## Experimental features
 
-For convenience there is also a `histogram` function that accepts one or more series and
-plots bar-chart like histograms. It will automatically discretize the series into a number
-of bins given by the `bins` option and display the result.
+### Plotting histograms
+
+For convenience there is also a `histogram` function that accepts one or more
+series and plots bar-chart like histograms. It will automatically discretize
+the series into a number of bins given by the `bins` option and display the
+result.
 
 When calling the `histogram` function, the `lines` option is `True` by default.
 
@@ -210,6 +213,45 @@ Result:
 │▄▄▄▌▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁│▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▐▄▄▄│ 0
 └────────────────────────────────────────────────────────────┘
      -1                        0                       1
+```
+
+### Plotting time series
+
+There is inital support for using timestamps for the x axis. It should work with most formats.
+
+Missing so far are nicer axis labels for time stamps, as well as timezone support.
+
+Example:
+
+```python
+import numpy as np
+dates =  np.arange('2024-02-17T12:10', 4*60, 60, dtype='M8[m]')
+from uniplot import plot
+plot(xs=dates, ys=[1,2,3,2])
+```
+
+Result:
+```
+┌────────────────────────────────────────────────────────────┐
+│                                       ▝                    │ 3
+│                                                            │
+│                                                            │
+│                                                            │
+│                                                            │
+│                                                            │
+│                                                            │
+│                                                            │
+│                    ▘                                      ▝│ 2
+│                                                            │
+│                                                            │
+│                                                            │
+│                                                            │
+│                                                            │
+│                                                            │
+│                                                            │
+│▖                                                           │ 1
+└────────────────────────────────────────────────────────────┘
+ 12:24:51  12:54:54  13:24:58  13:55:01  14:25:05   14:55:09
 ```
 
 
