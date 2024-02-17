@@ -4,7 +4,7 @@ make sure it works nicely with uniplot. Thus these tests.
 """
 
 import pandas as pd  # type: ignore
-import numpy as np  # type: ignore
+import numpy as np
 
 from uniplot import plot
 
@@ -62,3 +62,8 @@ def test_grouped_plotting():
         y_unit=" g",
         lines=True,
     )
+
+
+def test_plotting_time_series():
+    dti = pd.date_range("2024-01-01", periods=4, freq="h")
+    plot(xs=dti, ys=[1, 2, 3, 1])
