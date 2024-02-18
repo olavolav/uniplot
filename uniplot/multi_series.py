@@ -21,21 +21,30 @@ class MultiSeries:
         # First check if the input is multi-dim
         self.is_multi_dimensional: bool = _is_multi_dimensional(ys)
 
+        self.x_is_time_series: bool = False
+        self.y_is_time_series: bool = False
+
         # Initialize y series
         if self.is_multi_dimensional:
-            self.ys = [_cast_as_numpy_floats(ys_row) for ys_row in ys]
+            self.y_is_time_series = all([_is_time_series(y) for y in ys])
+            if self.y_is_time_series:
+                self.ys = [_cast_as_numpy_time_series(ys_row) for ys_row in ys]
+            else:
+                self.ys = [_cast_as_numpy_floats(ys_row) for ys_row in ys]
         else:
-            self.ys = [_cast_as_numpy_floats(ys)]
+            self.y_is_time_series = _is_time_series(ys)
 
-        self.x_is_time_series: bool = False
+            if self.y_is_time_series:
+                self.ys = [_cast_as_numpy_time_series(ys)]
+            else:
+                self.ys = [_cast_as_numpy_floats(ys)]
 
         # Initialize x series
         if xs is None:
+            # Initialize as a serial index
             self.xs = [np.arange(1, len(y) + 1, step=1, dtype=int) for y in self.ys]
         else:
             if self.is_multi_dimensional:
-                # Check if all x series are time series
-                # TODO Do that for y as well
                 self.x_is_time_series = all([_is_time_series(x) for x in xs])
 
                 if self.x_is_time_series:
@@ -50,15 +59,25 @@ class MultiSeries:
                 else:
                     self.xs = [_cast_as_numpy_floats(xs)]
 
+        # In the end, the dimensions of xs and ys need to match
+        assert len(self.xs) == len(self.ys)
+        assert [len(xs_row) for xs_row in self.xs] == [
+            len(ys_row) for ys_row in self.ys
+        ]
+
     def __len__(self) -> int:
-        """Return the number of time series."""
+        """
+        Return the number of time series.
+        """
         return len(self.ys)
 
     def __str__(self) -> str:
-        return f"MultiSeries(xs={self.xs}, ys={self.ys}, is_multi_dimensional={self.is_multi_dimensional}, x_is_time_series={self.x_is_time_series})"
+        return f"MultiSeries(xs={self.xs}, ys={self.ys}, is_multi_dimensional={self.is_multi_dimensional}, x_is_time_series={self.x_is_time_series}, y_is_time_series={self.y_is_time_series})"
 
     def shape(self) -> List[int]:
-        """Return a list with the length of the time series."""
+        """
+        Return a list with the length of the time series.
+        """
         return [len(ys_row) for ys_row in self.ys]
 
     def set_x_axis_to_log10(self) -> None:
@@ -73,7 +92,14 @@ class MultiSeries:
         self.xs = [_safe_log10(x) for x in self.xs]
 
     def set_y_axis_to_log10(self) -> None:
-        """Apply log10 to all y series."""
+        """
+        Apply log10 to all y series.
+
+        Raises a `ValueError` if any the x-axis is a time series.
+        """
+        if self.y_is_time_series:
+            raise ValueError("Cannot format a time series as logarithmic.")
+
         self.ys = [_safe_log10(y) for y in self.ys]
 
     def y_max(self) -> float:

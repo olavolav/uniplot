@@ -103,5 +103,9 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
         raise ValueError(
             "We currently do not support using timestamps on a log scale. We suggest to convert the timestamps to numbers first."
         )
+    if series.y_is_time_series and options.y_as_log:
+        raise ValueError(
+            "We currently do not support using timestamps on a log scale. We suggest to convert the timestamps to numbers first."
+        )
 
     return options

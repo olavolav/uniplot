@@ -131,14 +131,17 @@ the result as a list of strings, to include the output elsewhere.
 * `xs` - The x coordinates of the points to plot. Can either be `None`, or a
   list or NumPy array for plotting a single series, or a list of those for
   plotting multiple series. Defaults to `None`, meaning that the x axis will be
-  just the sample index of `ys`. (Note that since v0.12.0 you can also pass a
-  list or an NumPy array of timestamps, and the axis labels should be formatted
-  correctly. Limitations see below.)
+  just the sample index of `ys`.
 * `ys` - The y coordinates of the points to plot. Can either be a list or NumPy
   array for plotting a single series, or a list of those for plotting multiple
   series.
 
 In both cases, NaN values are ignored.
+
+Note that since v0.12.0 you can also pass a list or an NumPy array of
+timestamps, and the axis labels should be formatted correctly. Limitations see
+below.
+
 
 ### Options
 
@@ -225,7 +228,7 @@ Result:
 
 ### Plotting time series
 
-There is inital support for using timestamps for the x axis. It should work with most formats.
+There is inital support for using timestamps for the axis labels. It should work with most formats.
 
 Missing so far are nicer axis labels for time stamps, as well as timezone support.
 

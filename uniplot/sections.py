@@ -53,8 +53,8 @@ def generate_body_raw_elements(
     Generates the x-axis labels, y-axis labels, and the pixel character matrix.
     """
     # Prepare y axis labels
-    # TODO Allow for time series
-    y_axis_label_set = extended_talbot_labels(
+    label_fn = datetime_labels if series.y_is_time_series else extended_talbot_labels
+    y_axis_label_set = label_fn(
         x_min=options.y_min,
         x_max=options.y_max,
         available_space=options.height,
