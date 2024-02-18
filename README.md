@@ -7,12 +7,14 @@ Lightweight plotting to the terminal. 4x resolution via Unicode.
 
 ![uniplot demo GIF](https://github.com/olavolav/uniplot/raw/master/resource/uniplot-demo.gif)
 
-When working with production data science code it can be handy to have plotting tool that
-does not rely on graphics dependencies or works only in a Jupyter notebook.
+When working with production data science code it can be handy to have plotting
+tool that does not rely on graphics dependencies or works only in a Jupyter
+notebook.
 
-The **use case** that this was built for is to have plots as part of your data science /
-machine learning CI pipeline - that way whenever something goes wrong, you get not only
-the error and backtrace but also plots that show what the problem was.
+The **use case** that this was built for is to have plots as part of your data
+science / machine learning CI/cd pipeline - that way whenever something goes
+wrong, you get not only the error and backtrace but also plots that show what
+the problem was.
 
 
 ## Features
@@ -118,17 +120,23 @@ Result:
 
 ## Parameters
 
-The `plot` function accepts a number of parameters, all listed below. Note that only `ys`
-is required, all others are optional.
+The `plot` function accepts a number of parameters, all listed below. Note that
+only `ys` is required, all others are optional.
 
-There is also a `plot_to_string` function with the same signature, if you want the result
-as a list of strings, to include the output elsewhere.
+There is also a `plot_to_string` function with the same signature, if you want
+the result as a list of strings, to include the output elsewhere.
 
 ### Data
 
-* `xs` - The x coordinates of the points to plot. Can either be `None`, or a list or NumPy array for plotting a single series, or a list of those for plotting multiple series. Defaults to `None`, meaning that the x axis will be just the sample index of
-`ys`.
-* `ys` - The y coordinates of the points to plot. Can either be a list or NumPy array for plotting a single series, or a list of those for plotting multiple series.
+* `xs` - The x coordinates of the points to plot. Can either be `None`, or a
+  list or NumPy array for plotting a single series, or a list of those for
+  plotting multiple series. Defaults to `None`, meaning that the x axis will be
+  just the sample index of `ys`. (Note that since v0.12.0 you can also pass a
+  list or an NumPy array of timestamps, and the axis labels should be formatted
+  correctly. Limitations see below.)
+* `ys` - The y coordinates of the points to plot. Can either be a list or NumPy
+  array for plotting a single series, or a list of those for plotting multiple
+  series.
 
 In both cases, NaN values are ignored.
 
