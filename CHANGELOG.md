@@ -5,7 +5,7 @@ All notable changes to uniplot will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.12.2] - 2024-02-23
 ### Added
 - Experimental: Added support for plotting the y axis as timestamps.
 - Explicit conversion to string of text options. The goal here is to allow for
@@ -19,7 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.12.0] - 2024-02-17
 ### Added
 - Added tests to make sure uniplot works well with [Polars](https://pola.rs/).
-- Experimental: Added support for plotting the x axis as timestamps.
+- Experimental: Added support for plotting the x axis as timestamps. Thanks to
+  @leighleighleigh for the first draft!
 
 ## [0.11.0] - 2024-01-14
 ### Changed
