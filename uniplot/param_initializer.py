@@ -79,9 +79,16 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
         kwargs["y_min"] = kwargs["y_min"] - 1
         kwargs["y_max"] = kwargs["y_max"] + 1
 
-    # Make sure the length of the labels is not exceeding the number of series
+    # Explicit conversion to string of text options
+    for key in ["title", "x_unit", "y_unit"]:
+        if key in kwargs:
+            kwargs[key] = str(kwargs[key])
     if kwargs.get("legend_labels") is not None:
-        kwargs["legend_labels"] = list(kwargs["legend_labels"])[0 : len(series)]
+        kwargs["legend_labels"] = [
+            # Make sure the length of the labels is not exceeding the number of series
+            str(s)
+            for s in list(kwargs["legend_labels"])[0 : len(series)]
+        ]
 
     # By default, enable color for multiple series, disable color for a single one
     kwargs["color"] = kwargs.get("color", len(series) > 1)

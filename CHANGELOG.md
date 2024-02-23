@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Experimental: Added support for plotting the y axis as timestamps.
+- Explicit conversion to string of text options. The goal here is to allow for
+  other objects to be passed in, such as a machine learning model object,
+  without manually creaing the text label first.
 
 ## [0.12.1] - 2024-02-17
 ### Changed

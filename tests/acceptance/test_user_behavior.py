@@ -92,3 +92,19 @@ def test_plotting_time_series_with_python_datetime_objects():
         for i in range(1, 5)
     ]
     plot(xs=dates, ys=[1, 2, 3, 2])
+
+
+def test_just_pass_objects_as_labels_works_as_well():
+    class TestClass:
+        def __init__(self, x):
+            self.x: int = int(x)
+
+        def __str__(self) -> str:
+            return f"TestClass via str(x={self.x})"
+
+        def __repr__(self) -> str:
+            return f"TestClass via repr(x={self.x})"
+
+    objects = [TestClass(1), TestClass(12), TestClass(123)]
+    values = [[0, instance.x] for instance in objects]
+    plot(values, title=objects[0], legend_labels=objects, lines=True)
