@@ -137,18 +137,12 @@ def render(
             pixels_already_drawn = False
             if indices_slope is None:
                 # That means it's a vertical line
-                step = 1
-                if y_index_stop < y_index_start:
-                    step = -1
-                pixels[y_index_start:y_index_stop:step, x_index_start] = 1
+                pixels[max(y_index_smaller, 0):max(y_index_bigger, 0), x_index_start] = 1
                 pixels_already_drawn = True
 
             elif y_index_start == y_index_stop:
                 # That means it's a horizontal line
-                step = 1
-                if x_index_stop < x_index_start:
-                    step = -1
-                pixels[y_index_start, x_index_start:x_index_stop:step] = 1
+                pixels[y_index_start, max(x_index_smaller, 0):max(x_index_bigger, 0)] = 1
                 pixels_already_drawn = True
 
             elif abs(indices_slope) > 1:
