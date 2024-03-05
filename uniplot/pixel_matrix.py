@@ -134,24 +134,21 @@ def render(
             if x_start != x_stop:
                 slope = (y_stop - y_start) / (x_stop - x_start)
 
-            pixels_already_drawn = False
             if indices_slope is None:
                 # That means it's a vertical line
-                step = 1
-                if y_index_stop < y_index_start:
-                    step = -1
-                pixels[y_index_start:y_index_stop:step, x_index_start] = 1
-                pixels_already_drawn = True
+                pixels[
+                    max(y_index_smaller, 0) : max(y_index_bigger, 0), x_index_start
+                ] = 1
+                continue
 
-            elif y_index_start == y_index_stop:
+            if y_index_start == y_index_stop:
                 # That means it's a horizontal line
-                step = 1
-                if x_index_stop < x_index_start:
-                    step = -1
-                pixels[y_index_start, x_index_start:x_index_stop:step] = 1
-                pixels_already_drawn = True
+                pixels[
+                    y_index_start, max(x_index_smaller, 0) : max(x_index_bigger, 0)
+                ] = 1
+                continue
 
-            elif abs(indices_slope) > 1:
+            if abs(indices_slope) > 1:
                 # Draw line by iterating vertically
                 # 1. Compute y indices in the middle of bins between the two origins
                 step = 1
@@ -199,22 +196,18 @@ def render(
                     )
                 )
 
-            # Finally, draw pixels (if needed)
-            if not pixels_already_drawn:
-                # Assemble pixels
-                xy_indices_of_line = np.column_stack(
-                    (x_indices_of_line, y_indices_of_line)
-                )
+            # Assemble pixels
+            xy_indices_of_line = np.column_stack((x_indices_of_line, y_indices_of_line))
 
-                # Filter out of view pixels
-                xy_indices_of_line = xy_indices_of_line[
-                    (xy_indices_of_line[:, 0] >= max(0, x_index_smaller))
-                    & (xy_indices_of_line[:, 0] <= min(width - 1, x_index_bigger))
-                    & (xy_indices_of_line[:, 1] >= max(0, y_index_smaller))
-                    & (xy_indices_of_line[:, 1] <= min(height - 1, y_index_bigger))
-                ]
-                xy_indices_of_line = xy_indices_of_line.T
-                pixels[xy_indices_of_line[1], xy_indices_of_line[0]] = 1
+            # Filter out of view pixels
+            xy_indices_of_line = xy_indices_of_line[
+                (xy_indices_of_line[:, 0] >= max(0, x_index_smaller))
+                & (xy_indices_of_line[:, 0] <= min(width - 1, x_index_bigger))
+                & (xy_indices_of_line[:, 1] >= max(0, y_index_smaller))
+                & (xy_indices_of_line[:, 1] <= min(height - 1, y_index_bigger))
+            ]
+            xy_indices_of_line = xy_indices_of_line.T
+            pixels[xy_indices_of_line[1], xy_indices_of_line[0]] = 1
 
     # Filter out NaN and out of view pixels
     xy_indices = xy_indices[

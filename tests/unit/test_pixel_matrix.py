@@ -133,7 +133,7 @@ def test_vertical_line():
 
 def test_no_mysterious_extra_vertical_lines():
     """
-    This test is to make sure that issue #2 is fixed.
+    This test exists to make sure that issue #2 is fixed.
     """
     width = 60
     height = 17
@@ -151,6 +151,27 @@ def test_no_mysterious_extra_vertical_lines():
 
     desired_pixels = np.zeros((height, width), dtype=int)
     np.testing.assert_array_equal(pixels, desired_pixels)
+
+
+def test_that_vertical_lines_partially_out_of_view_are_fully_drawn():
+    """
+    This test exists to make sure that issue #22 is fixed.
+    """
+    width = 60
+    height = 17
+    pixels = render(
+        xs=np.array([1, 1]),
+        ys=np.array([0, 1]),
+        x_min=0,
+        y_min=0,
+        x_max=2,
+        y_max=0.8,
+        width=width,
+        height=height,
+        lines=True,
+    )
+    for row_index in range(height):
+        assert np.sum(pixels[row_index]) == 1
 
 
 def test_forward_line_with_steep_upward_slope():
