@@ -96,7 +96,7 @@ def test_plotting_time_series_with_python_datetime_objects():
 
 def test_just_pass_objects_as_labels_works_as_well():
     class TestClass:
-        def __init__(self, x):
+        def __init__(self, x) -> None:
             self.x: int = int(x)
 
         def __str__(self) -> str:
