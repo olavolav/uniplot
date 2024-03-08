@@ -32,13 +32,8 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
 
     # Main loop for interactive mode. Will only be executed once when not in
     # interactive mode.
-    continue_looping: bool = True
     loop_iteration: int = 0
-    while continue_looping:
-        # Make sure we stop after first iteration when not in interactive mode
-        if not options.interactive:
-            continue_looping = False
-
+    while True:
         (
             x_axis_labels,
             y_axis_labels,
@@ -61,25 +56,28 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
             print("Move h/j/k/l, zoom u/n, or r to reset. ESC/q to quit")
             key_pressed = getch().lower()
 
-            if key_pressed == "h":
+            if key_pressed in ["h", "a"]:
                 options.shift_view_left()
-            elif key_pressed == "l":
+            elif key_pressed in ["l", "d"]:
                 options.shift_view_right()
-            elif key_pressed == "j":
+            elif key_pressed in ["j", "x"]:
                 options.shift_view_down()
-            elif key_pressed == "k":
+            elif key_pressed in ["k", "e"]:
                 options.shift_view_up()
-            elif key_pressed == "u":
+            elif key_pressed in ["u", "w"]:
                 options.zoom_in()
-            elif key_pressed == "n":
+            elif key_pressed in ["n", "s"]:
                 options.zoom_out()
             elif key_pressed == "r":
                 options.reset_view()
             elif key_pressed in ["q", "\x1b"]:
                 # q and Escape will end interactive mode
-                continue_looping = False
+                break
 
             loop_iteration += 1
+        else:
+            # If not in interactive mode
+            break
 
 
 def plot_to_string(ys: Any, xs: Optional[Any] = None, **kwargs) -> List[str]:
