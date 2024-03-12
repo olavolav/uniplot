@@ -191,6 +191,14 @@ series and plots bar-chart like histograms. It will automatically discretize
 the series into a number of bins given by the `bins` option and display the
 result.
 
+Additional options, in alphabetical order:
+
+* `bins` - Number of bins to use. Defaults to `20`.
+* `bins_min` - Lower limit of the first bin. Defaults to the minimum of the
+  series.
+* `bins_max` - Upper limit of the last bin. Defaults to the maximum of the
+  series.
+
 When calling the `histogram` function, the `lines` option is `True` by default.
 
 Example:

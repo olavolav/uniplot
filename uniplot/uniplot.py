@@ -135,17 +135,21 @@ def histogram(
     # Histograms usually make sense only with lines
     kwargs["lines"] = kwargs.get("lines", True)
 
+    auto_bin_limits: bool = bins_min is None and bins_max is None
+
     bins_min = bins_min or multi_series.y_min()
     bins_max = bins_max or multi_series.y_max()
-    range = bins_max - bins_min
-    if range > 0:
-        bins_min = bins_min - 0.1 * range
-        bins_max = bins_max + 0.1 * range
+    assert bins_max > bins_min
+    if auto_bin_limits:
+        delta = bins_max - bins_min
+        bins_min = bins_min - 0.1 * delta
+        bins_max = bins_max + 0.1 * delta
+    bin_edges = [bins_min + i * (bins_max - bins_min) / bins for i in range(bins + 1)]
 
     xs_histo_series = []
     ys_histo_series = []
     for s in multi_series.ys:
-        hist, bin_edges = np.histogram(s, bins=bins)
+        hist, _ = np.histogram(s, bins=bin_edges)
 
         # Draw vertical and horizontal lines to connect points
         xs_here = np.zeros(1 + 2 * bins + 1)
