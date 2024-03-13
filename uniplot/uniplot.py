@@ -1,4 +1,3 @@
-import numpy as np
 from typing import List, Optional, Any
 
 from uniplot.multi_series import MultiSeries
@@ -149,18 +148,10 @@ def histogram(
     xs_histo_series = []
     ys_histo_series = []
     for s in multi_series.ys:
-        hist, _ = np.histogram(s, bins=bin_edges)
-
-        # Draw vertical and horizontal lines to connect points
-        xs_here = np.zeros(1 + 2 * bins + 1)
-        ys_here = np.zeros(1 + 2 * bins + 1)
-        xs_here[0] = bin_edges[0]
-        xs_here[1::2] = bin_edges
-        xs_here[2::2] = bin_edges[1:]
-        ys_here[1:-1:2] = hist
-        ys_here[2:-1:2] = hist
-
-        xs_histo_series.append(xs_here)
-        ys_histo_series.append(ys_here)
+        xs_barchart, ys_barchart = elements.compute_bar_chart_histogram_points(
+            s, bin_edges
+        )
+        xs_histo_series.append(xs_barchart)
+        ys_histo_series.append(ys_barchart)
 
     plot(xs=xs_histo_series, ys=ys_histo_series, **kwargs)
