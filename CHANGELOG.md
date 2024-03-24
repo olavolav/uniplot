@@ -5,6 +5,13 @@ All notable changes to uniplot will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Fixed
+- Link from PyPI to the GitHub repository was missing. Thanks to @adigitoleo
+  for pointing this out!
+- Histogram limits are now auto-expanded for both sides (minimum and maximum)
+  independently, which just makes more sense.
+
 ## [0.12.4] - 2024-03-13
 ### Fixed
 - Limits to bins that are passed to the histogram function via `bins_min` and

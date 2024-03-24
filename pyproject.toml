@@ -3,6 +3,7 @@ name = "uniplot"
 version = "0.12.4"
 description = "Lightweight plotting to the terminal. 4x resolution via Unicode."
 authors = ["Olav Stetter <olav.stetter@googlemail.com>"]
+repository = "https://github.com/olavolav/uniplot"
 license = "MIT"
 readme = "README.md"
 packages = [{include = "uniplot"}]
