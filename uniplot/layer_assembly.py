@@ -22,11 +22,27 @@ def assemble_scatter_plot(
         for x in options.x_gridlines
     ]
 
+    # Widgets
+    widget_layers = []
+    for widget in options.widgets:
+        pixels = widget.draw(options, layer_factory)
+        if pixels is None:
+            continue
+        if isinstance(pixels, list):
+            widget_layers.extend(pixels)
+        else:
+            widget_layers.append(pixels)
+
     # Pixels
     pixel_layer = layer_factory.render_points(xs=xs, ys=ys, options=options)
 
     # Assemble graph surface
-    all_layers = horizontal_gridline_layers + vertical_gridline_layers + [pixel_layer]
+    all_layers = (
+        horizontal_gridline_layers
+        + vertical_gridline_layers
+        + widget_layers
+        + [pixel_layer]
+    )
     return _merge_layers(all_layers, options=options)
 
 

@@ -1,5 +1,8 @@
 from dataclasses import dataclass, field
-from typing import List, Optional
+from types import ModuleType
+from typing import Callable, Dict, List, Optional
+
+from numpy.typing import NDArray
 
 
 def _default_gridlines() -> List[float]:
@@ -8,6 +11,23 @@ def _default_gridlines() -> List[float]:
 
 def _default_lines() -> List[bool]:
     return [False]
+
+
+class Widget(object):
+    def draw(
+        self, options: "Options", layer_factory: ModuleType
+    ) -> None | NDArray | list[NDArray]:
+        return None
+
+    def keymap(self) -> Dict[str, Callable[["Options"], None]]:
+        return {}
+
+
+def _default_interactions() -> List[Widget]:
+    return []
+
+
+NO_INTERACTION = lambda options: ...
 
 
 @dataclass
@@ -57,6 +77,8 @@ class Options:
     y_min: float = 0.0
     # Units of y axis
     y_unit: str = ""
+    # Custom widgets
+    widgets: list[Widget] = field(default_factory=_default_interactions)
 
     def __post_init__(self):
         # Validate values
@@ -90,6 +112,11 @@ class Options:
 
     def reset_width(self) -> None:
         self.width = self._initial_width
+
+    def dispatch(self, key_pressed):
+        for widget in self.widgets:
+            interaction_func = widget.keymap().get(key_pressed, NO_INTERACTION)
+            interaction_func(self)
 
     ###########
     # private #
