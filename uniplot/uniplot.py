@@ -134,8 +134,8 @@ def histogram(
     # Histograms usually make sense only with lines
     kwargs["lines"] = kwargs.get("lines", True)
 
-    bins_min_real: float = bins_min or multi_series.y_min()
-    bins_max_real: float = bins_max or multi_series.y_max()
+    bins_min_real: float = bins_min if bins_min is not None else multi_series.y_min()
+    bins_max_real: float = bins_max if bins_max is not None else multi_series.y_max()
     assert bins_max_real > bins_min_real
 
     # Depending on whether the bin limits were supplied as arguments, expand
