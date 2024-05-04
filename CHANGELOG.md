@@ -5,6 +5,11 @@ All notable changes to uniplot will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.6] - 2024-05-04
+### Fixed
+- Fixed bin range default checkwhen plotting a histogram. Thanks to @riga for
+  the PR!
+
 ## [0.12.5] - 2024-03-24
 ### Fixed
 - Link from PyPI to the GitHub repository was missing. Thanks to @adigitoleo
