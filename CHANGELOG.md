@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.12.6] - 2024-05-04
 ### Fixed
-- Fixed bin range default checkwhen plotting a histogram. Thanks to @riga for
+- Fixed bin range default check when plotting a histogram. Thanks to @riga for
   the PR!
 
 ## [0.12.5] - 2024-03-24
