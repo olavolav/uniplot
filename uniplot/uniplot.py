@@ -25,10 +25,6 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
     series: MultiSeries = MultiSeries(xs=xs, ys=ys)
     options: Options = validate_and_transform_options(series=series, kwargs=kwargs)
 
-    # Print header
-    for line in sections.generate_header(options):
-        print(line)
-
     # Main loop for interactive mode. Will only be executed once when not in
     # interactive mode.
     continue_looping: bool = True
@@ -51,6 +47,10 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
                 nr_lines_to_erase += len(options.legend_labels)
             elements.erase_previous_lines(nr_lines_to_erase)
 
+        # Print header
+        for line in sections.generate_header(options):
+            print(line)
+        
         for line in sections.generate_body(
             x_axis_labels, y_axis_labels, pixel_character_matrix, options
         ):
