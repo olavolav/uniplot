@@ -108,3 +108,10 @@ def test_just_pass_objects_as_labels_works_as_well():
     objects = [TestClass(1), TestClass(12), TestClass(123)]
     values = [[0, instance.x] for instance in objects]
     plot(values, title=objects[0], legend_labels=objects, lines=True)
+
+
+def test_pass_some_empty_series():
+    """
+    This is issue #30.
+    """
+    plot([[1, 2, 3, 4, 3, 2, 3, 4], [3, 2, 2, 4, 1, 2, 1, 4], [1, 3], []], lines=True)

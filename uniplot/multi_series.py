@@ -103,16 +103,16 @@ class MultiSeries:
         self.ys = [_safe_log10(y) for y in self.ys]
 
     def y_max(self) -> float:
-        return max([_safe_max(ys_row) for ys_row in self.ys])
+        return _safe_maxs(self.ys)
 
     def y_min(self) -> float:
-        return min([_safe_min(ys_row) for ys_row in self.ys])
+        return _safe_mins(self.ys)
 
     def x_max(self) -> float:
-        return max([_safe_max(xs_row) for xs_row in self.xs])
+        return _safe_maxs(self.xs)
 
     def x_min(self) -> float:
-        return min([_safe_min(xs_row) for xs_row in self.xs])
+        return _safe_mins(self.xs)
 
 
 ###########
@@ -186,6 +186,14 @@ def _cast_as_numpy_time_series(series: Any) -> NDArray:
 
 def _safe_max(array: NDArray) -> float:
     return array[~np.isnan(array)].max()
+
+
+def _safe_maxs(series: List) -> float:
+    return max([_safe_max(row) for row in series if len(row) > 0])
+
+
+def _safe_mins(series: List) -> float:
+    return min([_safe_min(row) for row in series if len(row) > 0])
 
 
 def _safe_min(array: NDArray) -> float:
