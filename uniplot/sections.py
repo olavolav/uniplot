@@ -41,7 +41,11 @@ def generate_body(
 
     # Print legend if labels were specified
     if options.legend_labels is not None:
-        lines.append(elements.legend(options.legend_labels, width=options.width))
+        lines.append(
+            elements.legend(
+                options.legend_labels, width=options.width, colors=options.color
+            )
+        )
 
     return lines
 
