@@ -77,6 +77,8 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
             elif key_pressed in ["q", "\x1b"]:
                 # q and Escape will end interactive mode
                 continue_looping = False
+            else:
+                options.dispatch(key_pressed)
 
             loop_iteration += 1
 
