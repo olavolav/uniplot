@@ -25,15 +25,16 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
     series: MultiSeries = MultiSeries(xs=xs, ys=ys)
     options: Options = validate_and_transform_options(series=series, kwargs=kwargs)
 
-    # Print header
-    for line in sections.generate_header(options):
-        print(line)
+    header_buffer: List[str] = []
+    header_buffer += sections.generate_header(options)
 
     # Main loop for interactive mode. Will only be executed once when not in
     # interactive mode.
+    body_buffer: List[str] = []
     continue_looping: bool = True
     loop_iteration: int = 0
     while continue_looping:
+        body_buffer = []
         # Make sure we stop after first iteration when not in interactive mode
         if not options.interactive:
             continue_looping = False
@@ -44,6 +45,10 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
             pixel_character_matrix,
         ) = sections.generate_body_raw_elements(series, options)
 
+        body_buffer += sections.generate_body(
+            x_axis_labels, y_axis_labels, pixel_character_matrix, options
+        )
+
         # Delete plot before we re-draw
         if loop_iteration > 0:
             nr_lines_to_erase = options.height + 4
@@ -51,10 +56,7 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
                 nr_lines_to_erase += len(options.legend_labels)
             elements.erase_previous_lines(nr_lines_to_erase)
 
-        for line in sections.generate_body(
-            x_axis_labels, y_axis_labels, pixel_character_matrix, options
-        ):
-            print(line)
+        print("\n".join(header_buffer + body_buffer))
 
         if options.interactive:
             print("Move h/j/k/l, zoom u/n, or r to reset. ESC/q to quit")
