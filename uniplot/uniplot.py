@@ -31,31 +31,25 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
     # Main loop for interactive mode. Will only be executed once when not in
     # interactive mode.
     body_buffer: List[str] = []
-    continue_looping: bool = True
-    loop_iteration: int = 0
-    while continue_looping:
+    first_iteration: bool = True
+    while first_iteration or options.interactive:
+        # Generate and collect plot content
         body_buffer = []
-        # Make sure we stop after first iteration when not in interactive mode
-        if not options.interactive:
-            continue_looping = False
-
         (
             x_axis_labels,
             y_axis_labels,
             pixel_character_matrix,
         ) = sections.generate_body_raw_elements(series, options)
-
         body_buffer += sections.generate_body(
             x_axis_labels, y_axis_labels, pixel_character_matrix, options
         )
 
         # Delete plot before we re-draw
-        if loop_iteration > 0:
-            nr_lines_to_erase = options.height + 4
-            if options.legend_labels is not None:
-                nr_lines_to_erase += len(options.legend_labels)
+        if not first_iteration:
+            nr_lines_to_erase = len(body_buffer) + int(options.interactive)
             elements.erase_previous_lines(nr_lines_to_erase)
 
+        # Output plot
         print("\n".join(header_buffer + body_buffer))
 
         if options.interactive:
@@ -77,10 +71,9 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
             elif key_pressed == "r":
                 options.reset_view()
             elif key_pressed in ["q", "\x1b"]:
-                # q and Escape will end interactive mode
-                continue_looping = False
+                break
 
-            loop_iteration += 1
+        first_iteration = False
 
 
 def plot_to_string(ys: Any, xs: Optional[Any] = None, **kwargs) -> List[str]:
