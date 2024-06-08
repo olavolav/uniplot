@@ -147,8 +147,13 @@ below.
 
 In alphabetical order:
 
-* `color` - Draw series in color. Defaults to `False` when plotting a single series, and to `True` when plotting multiple.
-* `force_ascii` - Force ASCII characters for plotting only. This can be useful for compatibility, for example when using uniplot inside of CI/CD systems that do not support Unicode. Defaults to `False`.
+* `color` - Draw series in color. Defaults to `False` when plotting a single
+  series, and to `True` when plotting multiple. Also accepts a list of strings,
+  to modify the default order of
+  `["blue", "magenta", "green", "yellow", "cyan", "red"]`.
+* `force_ascii` - Force ASCII characters for plotting only. This can be useful
+  for compatibility, for example when using uniplot inside of CI/CD systems
+  that do not support Unicode. Defaults to `False`.
 * `height` - The height of the plotting region, in characters. Default is `17`.
 * `interactive` - Enable interactive mode. Defaults to `False`.
 * `legend_labels` - Labels for the series. Can be `None` or a list of strings. Defaults to `None`.
