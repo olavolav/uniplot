@@ -2,7 +2,7 @@ import sys
 import re
 import numpy as np
 from numpy.typing import NDArray
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 from uniplot.conversions import COLOR_CODES
 
@@ -64,7 +64,9 @@ def character_for_2by2_pixels(
     return _colorize_char(char, square.max(), color_mode)
 
 
-def character_for_ascii_pixel(nr: int, color_mode: bool | List[str] = False) -> str:
+def character_for_ascii_pixel(
+    nr: int, color_mode: Union[bool, List[str]] = False
+) -> str:
     if nr < 1:
         return ""
     if not color_mode:
@@ -72,7 +74,7 @@ def character_for_ascii_pixel(nr: int, color_mode: bool | List[str] = False) -> 
     return _colorize_char("█", nr, color_mode)
 
 
-def legend(legend_labels: List[str], width: int, color: bool | List[str]) -> str:
+def legend(legend_labels: List[str], width: int, color: Union[bool, List[str]]) -> str:
     """
     Assemble a legend that shows the color of the different curves.
     """
@@ -149,7 +151,7 @@ def _text_without_control_chars(text: str):
     return COLOR_CODE_REGEX.sub("", text)
 
 
-def _colorize_char(char: str, color_nr: int, color_mode: bool | List[str]) -> str:
+def _colorize_char(char: str, color_nr: int, color_mode: Union[bool, List[str]]) -> str:
     if char == "" or color_mode is False:
         return char
     colors = (
