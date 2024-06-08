@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Optional, Literal, Union
+from typing import List, Optional, Union
 
 
 def _default_gridlines() -> List[float]:

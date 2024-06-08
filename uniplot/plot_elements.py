@@ -2,7 +2,9 @@ import sys
 import re
 import numpy as np
 from numpy.typing import NDArray
-from typing import List, Tuple, Optional
+from typing import List, Tuple
+
+from uniplot.conversions import COLOR_CODES
 
 UNICODE_SQUARES = {
     0: "",
@@ -27,14 +29,6 @@ BINARY_ENCODING_MATRIX = np.array([[1, 2], [4, 8]])
 CURSOR_UP_ONE = "\x1b[1A"
 ERASE_LINE = "\x1b[2K"
 
-COLOR_CODES = {
-    "blue": "\033[34m",
-    "magenta": "\033[35m",
-    "green": "\033[32m",
-    "yellow": "\033[33m",
-    "cyan": "\033[36m",
-    "red": "\033[31m",
-}
 DEFAULT_COLORS = list(COLOR_CODES.values())
 
 COLOR_RESET_CODE = "\033[0m"

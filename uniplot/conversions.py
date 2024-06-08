@@ -2,6 +2,15 @@ import numpy as np
 import datetime
 from typing import Any
 
+COLOR_CODES = {
+    "blue": "\033[34m",
+    "magenta": "\033[35m",
+    "green": "\033[32m",
+    "yellow": "\033[33m",
+    "cyan": "\033[36m",
+    "red": "\033[31m",
+}
+
 
 def floatify(x: Any) -> float:
     """
