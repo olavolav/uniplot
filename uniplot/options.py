@@ -1,8 +1,6 @@
 from dataclasses import dataclass, field
 from typing import List, Optional, Literal, Union
 
-COLORS = Literal["blue", "magenta", "green", "yellow", "cyan", "red"]
-
 
 def _default_gridlines() -> List[float]:
     return [0.0]
@@ -22,7 +20,7 @@ class Options:
     """
 
     # Color mode
-    color: Optional[Union[bool, List[COLORS]]] = False
+    color: Union[bool, List[str]] = False
     # Force ASCII characters for plotting only
     force_ascii: bool = False
     # Height of the plotting region, in lines

@@ -43,7 +43,7 @@ def generate_body(
     if options.legend_labels is not None:
         lines.append(
             elements.legend(
-                options.legend_labels, width=options.width, colors=options.color
+                options.legend_labels, width=options.width, color=options.color
             )
         )
 

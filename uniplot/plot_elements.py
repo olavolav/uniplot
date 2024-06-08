@@ -42,7 +42,7 @@ COLOR_CODE_REGEX = re.compile(r"\033\[\d+m")
 
 
 def character_for_2by2_pixels(
-    square: NDArray, color_mode: bool | Optional[List[str]] = False
+    square: NDArray, color_mode: bool | List[str] = False
 ) -> str:
     """
     Convert 2x2 matrix (non-negative integers) to unicode character
@@ -70,9 +70,7 @@ def character_for_2by2_pixels(
     return _colorize_char(char, square.max(), color_mode)
 
 
-def character_for_ascii_pixel(
-    nr: int, color_mode: bool | Optional[List[str]] = False
-) -> str:
+def character_for_ascii_pixel(nr: int, color_mode: bool | List[str] = False) -> str:
     if nr < 1:
         return ""
     if not color_mode:
@@ -80,19 +78,21 @@ def character_for_ascii_pixel(
     return _colorize_char("█", nr, color_mode)
 
 
-def legend(
-    legend_labels: List[str], width: int, colors: Optional[List[str]] = None
-) -> str:
+def legend(legend_labels: List[str], width: int, color: bool | List[str]) -> str:
     """
     Assemble a legend that shows the color of the different curves.
     """
-    color = _colors_to_codes(colors) if isinstance(colors, list) else DEFAULT_COLORS
+    color_names = _colors_to_codes(color) if isinstance(color, list) else DEFAULT_COLORS
 
     label_strings: List[str] = []
     for i, legend in enumerate(legend_labels):
-        label_string = (
-            f"{color[i % len(color)]}██{COLOR_RESET_CODE} {str(legend).strip()}"
-        )
+        label_string: str = ""
+        if color is not False:
+            label_string += f"{color_names[i % len(color_names)]}"
+        label_string += "██"
+        if color is not False:
+            label_string += COLOR_RESET_CODE
+        label_string += f" {str(legend).strip()}"
         label_strings.append(label_string)
 
     full_label_string = "\n".join(label_strings)
@@ -155,9 +155,13 @@ def _text_without_control_chars(text: str):
     return COLOR_CODE_REGEX.sub("", text)
 
 
-def _colorize_char(char: str, color: int, colors: Optional[List[str]] = None) -> str:
-    colors = _colors_to_codes(colors) if isinstance(colors, list) else DEFAULT_COLORS
-    color_code = colors[(color - 1) % len(colors)]
+def _colorize_char(char: str, color_nr: int, color_mode: bool | List[str]) -> str:
+    if char == "" or color_mode is False:
+        return char
+    colors = (
+        _colors_to_codes(color_mode) if isinstance(color_mode, list) else DEFAULT_COLORS
+    )
+    color_code = colors[(color_nr - 1) % len(colors)]
     return color_code + char + COLOR_RESET_CODE
 
 
