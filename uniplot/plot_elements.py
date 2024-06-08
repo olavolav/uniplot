@@ -36,7 +36,7 @@ COLOR_CODE_REGEX = re.compile(r"\033\[\d+m")
 
 
 def character_for_2by2_pixels(
-    square: NDArray, color_mode: bool | List[str] = False
+    square: NDArray, color_mode: Union[bool, List[str]] = False
 ) -> str:
     """
     Convert 2x2 matrix (non-negative integers) to unicode character
