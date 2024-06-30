@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.13.0] - 2024-06-08
 ### Added
-- Basic color control: The `color` option can now also accepts a list of
+- Basic color control: The `color` option can now also accept a list of
   strings. Thanks to @PabloRuizCuevas for idea and PR!
 
 ## [0.12.8] - 2024-06-07

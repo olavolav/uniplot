@@ -12,7 +12,7 @@ tool that does not rely on graphics dependencies or works only in a Jupyter
 notebook.
 
 The **use case** that this was built for is to have plots as part of your data
-science / machine learning CI/cd pipeline - that way whenever something goes
+science / machine learning CI/CD pipeline - that way whenever something goes
 wrong, you get not only the error and backtrace but also plots that show what
 the problem was.
 
@@ -26,15 +26,17 @@ the problem was.
 * It's fast: Plotting 1M data points takes 100ms thanks to NumPy magic
 * Only one dependency: NumPy (but you have that anyway don't you)
 
-Please note that Unicode drawing will work correctly only when using a font that
-fully supports the [Box-drawing character set](https://en.wikipedia.org/wiki/Box-drawing_character).
-Please refer to [this page for a (incomplete) list of supported fonts](https://www.fileformat.info/info/unicode/block/block_elements/fontsupport.htm).
+Please note that Unicode drawing will work correctly only when using a font
+that fully supports the [Box-drawing character
+set](https://en.wikipedia.org/wiki/Box-drawing_character). Please refer to
+[this page for a (incomplete) list of supported
+fonts](https://www.fileformat.info/info/unicode/block/block_elements/fontsupport.htm).
 
 
 ## Examples
 
-Note that all the examples are without color and plotting only a single series of data.
-For using color see the GIF example above.
+Note that all the examples are without color and plotting only a single series
+of data. For using color see the GIF example above.
 
 ### Plot sine wave
 
@@ -72,8 +74,8 @@ Result:
 
 ### Plot global temperature data
 
-Here we are using Pandas to load and prepare global temperature data from the [Our World
-in Data GitHub repository](https://github.com/owid/owid-datasets).
+Here we are using Pandas to load and prepare global temperature data from the
+[Our World in Data GitHub repository](https://github.com/owid/owid-datasets).
 
 First we load the data, rename a column and and filter the data:
 
@@ -156,26 +158,40 @@ In alphabetical order:
   that do not support Unicode. Defaults to `False`.
 * `height` - The height of the plotting region, in characters. Default is `17`.
 * `interactive` - Enable interactive mode. Defaults to `False`.
-* `legend_labels` - Labels for the series. Can be `None` or a list of strings. Defaults to `None`.
-* `lines` - Enable lines between points. Can either be `True` or `False`, or a list of those values for plotting multiple series. Defaults to `False`.
-* `line_length_hard_cap` - Enforce a hard limit on the number of characters per line of the plot area. This may override the `width` option if there is not enough space. Defaults to `None`.
+* `legend_labels` - Labels for the series. Can be `None` or a list of strings.
+  Defaults to `None`.
+* `lines` - Enable lines between points. Can either be `True` or `False`, or a
+  list of those values for plotting multiple series. Defaults to `False`.
+* `line_length_hard_cap` - Enforce a hard limit on the number of characters per
+  line of the plot area. This may override the `width` option if there is not
+  enough space. Defaults to `None`.
 * `title` - The title of the plot. Defaults to `None`.
-* `width` - The width of the plotting region, in characters. Default is `60`. Note that if the `line_length_hard_cap` option is used and there is not enough space, the actual width may be smaller.
+* `width` - The width of the plotting region, in characters. Default is `60`.
+* Note that if the `line_length_hard_cap` option is used and there is not
+  enough space, the actual width may be smaller.
 * `x_as_log` - Plot the x axis as logarithmic scale. Defaults to `False`.
-* `x_gridlines` - A list of x values that have a vertical line for better orientation. Defaults to `[0]`, or to `[]` if `x_as_log` is enabled.
-* `x_max` - Maximum x value of the view. Defaults to a value that shows all data points.
-* `x_min` - Minimum x value of the view. Defaults to a value that shows all data points.
-* `x_unit` - Unit of the x axis. This is a string that is appended to the axis labels. Defaults to `""`.
+* `x_gridlines` - A list of x values that have a vertical line for better
+  orientation. Defaults to `[0]`, or to `[]` if `x_as_log` is enabled.
+* `x_max` - Maximum x value of the view. Defaults to a value that shows all
+  data points.
+* `x_min` - Minimum x value of the view. Defaults to a value that shows all
+  data points.
+* `x_unit` - Unit of the x axis. This is a string that is appended to the axis
+  labels. Defaults to `""`.
 * `y_as_log` - Plot the y axis as logarithmic scale. Defaults to `False`.
-* `y_gridlines` - A list of y values that have a horizontal line for better orientation. Defaults to `[0]`, or to `[]` if `y_as_log` is enabled.
-* `y_max` - Maximum y value of the view. Defaults to a value that shows all data points.
-* `y_min` - Minimum y value of the view. Defaults to a value that shows all data points.
-* `y_unit` - Unit of the y axis. This is a string that is appended to the axis labels. Defaults to `""`.
+* `y_gridlines` - A list of y values that have a horizontal line for better
+  orientation. Defaults to `[0]`, or to `[]` if `y_as_log` is enabled.
+* `y_max` - Maximum y value of the view. Defaults to a value that shows all
+  data points.
+* `y_min` - Minimum y value of the view. Defaults to a value that shows all
+  data points.
+* `y_unit` - Unit of the y axis. This is a string that is appended to the axis
+  labels. Defaults to `""`.
 
 ### Changing default parameters
 
-uniplot does not store a state of the configuration parameters. However, you can define a
-new plot funtion with new defaults by defining a `partial`:
+uniplot does not store a state of the configuration parameters. However, you
+can define a new plot funtion with new defaults by defining a `partial`:
 
 ```python
 from functools import partial
@@ -183,8 +199,8 @@ from uniplot import plot as default_plot
 plot = partial(default_plot, height=25, width=80)
 ```
 
-This defines a new `plot` function that is identical to the original, except the default
-values for `width` and `height` are now different.
+This defines a new `plot` function that is identical to the original, except
+the default values for `width` and `height` are now different.
 
 
 ## Experimental features
@@ -241,9 +257,11 @@ Result:
 
 ### Plotting time series
 
-There is inital support for using timestamps for the axis labels. It should work with most formats.
+There is inital support for using timestamps for the axis labels. It should
+work with most formats.
 
-Missing so far are nicer axis labels for time stamps, as well as timezone support.
+Missing so far are nicer axis labels for time stamps, as well as timezone
+support.
 
 Example:
 
@@ -292,5 +310,5 @@ pip install uniplot
 
 Clone this repository, and install dependecies via `poetry install`.
 
-You can run the tests via `poetry run ./run_tests` to make sure your setup is good. Then
-proceed with issues, PRs etc. the usual way.
+You can run the tests via `poetry run ./run_tests` to make sure your setup is
+good. Then proceed with issues, PRs etc. the usual way.
