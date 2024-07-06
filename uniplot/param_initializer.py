@@ -97,6 +97,12 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
             if c not in COLOR_CODES.keys():
                 raise ValueError(f"Invalid color '{c}' specified.")
 
+    if "force_ascii_characters" in kwargs:
+        # In ASCII mode, simply slice to only use the first character
+        kwargs["force_ascii_characters"] = [
+            (str(x) + "#")[0] for x in kwargs["force_ascii_characters"]
+        ]
+
     # Set lines option for all series
     if not kwargs.get("lines"):
         # This will work for both unset lines option and `False`
@@ -110,11 +116,9 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
     options = Options(**kwargs)
 
     # Check for invalid or unsupported combinations
-    if series.x_is_time_series and options.x_as_log:
-        raise ValueError(
-            "We currently do not support using timestamps on a log scale. We suggest to convert the timestamps to numbers first."
-        )
-    if series.y_is_time_series and options.y_as_log:
+    if (series.x_is_time_series and options.x_as_log) or (
+        series.y_is_time_series and options.y_as_log
+    ):
         raise ValueError(
             "We currently do not support using timestamps on a log scale. We suggest to convert the timestamps to numbers first."
         )

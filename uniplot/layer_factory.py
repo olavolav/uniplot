@@ -104,6 +104,7 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
             if options.force_ascii:
                 pixels[row, col] = elements.character_for_ascii_pixel(
                     matrix[row, col],
+                    options.force_ascii_characters,
                     color_mode=options.color,
                 )
             else:

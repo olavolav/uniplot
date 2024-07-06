@@ -65,30 +65,37 @@ def character_for_2by2_pixels(
 
 
 def character_for_ascii_pixel(
-    nr: int, color_mode: Union[bool, List[str]] = False
+    nr: int,
+    force_ascii_characters: List[str],
+    color_mode: Union[bool, List[str]] = False,
 ) -> str:
+    # NOTE We assume that this function is only being called when the
+    # `force_ascii` option is enabled.
     if nr < 1:
         return ""
-    if not color_mode:
-        return "█"
-    return _colorize_char("█", nr, color_mode)
+    char = force_ascii_characters[(nr - 1) % len(force_ascii_characters)]
+    return _colorize_char(char, nr, color_mode)
 
 
-def legend(legend_labels: List[str], width: int, color: Union[bool, List[str]]) -> str:
+def legend(
+    legend_labels: List[str],
+    width: int,
+    color: Union[bool, List[str]],
+    force_ascii: bool = False,
+    force_ascii_characters: List[str] = [],
+) -> str:
     """
     Assemble a legend that shows the color of the different curves.
     """
-    color_names = _colors_to_codes(color) if isinstance(color, list) else DEFAULT_COLORS
-
     label_strings: List[str] = []
     for i, legend in enumerate(legend_labels):
-        label_string: str = ""
-        if color is not False:
-            label_string += f"{color_names[i % len(color_names)]}"
-        label_string += "██"
-        if color is not False:
-            label_string += COLOR_RESET_CODE
-        label_string += f" {str(legend).strip()}"
+        symbol: str = "█"
+        if force_ascii:
+            symbol = force_ascii_characters[i % len(force_ascii_characters)]
+
+        label_string = (
+            _colorize_char(symbol * 2, i + 1, color) + " " + str(legend).strip()
+        )
         label_strings.append(label_string)
 
     full_label_string = "\n".join(label_strings)
