@@ -5,6 +5,14 @@ All notable changes to uniplot will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.13.1] - 2024-07-06
+### Added
+- New option `force_ascii_characters` that controls the symbols to be used, so
+  that we can plot multiple series even without Unicode or color.
+
+### Fixed
+- Legend labels were colored even with the option `color=False`. Thanks to
+  @NikosAlexandris for pointing this out!
 
 ## [0.13.0] - 2024-06-08
 ### Added
