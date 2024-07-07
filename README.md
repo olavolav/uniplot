@@ -126,7 +126,9 @@ The `plot` function accepts a number of parameters, all listed below. Note that
 only `ys` is required, all others are optional.
 
 There is also a `plot_to_string` function with the same signature, if you want
-the result as a list of strings, to include the output elsewhere.
+the result as a list of strings, to include the output elsewhere. The only
+difference is that `plot_to_string` does not support interactive mode.
+
 
 ### Data
 
@@ -169,7 +171,7 @@ In alphabetical order:
   enough space. Defaults to `None`.
 * `title` - The title of the plot. Defaults to `None`.
 * `width` - The width of the plotting region, in characters. Default is `60`.
-* Note that if the `line_length_hard_cap` option is used and there is not
+  Note that if the `line_length_hard_cap` option is used and there is not
   enough space, the actual width may be smaller.
 * `x_as_log` - Plot the x axis as logarithmic scale. Defaults to `False`.
 * `x_gridlines` - A list of x values that have a vertical line for better
@@ -193,7 +195,8 @@ In alphabetical order:
 ### Changing default parameters
 
 uniplot does not store a state of the configuration parameters. However, you
-can define a new plot funtion with new defaults by defining a `partial`:
+can define a new plot funtion with new defaults by defining a `partial`. See
+the following example:
 
 ```python
 from functools import partial
