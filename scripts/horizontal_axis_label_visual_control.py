@@ -19,4 +19,4 @@ for i in range(NR_RUNS):
         print(f"Found an empty label set for x_min = {x_min} and x_max = {x_max}")
         nr_runs_with_blank_labels += 1
 
-print(f"\nIn total, found {nr_runs_with_blank_labels} case(s) with blank labels.")
+print(f"\n-> In total, found {nr_runs_with_blank_labels} case(s) with blank labels.")

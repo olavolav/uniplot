@@ -69,7 +69,7 @@ def generate_body_raw_elements(
         unit=options.y_unit,
         log=options.y_as_log,
         vertical_direction=True,
-    )
+    )  # type: ignore
     y_axis_labels = [""] * options.height
     if y_axis_label_set is not None:
         y_axis_labels = y_axis_label_set.render()
@@ -95,7 +95,7 @@ def generate_body_raw_elements(
         unit=options.x_unit,
         log=options.x_as_log,
         vertical_direction=False,
-    )
+    )  # type: ignore
     x_axis_labels = ""
     if x_axis_label_set is not None:
         x_axis_labels = x_axis_label_set.render()[0]

@@ -1,12 +1,35 @@
 import numpy as np
-from typing import Optional
+from numpy.typing import NDArray
+from typing import Tuple, Optional, Final
+from functools import lru_cache
 
 from uniplot.axis_labels.datetime_label_set import DatetimeLabelSet
+from uniplot.axis_labels.extended_talbot_labels import (
+    _compute_preferred_number_of_labels,
+    _compute_simplicity_score,
+    _compute_coverage_score,
+    _compute_density_score,
+)
+
+DIGIT_TIME_UNITS: Final = ["Y", "M", "D", "h", "m", "s"]
+
+# Preference-ordered list of "nice" numbers
+Q_VALUES_DEFAULT: Final = [1, 5, 2, 4, 3]
+Q_VALUES_PER_UNIT: Final = {
+    "M": [1, 4, 3],
+    "h": [1, 12, 6, 3, 2],
+    "m": [1, 15, 10, 5, 2],
+}
+# Weights to be able to combine the different scores
+WEIGHTS: Final = np.array([0.4, 0.25, 0.3, 0.2])
+# The "depth" of the search
+MAX_SKIP_AMOUNT: Final = 12
 
 
+@lru_cache(maxsize=512)
 def datetime_labels(
-    x_min: float,
-    x_max: float,
+    x_min,
+    x_max,
     available_space: int,
     vertical_direction: bool = False,
     unit: str = "",
@@ -16,23 +39,130 @@ def datetime_labels(
     """
     A simple way to get started with datetime labelling.
     """
+    if log:
+        # Not supported
+        raise
+
+    x_min_as_dt = np.float64(x_min).astype("datetime64[s]")
+    x_max_as_dt = np.float64(x_max).astype("datetime64[s]")
+
     if verbose:
         print(
-            f"datetime_labels: x_min={x_min}, x_max={x_max}, vertical_direction={vertical_direction}"
+            f"datetime_labels: x_min={x_min_as_dt}, x_max={x_max_as_dt}, vertical_direction={vertical_direction}"
         )
-    # Try in decending order of number of labels.
-    for nr_labels in range(8, 0, -1):
-        d = (x_max - x_min) / nr_labels
-        float_datetimes = [x_min + (i + 0.5) * d for i in range(nr_labels)]
-        labels = np.array(float_datetimes).astype("datetime64[s]")
-        dls = DatetimeLabelSet(
-            labels=labels,
-            x_min=x_min,
-            x_max=x_max,
-            available_space=available_space,
-            vertical_direction=vertical_direction,
-            unit=unit,
-        )
-        if not dls.compute_if_render_does_overlap():
-            return dls
-    return None
+
+    result: Optional[DatetimeLabelSet] = None
+    best_score: float = -2.0
+
+    data_range = np.timedelta64(x_max_as_dt - x_min_as_dt)
+    pseudo_exponent_index, pseudo_exponent = _compute_pseudo_exponent(data_range)
+    label_start = _find_left_zero_datetime(x_min_as_dt, pseudo_exponent)
+    if verbose:
+        print(f"pseudo-exponent = {pseudo_exponent}, label_start = {label_start}")
+
+    preferred_nr_labels = _compute_preferred_number_of_labels(
+        available_space, vertical_direction
+    )
+
+    pseudo_exponents = [pseudo_exponent]
+    if pseudo_exponent != "s":
+        pseudo_exponents.append(DIGIT_TIME_UNITS[pseudo_exponent_index + 1])
+    for pe in pseudo_exponents:
+        # j is the "skip amount"
+        for j in range(1, MAX_SKIP_AMOUNT + 1):
+            # i is the index of the currently selected "nice" number q
+            qs = Q_VALUES_PER_UNIT.get(pe, Q_VALUES_DEFAULT)
+            for i, q in enumerate(qs):
+                labels = _label_range(label_start, x_max_as_dt, q * j, pe)
+
+                # Crop labels
+                labels = labels[(labels >= x_min_as_dt) & (labels <= x_max_as_dt)]
+                if len(labels) < 2:
+                    continue
+
+                simplicity = _compute_simplicity_score(labels, i, j)
+                coverage = _compute_coverage_score(labels.astype(float), x_min, x_max)
+                density = _compute_density_score(labels, preferred_nr_labels)
+
+                score_approx = np.dot(
+                    np.array([simplicity, coverage, density, 1]), WEIGHTS
+                )
+                if (result is not None) and (score_approx < best_score):
+                    # The current set cannot be better than the currently best set
+                    continue
+
+                # Make labels
+                current_set = DatetimeLabelSet(
+                    labels=labels,
+                    x_min=x_min,
+                    x_max=x_max,
+                    available_space=available_space,
+                    vertical_direction=vertical_direction,
+                    unit=unit,
+                )
+
+                grid_alignment = int(
+                    current_set.compute_if_spacing_is_regular()
+                ) - 2 * int(current_set.compute_if_render_does_overlap())
+
+                score = np.dot(
+                    np.array([simplicity, coverage, density, grid_alignment]),
+                    WEIGHTS,
+                )
+                if verbose:
+                    print(
+                        f"Testing labels: {labels}",
+                        f" => simplicity = {simplicity}, coverage = {coverage},",
+                        f" density = {density}, grid_alignment => "
+                        f"{grid_alignment}, score = {score}",
+                    )
+                if score > best_score:
+                    if verbose:
+                        print("=> New best score 😀")
+                    best_score = score
+                    result = current_set
+
+    return result
+
+
+###########
+# private #
+###########
+
+
+def _compute_pseudo_exponent(d_range) -> Tuple[int, str]:
+    for i, unit in enumerate(DIGIT_TIME_UNITS):
+        td = np.timedelta64(1, unit).astype("timedelta64[s]")
+        if d_range > td:
+            return (i, unit)
+    return (len(DIGIT_TIME_UNITS) - 1, DIGIT_TIME_UNITS[-1])
+
+
+def _find_left_zero_datetime(x_min, unit):
+    return x_min.astype(f"datetime64[{unit}]").astype("datetime64[s]")
+
+
+def _label_range(start, stop, step_count: int, step_unit: str) -> NDArray:
+    if step_count < 1:
+        return np.array([], dtype="datetime64[s]")
+
+    # For units where the step size is an equal amount of seconds
+    if step_unit not in ["Y", "M"]:
+        step_size = np.timedelta64(step_count, step_unit).astype("timedelta64[s]")
+        return np.arange(start=start, stop=stop, step=step_size)
+
+    # Otherwise, manually construct the list
+    l = [start]
+    if step_unit == "M":
+        for _ in range(step_count):
+            l1 = l[-1] + np.timedelta64(step_count * 31, "D").astype("timedelta64[s]")
+            l1 = l1.astype(f"datetime64[M]").astype("datetime64[s]")
+            l.append(l1)
+        return np.array(l, dtype="datetime64[s]")
+
+    # Years
+    for _ in range(step_count):
+        l1 = l[-1] + np.timedelta64(step_count * 365, "D").astype("timedelta64[s]")
+        l1 = l1.astype(f"datetime64[Y]").astype("datetime64[s]")
+        l.append(l1)
+    return np.array(l, dtype="datetime64[s]")
