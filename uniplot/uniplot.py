@@ -1,5 +1,4 @@
 from typing import List, Optional, Any
-
 from uniplot.multi_series import MultiSeries
 from uniplot.options import Options
 from uniplot.param_initializer import validate_and_transform_options
@@ -25,55 +24,101 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
     series: MultiSeries = MultiSeries(xs=xs, ys=ys)
     options: Options = validate_and_transform_options(series=series, kwargs=kwargs)
 
-    header_buffer: List[str] = []
-    header_buffer += sections.generate_header(options)
+    print(_generate_plot_str(series, options))
 
     # Main loop for interactive mode. Will only be executed once when not in
     # interactive mode.
-    body_buffer: List[str] = []
-    first_iteration: bool = True
-    while first_iteration or options.interactive:
-        # Generate and collect plot content
-        body_buffer = []
-        (
-            x_axis_labels,
-            y_axis_labels,
-            pixel_character_matrix,
-        ) = sections.generate_body_raw_elements(series, options)
-        body_buffer += sections.generate_body(
-            x_axis_labels, y_axis_labels, pixel_character_matrix, options
-        )
+    while options.interactive:
+        options.interactive = _process_action(options)
+        # Erases the lines bellow the header, to update them
+        _erase_previous_lines(options)
+        # Generate updated plot
+        print(_generate_plot_str(series, options, with_header=False))
 
-        # Delete plot before we re-draw
-        if not first_iteration:
-            nr_lines_to_erase = len(body_buffer) + int(options.interactive)
-            elements.erase_previous_lines(nr_lines_to_erase)
 
-        # Output plot
-        print("\n".join(header_buffer + body_buffer))
+def plot_gen(**kwargs):
+    """
+    2D scatter dot plot on the terminal.
 
-        if options.interactive:
-            print("Move h/j/k/l, zoom u/n, or r to reset. ESC/q to quit")
-            key_pressed = getch().lower()
+    Parameters:
 
-            if key_pressed == "h":
-                options.shift_view_left()
-            elif key_pressed == "l":
-                options.shift_view_right()
-            elif key_pressed == "j":
-                options.shift_view_down()
-            elif key_pressed == "k":
-                options.shift_view_up()
-            elif key_pressed == "u":
-                options.zoom_in()
-            elif key_pressed == "n":
-                options.zoom_out()
-            elif key_pressed == "r":
-                options.reset_view()
-            elif key_pressed in ["q", "\x1b"]:
-                break
+    - `ys` are the y coordinates of the points to plot. This parameter is
+      mandatory and can either be a list or a list of lists, or the equivalent
+      NumPy array.
+    - `xs` are the x coordinates of the points to plot. This parameter is
+      optional and can either be a `None` or of the same shape as `ys`.
+    - Any additional keyword arguments are passed to the
+      `uniplot.options.Options` class.
+    """
+    ys, xs, n_kwargs = yield
+    while True:
+        series: MultiSeries = MultiSeries(xs=xs, ys=ys)
+        options: Options = validate_and_transform_options(series=series, kwargs=kwargs)
+        print(_generate_plot_str(series, options))
+        ys, xs, n_kwargs = yield
+        if n_kwargs:
+            kwargs.update(n_kwargs)
+        if n_kwargs.get('erase', True):
+            _erase_previous_lines(options)
 
-        first_iteration = False
+
+def _process_action(options: Options) -> bool:
+    # q and Escape will end interactive mode
+    print("Move h/j/k/l, zoom u/n, or r to reset. ESC/q to quit")
+    key_pressed = getch().lower()
+
+    if key_pressed == "h":
+        options.shift_view_left()
+    elif key_pressed == "l":
+        options.shift_view_right()
+    elif key_pressed == "j":
+        options.shift_view_down()
+    elif key_pressed == "k":
+        options.shift_view_up()
+    elif key_pressed == "u":
+        options.zoom_in()
+    elif key_pressed == "n":
+        options.zoom_out()
+    elif key_pressed == "r":
+        options.reset_view()
+    elif key_pressed in ["q", "\x1b"]:
+        return False
+    return True
+
+
+def _erase_previous_lines(options: Options) -> None:
+    # Delete plot before we re-draw
+    nr_lines_to_erase = options.height + 4
+    if options.legend_labels is not None:
+        nr_lines_to_erase += len(options.legend_labels)
+    elements.erase_previous_lines(nr_lines_to_erase)
+
+
+def _generate_plot_str_list(
+    series: MultiSeries, options: Options, with_header: bool = True
+) -> List[str]:
+    """Same as 'plot' but the return type is a list of strings. Ignores the
+    `interactive` option.
+
+    Takes series and options as as input
+    """
+    header = sections.generate_header(options) if with_header else []
+    (
+        x_axis_labels,
+        y_axis_labels,
+        pixel_character_matrix,
+    ) = sections.generate_body_raw_elements(series, options)
+
+    body = sections.generate_body(
+        x_axis_labels, y_axis_labels, pixel_character_matrix, options
+    )
+    return header + body
+
+
+def _generate_plot_str(
+    series: MultiSeries, options: Options, with_header: bool = True
+) -> str:
+    return "\n".join(_generate_plot_str_list(series, options, with_header))
 
 
 def plot_to_string(ys: Any, xs: Optional[Any] = None, **kwargs) -> List[str]:
@@ -86,18 +131,7 @@ def plot_to_string(ys: Any, xs: Optional[Any] = None, **kwargs) -> List[str]:
     """
     series: MultiSeries = MultiSeries(xs=xs, ys=ys)
     options: Options = validate_and_transform_options(series=series, kwargs=kwargs)
-
-    header = sections.generate_header(options)
-    (
-        x_axis_labels,
-        y_axis_labels,
-        pixel_character_matrix,
-    ) = sections.generate_body_raw_elements(series, options)
-
-    body = sections.generate_body(
-        x_axis_labels, y_axis_labels, pixel_character_matrix, options
-    )
-    return header + body
+    return _generate_plot_str_list(series, options)
 
 
 #####################################
