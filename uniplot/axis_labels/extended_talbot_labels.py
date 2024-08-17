@@ -1,5 +1,6 @@
 import numpy as np
 from typing import Optional, Final
+from functools import lru_cache
 
 from uniplot.axis_labels.label_set import LabelSet
 
@@ -11,6 +12,7 @@ WEIGHTS: Final = np.array([0.4, 0.25, 0.3, 0.2])
 MAX_SKIP_AMOUNT: Final = 9
 
 
+@lru_cache(maxsize=512)
 def extended_talbot_labels(
     x_min: float,
     x_max: float,
@@ -89,7 +91,10 @@ def extended_talbot_labels(
                 )
                 if verbose:
                     print(
-                        f"Testing labels: {labels} => simplicity = {simplicity}, coverage = {coverage}, density = {density}, grid_alignment => {grid_alignment}, score = {score}"
+                        f"Testing labels: {labels}",
+                        f" => simplicity = {simplicity}, coverage = {coverage},",
+                        f" density = {density}, grid_alignment => "
+                        f"{grid_alignment}, score = {score}",
                     )
                 if score > best_score:
                     if verbose:

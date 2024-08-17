@@ -2,7 +2,9 @@ import sys
 import re
 import numpy as np
 from numpy.typing import NDArray
-from typing import List, Tuple
+from typing import List, Tuple, Union
+
+from uniplot.conversions import COLOR_CODES
 
 UNICODE_SQUARES = {
     0: "",
@@ -27,19 +29,15 @@ BINARY_ENCODING_MATRIX = np.array([[1, 2], [4, 8]])
 CURSOR_UP_ONE = "\x1b[1A"
 ERASE_LINE = "\x1b[2K"
 
-COLOR_CODES = {
-    "blue": "\033[34m",
-    "magenta": "\033[35m",
-    "green": "\033[32m",
-    "yellow": "\033[33m",
-    "cyan": "\033[36m",
-    "red": "\033[31m",
-}
+DEFAULT_COLORS = list(COLOR_CODES.values())
+
 COLOR_RESET_CODE = "\033[0m"
 COLOR_CODE_REGEX = re.compile(r"\033\[\d+m")
 
 
-def character_for_2by2_pixels(square: NDArray, color_mode: bool = False) -> str:
+def character_for_2by2_pixels(
+    square: NDArray, color_mode: Union[bool, List[str]] = False
+) -> str:
     """
     Convert 2x2 matrix (non-negative integers) to unicode character
     representation for plotting.
@@ -63,27 +61,40 @@ def character_for_2by2_pixels(square: NDArray, color_mode: bool = False) -> str:
     # blank and we do not need to colorize it
     if char == "" or not color_mode:
         return char
-    return _colorize_char(char, square.max())
+    return _colorize_char(char, square.max(), color_mode)
 
 
-def character_for_ascii_pixel(nr: int, color_mode: bool = False) -> str:
+def character_for_ascii_pixel(
+    nr: int,
+    force_ascii_characters: List[str],
+    color_mode: Union[bool, List[str]] = False,
+) -> str:
+    # NOTE We assume that this function is only being called when the
+    # `force_ascii` option is enabled.
     if nr < 1:
         return ""
-    if not color_mode:
-        return "█"
-    return _colorize_char("█", nr)
+    char = force_ascii_characters[(nr - 1) % len(force_ascii_characters)]
+    return _colorize_char(char, nr, color_mode)
 
 
-def legend(legend_labels: List[str], width: int) -> str:
+def legend(
+    legend_labels: List[str],
+    width: int,
+    color: Union[bool, List[str]],
+    force_ascii: bool = False,
+    force_ascii_characters: List[str] = [],
+) -> str:
     """
     Assemble a legend that shows the color of the different curves.
     """
     label_strings: List[str] = []
+    for i, legend in enumerate(legend_labels):
+        symbol: str = "█"
+        if force_ascii:
+            symbol = force_ascii_characters[i % len(force_ascii_characters)]
 
-    for i in range(len(legend_labels)):
-        color_code = list(COLOR_CODES.values())[i % len(COLOR_CODES)]
         label_string = (
-            f"{color_code}██{COLOR_RESET_CODE} {str(legend_labels[i]).strip()}"
+            _colorize_char(symbol * 2, i + 1, color) + " " + str(legend).strip()
         )
         label_strings.append(label_string)
 
@@ -147,9 +158,18 @@ def _text_without_control_chars(text: str):
     return COLOR_CODE_REGEX.sub("", text)
 
 
-def _colorize_char(char: str, color: int) -> str:
-    color_code = list(COLOR_CODES.values())[(color - 1) % len(COLOR_CODES)]
+def _colorize_char(char: str, color_nr: int, color_mode: Union[bool, List[str]]) -> str:
+    if char == "" or color_mode is False:
+        return char
+    colors = (
+        _colors_to_codes(color_mode) if isinstance(color_mode, list) else DEFAULT_COLORS
+    )
+    color_code = colors[(color_nr - 1) % len(colors)]
     return color_code + char + COLOR_RESET_CODE
+
+
+def _colors_to_codes(colors: List[str]):
+    return [COLOR_CODES.get(i, " ") for i in colors]
 
 
 def _histogram_to_bar_chart_points(bin_edges, counts) -> Tuple:

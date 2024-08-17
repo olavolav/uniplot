@@ -17,9 +17,24 @@ def test_normal_plotting_to_string():
 
 
 def test_plotting_with_forced_ascii():
-    x = [1, 3, -2]
-    strs = plot_to_string(xs=x, ys=x, title="Sine wave in ASCII", force_ascii=True)
-    assert "█" in "".join(strs)
+    ys = [1, 3, -2]
+    strs = plot_to_string(
+        xs=ys,
+        ys=ys,
+        title="Sine wave in ASCII",
+        force_ascii=True,
+    )
+    assert "\n".join(strs).count("+") == len(ys)
+
+
+def test_plotting_with_forced_ascii_and_custom_symbols():
+    ys = [[1, 3, -2], [3, 4, 3, 4, 3, 5], [0]]
+    symbols = ["A", "B", "C"]
+    strs = plot_to_string(ys, force_ascii=True, force_ascii_characters=symbols)
+    plot_str = "\n".join(strs)
+
+    for i in range(2):
+        assert plot_str.count(symbols[i]) == len(ys[i])
 
 
 def test_normal_plotting_with_x_series():

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import List, Optional, Union
 
 
 def _default_gridlines() -> List[float]:
@@ -8,6 +8,10 @@ def _default_gridlines() -> List[float]:
 
 def _default_lines() -> List[bool]:
     return [False]
+
+
+def _default_ascii_characters() -> List[str]:
+    return ["+", "x", "o", "*", "~", "."]
 
 
 @dataclass
@@ -20,9 +24,11 @@ class Options:
     """
 
     # Color mode
-    color: bool = False
+    color: Union[bool, List[str]] = False
     # Force ASCII characters for plotting only
     force_ascii: bool = False
+    # List of characters to use when plotting in force_ascii mode.
+    force_ascii_characters: List[str] = field(default_factory=_default_ascii_characters)
     # Height of the plotting region, in lines
     height: int = 17
     # Interactive mode

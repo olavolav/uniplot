@@ -5,6 +5,31 @@ All notable changes to uniplot will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.14.0] - 2024-08-17
+### Improved
+- Much improved datetime labels. Still experimental, but now using a similar
+  logic as the numerical labels.
+
+## [0.13.1] - 2024-07-06
+### Added
+- New option `force_ascii_characters` that controls the symbols to be used, so
+  that we can plot multiple series even without Unicode or color.
+
+### Fixed
+- Legend labels were colored even with the option `color=False`. Thanks to
+  @NikosAlexandris for pointing this out!
+
+## [0.13.0] - 2024-06-08
+### Added
+- Basic color control: The `color` option can now also accept a list of
+  strings. Thanks to @PabloRuizCuevas for idea and PR!
+
+## [0.12.8] - 2024-06-07
+### Improved
+- Make plot lines appear simultaneously. This can be important when collecting
+  various terminal streams, for example in a log analyzer. Thanks to
+  @PabloRuizCuevas for idea and PR!
+
 ## [0.12.7] - 2024-05-22
 ### Fixed
 - Fixed passing partially empty series. Thanks to @PabloRuizCuevas for pointing
