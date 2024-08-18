@@ -81,9 +81,10 @@ def extended_talbot_labels(
                     vertical_direction=vertical_direction,
                 )
 
-                grid_alignment = int(
-                    current_set.compute_if_spacing_is_regular()
-                ) - 2 * int(current_set.compute_if_render_does_overlap())
+                if current_set.compute_if_render_does_overlap():
+                    continue
+
+                grid_alignment = int(current_set.compute_if_spacing_is_regular())
 
                 score = np.dot(
                     np.array([simplicity, coverage, density, grid_alignment]),
