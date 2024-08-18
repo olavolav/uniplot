@@ -24,8 +24,8 @@ def render(
 
     Returns the pixels as 2D array with 1 or 0 integer entries.
 
-    Note that the row order is optimized for drawing later, so the first row corresponds
-    to the highest line of pixels.
+    Note that the row order is optimized for drawing later, so the first row
+    corresponds to the highest line of pixels.
     """
     xs = np.array(xs)
     ys = np.array(ys)
@@ -69,28 +69,32 @@ def render(
         # Filter out of view line segments
         xy_line_endpoints = xy_line_endpoints[
             (
-                # At least one of the x coordinates of start and end need to be >= x_min
+                # At least one of the x coordinates of start and end need to be
+                # >= x_min
                 (xy_line_endpoints[:, 1, 0] >= x_min)
                 | (xy_line_endpoints[:, 3, 0] >= x_min)
             )
             & (
-                # At least one of the x coordinates of start and end need to be < x_max
+                # At least one of the x coordinates of start and end need to be
+                # < x_max
                 (xy_line_endpoints[:, 1, 0] < x_max)
                 | (xy_line_endpoints[:, 3, 0] < x_max)
             )
             & (
-                # At least one of the y coordinates of start and end need to be >= y_min
+                # At least one of the y coordinates of start and end need to be
+                # >= y_min
                 (xy_line_endpoints[:, 1, 1] >= y_min)
                 | (xy_line_endpoints[:, 3, 1] >= y_min)
             )
             & (
-                # At least one of the y coordinates of start and end need to be < x_max
+                # At least one of the y coordinates of start and end need to be
+                # < x_max
                 (xy_line_endpoints[:, 1, 1] < y_max)
                 | (xy_line_endpoints[:, 3, 1] < y_max)
             )
             & (
-                # The start and stop indices need to be different by at least 2 in any
-                # direction
+                # The start and stop indices need to be different by at least 2
+                # in any direction
                 (np.abs(xy_line_endpoints[:, 0, 0] - xy_line_endpoints[:, 2, 0]) > 1.5)
                 | (
                     np.abs(xy_line_endpoints[:, 0, 1] - xy_line_endpoints[:, 2, 1])
@@ -99,9 +103,9 @@ def render(
             )
         ]
 
-        # TODO This can likely be optimized by assembling all segments and computing the
-        # pixels of all lines together, or at least of each half split by slope
-        # for segment in np.nditer(xy_line_endpoints)
+        # TODO This can likely be optimized by assembling all segments and
+        # computing the pixels of all lines together, or at least of each half
+        # split by slope for segment in np.nditer(xy_line_endpoints)
         x_indices_of_line: NDArray = np.array([])
         y_indices_of_line: NDArray = np.array([])
         indices_slope: Optional[float] = None
@@ -149,8 +153,9 @@ def render(
                 continue
 
             if abs(indices_slope) > 1:
-                # Draw line by iterating vertically
-                # 1. Compute y indices in the middle of bins between the two origins
+                # Draw line by iterating vertically:
+                # 1. Compute y indices in the middle of bins between the two
+                # origins
                 step = 1
                 if y_index_stop < y_index_start:
                     step = -1
@@ -174,8 +179,9 @@ def render(
                 )
 
             else:
-                # Draw line by iterating horizontically
-                # 1. Compute x indices in the middle of bins between the two origins
+                # Draw line by iterating horizontically:
+                # 1. Compute x indices in the middle of bins between the two
+                # origins
                 step = 1
                 if x_index_stop < x_index_start:
                     step = -1
@@ -232,11 +238,11 @@ def merge_on_top(
     with_shadow: bool = False,
 ) -> NDArray:
     """
-    Put a pixel matrix on top of another, with an optional single solid line of "shadow",
-    including diagonal fields.
+    Put a pixel matrix on top of another, with an optional single solid line of
+    "shadow", including diagonal fields.
 
-    If activated, this shadow will ensure that later 2x2 squares exclusively belong to
-    one particular line.
+    If activated, this shadow will ensure that later 2x2 squares exclusively
+    belong to one particular line.
     """
     merged_layer = np.copy(low_layer)
 
@@ -246,9 +252,9 @@ def merge_on_top(
                 # Overwrite bottom with top value
                 merged_layer[row, col] = high_layer[row, col]
             elif with_shadow and merged_layer[row, col] != 0:
-                # So we know that the top layer at position `[row, col]` is blank but
-                # the bottom one is not. So now we check if we should set this pixel to
-                # zero because of shadowing.
+                # So we know that the top layer at position `[row, col]` is
+                # blank but the bottom one is not. So now we check if we should
+                # set this pixel to zero because of shadowing.
                 if (
                     high_layer[
                         max(row - 1, 0) : min(row + 2, height),

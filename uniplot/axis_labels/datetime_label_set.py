@@ -1,24 +1,9 @@
 import re
 import numpy as np
 from numpy.typing import NDArray
-from typing import List, Final
+from typing import List
 
 from uniplot.axis_labels.label_set import LabelSet
-
-NICE_DATETIME_UNITS: Final = [
-    "Y",
-    "M",
-    "D",
-    # "h", looks weird
-    "m",
-    "s",
-    "ms",
-    "us",
-    "ns",
-    "ps",
-    "fs",
-    "as",
-]
 
 
 class DatetimeLabelSet(LabelSet):
@@ -64,10 +49,10 @@ class DatetimeLabelSet(LabelSet):
         # Remove day, and then month, if that is redundant (i.e. all labels
         # have a "-01" at the end)
         for _ in range(2):
-            if list(
-                set([(re.fullmatch(r"[\d-]+-01", s) is not None) for s in short_labels])
-            ) == [True]:
+            if all([re.fullmatch(r"[\d-]+-01", s) for s in short_labels]):
                 short_labels = [t[:-3] for t in short_labels]
+            else:
+                break
 
         return short_labels
 

@@ -64,7 +64,8 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
         kwargs.get("x_max", floatify(series.x_max()) + x_enlarge_delta)
     )
 
-    # Fallback for only a single data point, or multiple with single x coordinate
+    # Fallback for only a single data point, or multiple with single x
+    # coordinate
     if kwargs["x_min"] == kwargs["x_max"]:
         kwargs["x_min"] = kwargs["x_min"] - 1
         kwargs["x_max"] = kwargs["x_max"] + 1
@@ -74,7 +75,8 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
     kwargs["y_min"] = kwargs.get("y_min", series.y_min() - y_enlarge_delta)
     kwargs["y_max"] = kwargs.get("y_max", series.y_max() + y_enlarge_delta)
 
-    # Fallback for only a single data point, or multiple with single y coordinate
+    # Fallback for only a single data point, or multiple with single y
+    # coordinate
     if float(kwargs["y_min"]) == float(kwargs["y_max"]):
         kwargs["y_min"] = kwargs["y_min"] - 1
         kwargs["y_max"] = kwargs["y_max"] + 1
@@ -85,12 +87,14 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
             kwargs[key] = str(kwargs[key])
     if kwargs.get("legend_labels") is not None:
         kwargs["legend_labels"] = [
-            # Make sure the length of the labels is not exceeding the number of series
+            # Make sure the length of the labels is not exceeding the number of
+            # series
             str(s)
             for s in list(kwargs["legend_labels"])[0 : len(series)]
         ]
 
-    # By default, enable color for multiple series, disable color for a single one
+    # By default, enable color for multiple series, disable color for a single
+    # one
     kwargs["color"] = kwargs.get("color", len(series) > 1)
     if isinstance(kwargs["color"], list):
         for c in kwargs["color"]:

@@ -37,7 +37,8 @@ class Options:
     legend_labels: Optional[List[str]] = None
     # Draw lines between points
     lines: List[bool] = field(default_factory=_default_lines)
-    # Enforce a hard limit on the number of characters per line. This may override the `width` option if there is not enough space.
+    # Enforce a hard limit on the number of characters per line. This may
+    # override the `width` option if there is not enough space.
     line_length_hard_cap: Optional[int] = None
     # Title of the plot
     title: Optional[str] = None
