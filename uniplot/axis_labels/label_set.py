@@ -35,7 +35,6 @@ class LabelSet:
         self._rendered_result: List[str] = []
         self._render_does_overlap: bool = False
         self._spacing_is_regular: bool = True
-        self._post_process_init()
 
     def render(self) -> List[str]:
         self._render_and_measure_to_cache()

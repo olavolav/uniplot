@@ -16,7 +16,7 @@ DIGIT_TIME_UNITS: Final = ["Y", "M", "D", "h", "m", "s"]
 # Preference-ordered list of "nice" numbers
 Q_VALUES_DEFAULT: Final = [1, 5, 2, 4, 3]
 Q_VALUES_PER_UNIT: Final = {
-    "M": [1, 4, 3],
+    "M": [1, 4, 3, 2],
     "h": [1, 12, 6, 3, 2],
     "m": [1, 15, 10, 5, 2],
 }
@@ -28,8 +28,8 @@ MAX_SKIP_AMOUNT: Final = 12
 
 @lru_cache(maxsize=512)
 def datetime_labels(
-    x_min,
-    x_max,
+    x_min: float,
+    x_max: float,
     available_space: int,
     vertical_direction: bool = False,
     unit: str = "",
@@ -113,6 +113,7 @@ def datetime_labels(
                 if verbose:
                     print(
                         f"Testing labels: {labels}",
+                        f" at pe = {pe}, j = {j}, q = {q}",
                         f" => simplicity = {simplicity}, coverage = {coverage},",
                         f" density = {density}, grid_alignment => "
                         f"{grid_alignment}, score = {score}",
@@ -144,7 +145,7 @@ def _find_left_zero_datetime(x_min, unit):
 
 
 def _label_range(start, stop, step_count: int, step_unit: str) -> NDArray:
-    if step_count < 1:
+    if step_count < 1 or stop < start:
         return np.array([], dtype="datetime64[s]")
 
     # For units where the step size is an equal amount of seconds
@@ -155,15 +156,23 @@ def _label_range(start, stop, step_count: int, step_unit: str) -> NDArray:
     # Otherwise, manually construct the list
     l = [start]
     if step_unit == "M":
-        for _ in range(step_count):
-            l1 = l[-1] + np.timedelta64(step_count * 31, "D").astype("timedelta64[s]")
+        step = np.timedelta64(step_count * 31 + 1, "D").astype("timedelta64[s]")
+        while True:
+            l1 = l[-1] + step
             l1 = l1.astype(f"datetime64[M]").astype("datetime64[s]")
-            l.append(l1)
+            if l1 < stop:
+                l.append(l1)
+            else:
+                break
         return np.array(l, dtype="datetime64[s]")
 
     # Years
-    for _ in range(step_count):
-        l1 = l[-1] + np.timedelta64(step_count * 365, "D").astype("timedelta64[s]")
+    step = np.timedelta64(step_count * 365 + 1, "D").astype("timedelta64[s]")
+    while True:
+        l1 = l[-1] + step
         l1 = l1.astype(f"datetime64[Y]").astype("datetime64[s]")
-        l.append(l1)
+        if l1 < stop:
+            l.append(l1)
+        else:
+            break
     return np.array(l, dtype="datetime64[s]")

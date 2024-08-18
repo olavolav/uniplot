@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Improved
 - Stricter label overlap filter leading to higher quality datetime labels.
+- Shortened, more readable datetime labels when plotting over months/years.
 
 ## [0.14.0] - 2024-08-17
 ### Improved
