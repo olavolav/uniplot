@@ -3,6 +3,34 @@ import numpy as np
 from uniplot.axis_labels.datetime_labels import datetime_labels
 
 
+def test_datetime_labeling_across_seconds():
+    start_datetime = np.datetime64("2024-08-01T09:00:00").astype("datetime64[s]")
+    end_datetime = np.datetime64("2024-08-01T09:01:00").astype("datetime64[s]")
+    ls = datetime_labels(
+        x_min=start_datetime.astype(float),
+        x_max=end_datetime.astype(float),
+        available_space=60,
+        vertical_direction=False,
+    )
+    assert ls is not None
+    render = ls.render()[0]
+    assert " 09:00:30 " in render
+
+
+def test_datetime_labeling_across_minutes():
+    start_datetime = np.datetime64("2024-08-01T09:00:00").astype("datetime64[s]")
+    end_datetime = np.datetime64("2024-08-01T09:45:00").astype("datetime64[s]")
+    ls = datetime_labels(
+        x_min=start_datetime.astype(float),
+        x_max=end_datetime.astype(float),
+        available_space=60,
+        vertical_direction=False,
+    )
+    assert ls is not None
+    render = ls.render()[0]
+    assert " 09:30 " in render
+
+
 def test_datetime_labeling_across_hours():
     start_datetime = np.datetime64("2024-08-01T09:00:00").astype("datetime64[s]")
     end_datetime = np.datetime64("2024-08-01T15:00:00").astype("datetime64[s]")
