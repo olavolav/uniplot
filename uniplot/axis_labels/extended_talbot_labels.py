@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.typing import NDArray
 from typing import Optional, Final
 from functools import lru_cache
 
@@ -127,17 +128,17 @@ def _compute_preferred_number_of_labels(
     return max(2, min(20, preferred_number_of_labels))
 
 
-def _compute_simplicity_score(labels, i: int, j: int) -> float:
+def _compute_simplicity_score(labels: NDArray, i: int, j: int) -> float:
     """
     Simplicity score according to Talbot.
     """
     # Indicator variable that is one if zero is part of the labels, and zero otherwise
     # NOTE It might make sense to extend this to all gridline values, plus zero
-    v = int(0.0 in labels)
+    v = int(any(np.isclose(labels, np.zeros(len(labels)))))
     return 1 - (i - 1) / (len(Q_VALUES) - 1) - j + v
 
 
-def _compute_coverage_score(labels, x_min: float, x_max: float) -> float:
+def _compute_coverage_score(labels: NDArray, x_min: float, x_max: float) -> float:
     """
     Coverage score according to Talbot.
     """
@@ -146,7 +147,7 @@ def _compute_coverage_score(labels, x_min: float, x_max: float) -> float:
     )
 
 
-def _compute_density_score(labels, preferred_nr: int) -> float:
+def _compute_density_score(labels: NDArray, preferred_nr: int) -> float:
     """
     Density score according to Talbot.
     """

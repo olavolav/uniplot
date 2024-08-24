@@ -6,7 +6,6 @@ from functools import lru_cache
 from uniplot.axis_labels.datetime_label_set import DatetimeLabelSet
 from uniplot.axis_labels.extended_talbot_labels import (
     _compute_preferred_number_of_labels,
-    _compute_simplicity_score,
     _compute_coverage_score,
     _compute_density_score,
 )
@@ -80,7 +79,7 @@ def datetime_labels(
                 if len(labels) < 2:
                     continue
 
-                simplicity = _compute_simplicity_score(labels, i, j)
+                simplicity = _compute_simplicity_score(qs, i, j)
                 coverage = _compute_coverage_score(labels.astype(float), x_min, x_max)
                 density = _compute_density_score(labels, preferred_nr_labels)
 
@@ -176,3 +175,10 @@ def _label_range(start, stop, step_count: int, step_unit: str) -> NDArray:
         else:
             break
     return np.array(l, dtype="datetime64[s]")
+
+
+def _compute_simplicity_score(q_values, i: int, j: int) -> float:
+    """
+    Simplicity score according, modified from Talbot.
+    """
+    return 1 - (i - 1) / (len(q_values) - 1) - j
