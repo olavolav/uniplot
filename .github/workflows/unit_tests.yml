@@ -27,5 +27,5 @@ jobs:
     - name: Install dependencies
       run: poetry install --no-interaction --no-root
 
-    - name: Run unit tests
-      run: poetry run python -m pytest
+    - name: Run test script
+      run: ./run_tests
