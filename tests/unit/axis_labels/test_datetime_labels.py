@@ -1,3 +1,4 @@
+import pytest
 import numpy as np
 
 from uniplot.axis_labels.datetime_labels import datetime_labels
@@ -86,3 +87,18 @@ def test_datetime_labeling_across_years():
     assert ls is not None
     render = ls.render()[0]
     assert " 2024 " in render
+
+
+@pytest.mark.skip(reason="not yet implemented")
+def test_datetime_labeling_across_centuries():
+    start_datetime = np.datetime64("1000-01-01").astype("datetime64[s]")
+    end_datetime = np.datetime64("3500-08-14").astype("datetime64[s]")
+    ls = datetime_labels(
+        x_min=start_datetime.astype(float),
+        x_max=end_datetime.astype(float),
+        available_space=60,
+        vertical_direction=False,
+    )
+    assert ls is not None
+    render = ls.render()[0]
+    assert " 2000 " in render
