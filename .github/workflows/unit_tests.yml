@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Check out code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
@@ -28,4 +28,7 @@ jobs:
       run: poetry install --no-interaction --no-root
 
     - name: Run test script
-      run: poetry run ./run_tests.sh
+      run: |
+        echo pwd
+        poetry run ls
+        poetry run ./run_tests.sh
