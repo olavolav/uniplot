@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Improved
 - Introduced linting with Ruff.
 - Switched to Ruff for code formatting.
+- Full CI is now executed on GitHub, same as locally.
 
 ## [0.14.1] - 2024-08-18
 ### Improved
