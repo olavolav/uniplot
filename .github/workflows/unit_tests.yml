@@ -30,6 +30,6 @@ jobs:
     - name: Run test script
       run: |
         pwd
-        poetry run ls
+        poetry run ls -l
         head run_tests.sh
         poetry run ./run_tests.sh
