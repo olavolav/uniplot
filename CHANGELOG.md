@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Improved
 - Introduced linting with Ruff.
+- Switched to Ruff for code formatting.
 
 ## [0.14.1] - 2024-08-18
 ### Improved
