@@ -148,7 +148,7 @@ def _is_time_series(series: Any) -> bool:
         # if "datetime64" works.
         np_array.astype("datetime64")
         return True
-    except:
+    except Exception:
         return False
 
 

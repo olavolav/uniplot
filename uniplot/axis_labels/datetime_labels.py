@@ -153,28 +153,28 @@ def _label_range(start, stop, step_count: int, step_unit: str) -> NDArray:
         return np.arange(start=start, stop=stop, step=step_size)
 
     # Otherwise, manually construct the list
-    l = [start]
+    ls = [start]
     if step_unit == "M":
         step = np.timedelta64(step_count * 31 + 1, "D").astype("timedelta64[s]")
         while True:
-            l1 = l[-1] + step
-            l1 = l1.astype(f"datetime64[M]").astype("datetime64[s]")
+            l1 = ls[-1] + step
+            l1 = l1.astype("datetime64[M]").astype("datetime64[s]")
             if l1 < stop:
-                l.append(l1)
+                ls.append(l1)
             else:
                 break
-        return np.array(l, dtype="datetime64[s]")
+        return np.array(ls, dtype="datetime64[s]")
 
     # Years
     step = np.timedelta64(step_count * 365 + 1, "D").astype("timedelta64[s]")
     while True:
-        l1 = l[-1] + step
-        l1 = l1.astype(f"datetime64[Y]").astype("datetime64[s]")
+        l1 = ls[-1] + step
+        l1 = l1.astype("datetime64[Y]").astype("datetime64[s]")
         if l1 < stop:
-            l.append(l1)
+            ls.append(l1)
         else:
             break
-    return np.array(l, dtype="datetime64[s]")
+    return np.array(ls, dtype="datetime64[s]")
 
 
 def _compute_simplicity_score(q_values, i: int, j: int) -> float:

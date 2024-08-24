@@ -26,7 +26,7 @@ def floatify(x: Any) -> float:
         if np.issubdtype(x.dtype, np.datetime64):
             return x.astype("datetime64[s]").astype(float)
         return float(x)
-    except:
+    except AttributeError:
         if isinstance(x, datetime.datetime) or isinstance(x, datetime.date):
             return np.datetime64(x).astype("datetime64[s]").astype(float)
         return float(x)

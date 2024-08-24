@@ -7,7 +7,7 @@ from uniplot.multi_series import MultiSeries
 def test_passing_simple_list():
     series = MultiSeries(ys=[1, 2, 3])
     options = validate_and_transform_options(series=series)
-    assert options.interactive == False
+    assert not options.interactive
 
 
 def test_lines_option_with_simple_list():

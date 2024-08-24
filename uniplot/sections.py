@@ -78,7 +78,7 @@ def generate_body_raw_elements(
     if options.line_length_hard_cap is not None:
         options.reset_width()
         # Determine maximum length of y axis label
-        max_y_label_length = max([len(l) for l in y_axis_labels])
+        max_y_label_length = max([len(ls) for ls in y_axis_labels])
         # Make sure the total plot does not exceed `line_length_hard_cap`
         if 2 + options.width + 1 + max_y_label_length > options.line_length_hard_cap:
             # Overflow, so we need to reduce width of plot area

@@ -11,6 +11,13 @@ echo "##############"
 black uniplot/**/*.py tests/**/*.py scripts/*.py
 
 echo ""
+echo "##########"
+echo "# Linter #"
+echo "##########"
+
+ruff check
+
+echo ""
 echo "##############"
 echo "# Type check #"
 echo "##############"
