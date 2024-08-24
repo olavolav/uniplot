@@ -29,6 +29,6 @@ jobs:
 
     - name: Run test script
       run: |
-        echo pwd
+        pwd
         poetry run ls
-        poetry run ./run_tests.sh
+        poetry run run_tests.sh
