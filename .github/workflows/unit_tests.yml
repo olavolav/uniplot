@@ -28,4 +28,4 @@ jobs:
       run: poetry install --no-interaction --no-root
 
     - name: Run test script
-      run: poetry run ./run_tests.sh
+      run: bash poetry run ./run_tests.sh
