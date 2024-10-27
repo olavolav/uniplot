@@ -7,6 +7,7 @@ import uniplot.sections as sections
 import uniplot.plot_elements as elements
 from uniplot.getch import getch
 
+import rustlabels # rust code
 
 def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
     """
@@ -22,6 +23,10 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
     - Any additional keyword arguments are passed to the
       `uniplot.options.Options` class.
     """
+    # TEST
+    rust_result = rustlabels.sum_as_string(1,2)
+    print(f"DEBUG: rust_result = {rust_result}")
+
     series: MultiSeries = MultiSeries(xs=xs, ys=ys)
     options: Options = validate_and_transform_options(series=series, kwargs=kwargs)
 
