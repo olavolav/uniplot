@@ -62,18 +62,23 @@ def generate_body_raw_elements(
     Generates the x-axis labels, y-axis labels, and the pixel character matrix.
     """
     # Prepare y axis labels
-    label_fn = datetime_labels if series.y_is_time_series else extended_talbot_labels
-    y_axis_label_set = label_fn(
-        x_min=options.y_min,
-        x_max=options.y_max,
-        available_space=options.height,
-        unit=options.y_unit,
-        log=options.y_as_log,
-        vertical_direction=True,
-    )  # type: ignore
-    y_axis_labels = [""] * options.height
-    if y_axis_label_set is not None:
-        y_axis_labels = y_axis_label_set.render()
+    if (not series.y_is_time_series) and (not options.y_as_log):
+        # Then we can use the optimized Rust version :-)
+        raw_render = rustlabels.float_axis_labels(options.y_min, options.y_max, options.height, True, options.y_unit) # type: ignore
+        y_axis_labels = raw_render.split("\n")
+    else:
+        label_fn = datetime_labels if series.y_is_time_series else extended_talbot_labels
+        y_axis_label_set = label_fn(
+            x_min=options.y_min,
+            x_max=options.y_max,
+            available_space=options.height,
+            unit=options.y_unit,
+            log=options.y_as_log,
+            vertical_direction=True,
+        )  # type: ignore
+        y_axis_labels = [""] * options.height
+        if y_axis_label_set is not None:
+            y_axis_labels = y_axis_label_set.render()
 
     # Observe line_length_hard_cap
     if options.line_length_hard_cap is not None:
@@ -90,7 +95,7 @@ def generate_body_raw_elements(
     # Prepare x axis labels
     if (not series.x_is_time_series) and (not options.x_as_log):
         # Then we can use the optimized Rust version :-)
-        x_axis_labels = rustlabels.float_axis_labels(options.x_min, options.x_max, options.width, False, options.x_unit) # type: none
+        x_axis_labels = rustlabels.float_axis_labels(options.x_min, options.x_max, options.width, False, options.x_unit) # type: ignore
     else:
         # Otherwise we stick with the Python implementation, until the Rust one is capable enough
         label_fn = datetime_labels if series.x_is_time_series else extended_talbot_labels
