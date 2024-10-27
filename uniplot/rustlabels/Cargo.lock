@@ -9,6 +9,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
 
 [[package]]
+name = "axis_labels_rs"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cd719d1f557e43c047e40fa6d3b0af87e7446d75fa9327046addc7c514d1ffa5"
+
+[[package]]
 name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -136,8 +142,9 @@ dependencies = [
 
 [[package]]
 name = "rustlabels"
-version = "0.1.1"
+version = "0.1.3"
 dependencies = [
+ "axis_labels_rs",
  "pyo3",
 ]
 
