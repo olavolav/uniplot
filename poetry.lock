@@ -374,17 +374,17 @@ files = [
 
 [[package]]
 name = "rustlabels"
-version = "0.1.1"
+version = "0.1.3"
 description = ""
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "rustlabels-0.1.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:f2d9fd7f691f49819e0df2af51a95d78223e6f8de4a2aefb53e2a8ee638b52dc"},
+    {file = "rustlabels-0.1.3-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:8b194e1c2a896c7f282bd9602cecfad49b8317f68bba4bc8a52c2fb32327cc85"},
 ]
 
 [package.source]
 type = "file"
-url = "uniplot/rustlabels/target/wheels/rustlabels-0.1.1-cp310-cp310-macosx_11_0_arm64.whl"
+url = "uniplot/rustlabels/target/wheels/rustlabels-0.1.3-cp310-cp310-macosx_11_0_arm64.whl"
 
 [[package]]
 name = "six"
@@ -433,4 +433,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8"
-content-hash = "ed9c79980ebee2a9c2f05362490c0b9b99126f8548765082aabdf2a84963e6bb"
+content-hash = "c41836e1fde88a75066b16b28b9f6eab775b2e4280f3bfd0bf056f638ee77e7d"

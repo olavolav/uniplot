@@ -7,7 +7,7 @@ import uniplot.layer_assembly as layer_assembly
 import uniplot.plot_elements as elements
 from uniplot.axis_labels.extended_talbot_labels import extended_talbot_labels
 from uniplot.axis_labels.datetime_labels import datetime_labels
-
+import rustlabels
 
 def generate_header(options: Options) -> List[str]:
     """
@@ -88,18 +88,23 @@ def generate_body_raw_elements(
                 raise
 
     # Prepare x axis labels
-    label_fn = datetime_labels if series.x_is_time_series else extended_talbot_labels
-    x_axis_label_set = label_fn(
-        x_min=options.x_min,
-        x_max=options.x_max,
-        available_space=options.width,
-        unit=options.x_unit,
-        log=options.x_as_log,
-        vertical_direction=False,
-    )  # type: ignore
-    x_axis_labels = ""
-    if x_axis_label_set is not None:
-        x_axis_labels = x_axis_label_set.render()[0]
+    if (not series.x_is_time_series) and (not options.x_as_log):
+        # Then we can use the optimized Rust version :-)
+        x_axis_labels = rustlabels.float_axis_labels(options.x_min, options.x_max, options.width, False, options.x_unit) # type: none
+    else:
+        # Otherwise we stick with the Python implementation, until the Rust one is capable enough
+        label_fn = datetime_labels if series.x_is_time_series else extended_talbot_labels
+        x_axis_label_set = label_fn(
+            x_min=options.x_min,
+            x_max=options.x_max,
+            available_space=options.width,
+            unit=options.x_unit,
+            log=options.x_as_log,
+            vertical_direction=False,
+        )  # type: ignore
+        x_axis_labels = ""
+        if x_axis_label_set is not None:
+            x_axis_labels = x_axis_label_set.render()[0]
 
     # Prepare graph surface
     pixel_character_matrix = layer_assembly.assemble_scatter_plot(
