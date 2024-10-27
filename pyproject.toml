@@ -11,6 +11,8 @@ packages = [{include = "uniplot"}]
 [tool.poetry.dependencies]
 python = ">=3.8"
 numpy = ">=1.22.0"
+maturin = "^1.7.4"
+rustlabels = { file = "uniplot/rustlabels/target/wheels/rustlabels-0.1.1-cp310-cp310-macosx_11_0_arm64.whl" }
 
 [tool.poetry.dev-dependencies]
 pytest = ">=6.0.1"

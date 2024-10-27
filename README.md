@@ -261,3 +261,8 @@ Clone this repository, and install dependecies via `poetry install`.
 
 You can run the tests via `poetry run ./run_tests` to make sure your setup is
 good. Then proceed with issues, PRs etc. the usual way.
+
+Should you need to rebuild the Rust dependencies, run:
+```
+poetry run maturin build -m uniplot/rustlabels/Cargo.toml
+```
