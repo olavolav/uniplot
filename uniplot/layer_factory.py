@@ -73,7 +73,11 @@ def render_vertical_gridline(x: float, options: Options) -> NDArray:
 
 def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDArray:
     # Determine if we use Unicode super-resolution :-) or not
-    scaling_factor: int = 2 - int(options.force_ascii)
+    scaling_factor_width: int = 1
+    scaling_factor_height: int = 1
+    if not options.force_ascii:
+        scaling_factor_width = 2
+        scaling_factor_height = 4 if options.character_set == "braille" else 2
     matrix: NDArray = np.array([])
 
     for i in range(len(ys)):
@@ -84,8 +88,8 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
             x_max=options.x_max,
             y_min=options.y_min,
             y_max=options.y_max,
-            width=scaling_factor * options.width,
-            height=scaling_factor * options.height,
+            width=scaling_factor_width * options.width,
+            height=scaling_factor_height * options.height,
             lines=options.lines[i],
         )
         if i == 0:
@@ -94,8 +98,8 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
             matrix = pixel_matrix.merge_on_top(
                 low_layer=matrix,
                 high_layer=next_matrix,
-                width=scaling_factor * options.width,
-                height=scaling_factor * options.height,
+                width=scaling_factor_width * options.width,
+                height=scaling_factor_height * options.height,
             )
 
     pixels = _init_character_matrix(width=options.width, height=options.height)
@@ -105,6 +109,11 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
                 pixels[row, col] = elements.character_for_ascii_pixel(
                     matrix[row, col],
                     options.force_ascii_characters,
+                    color_mode=options.color,
+                )
+            elif options.character_set == "braille":
+                pixels[row, col] = elements.character_for_2by4_pixels(
+                    matrix[4 * row : 4 * row + 4, 2 * col : 2 * col + 2],
                     color_mode=options.color,
                 )
             else:

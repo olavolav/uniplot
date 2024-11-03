@@ -151,6 +151,10 @@ below.
 
 In alphabetical order:
 
+* `character_set` - Which Unicode character set to use. User `"boxplot"` for
+  the Boxplot character set with 4x resolution, or `"braille"` for the Braille
+  character set with 8x resolution. The latter has a lighter look overall.
+  Defaults to `"boxplot"`.
 * `color` - Draw series in color. Defaults to `False` when plotting a single
   series, and to `True` when plotting multiple. Also accepts a list of strings,
   to modify the default order of
