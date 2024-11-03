@@ -24,7 +24,7 @@ class Options:
     """
 
     # Character set
-    character_set: str = "boxplot"
+    character_set: str = "block"
     # Color mode
     color: Union[bool, List[str]] = False
     # Force ASCII characters for plotting only
@@ -74,7 +74,7 @@ class Options:
 
         # Validate charcter set
         self.charcter_set = str(self.character_set).strip().lower()
-        if self.character_set not in ["boxplot", "braille"]:
+        if self.character_set not in ["block", "braille"]:
             raise ValueError("Invalid charcater set.")
 
         # Remember values for resetting later

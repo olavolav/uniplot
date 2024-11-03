@@ -27,10 +27,12 @@ the problem was.
 * Only one dependency: NumPy (but you have that anyway don't you)
 
 Please note that Unicode drawing will work correctly only when using a font
-that fully supports the [Box-drawing character
-set](https://en.wikipedia.org/wiki/Box-drawing_character). Please refer to
+that fully supports the [Block Elements character
+set](https://en.wikipedia.org/wiki/Box-drawing_character) or the [Braille
+character set](https://en.wikipedia.org/wiki/Braille_Patterns). Please refer to
 [this page for a (incomplete) list of supported
-fonts](https://www.fileformat.info/info/unicode/block/block_elements/fontsupport.htm).
+fonts](https://www.fileformat.info/info/unicode/block/block_elements/fontsupport.htm)
+and the options below to select the character set.
 
 
 ## Examples
@@ -151,10 +153,12 @@ below.
 
 In alphabetical order:
 
-* `character_set` - Which Unicode character set to use. User `"boxplot"` for
-  the Boxplot character set with 4x resolution, or `"braille"` for the Braille
-  character set with 8x resolution. The latter has a lighter look overall.
-  Defaults to `"boxplot"`.
+* `character_set` - Which Unicode character set to use. Use `"block"` for
+  the [Block Elements character
+  set](https://en.wikipedia.org/wiki/Block_Elements) with 4x resolution, or
+  `"braille"` for the [Braille character
+  set](https://en.wikipedia.org/wiki/Braille_Patterns) with 8x resolution.
+  The latter has a lighter look overall. Defaults to `"block"`.
 * `color` - Draw series in color. Defaults to `False` when plotting a single
   series, and to `True` when plotting multiple. Also accepts a list of strings,
   to modify the default order of

@@ -51,7 +51,7 @@ def character_for_2by2_pixels(
     square: NDArray, color_mode: Union[bool, List[str]] = False
 ) -> str:
     """
-    Convert 2x2 matrix (non-negative integers) to unicode boxplot character
+    Convert 2x2 matrix (non-negative integers) to Unicode Block Elements character
     representation for plotting.
     """
     assert square.shape == (2, 2)
