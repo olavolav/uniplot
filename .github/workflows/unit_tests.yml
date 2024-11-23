@@ -31,4 +31,4 @@ jobs:
       run: |
         echo "TEST TEST TEST ..."
         echo $PYTHONPATH
-        PYTHONPATH=./uniplot poetry run ./run_tests.sh
+        PYTHONPATH=".;.uniplot" poetry run ./run_tests.sh
