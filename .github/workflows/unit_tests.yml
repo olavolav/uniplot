@@ -28,7 +28,4 @@ jobs:
       run: poetry install --no-interaction --no-root
 
     - name: Run test script
-      run: |
-        echo "TEST TEST TEST ..."
-        echo $PYTHONPATH
-        PYTHONPATH=".:.uniplot" poetry run ./run_tests.sh
+      run: PYTHONPATH=".:.uniplot" poetry run ./run_tests.sh
