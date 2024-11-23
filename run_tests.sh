@@ -8,7 +8,7 @@ echo "##############"
 echo "# Code style #"
 echo "##############"
 
-ruff format uniplot/**/*.py tests/**/*.py scripts/*.py
+ruff format uniplot/**/*.py tests/**/*.py scripts/*.py examples/*.py
 
 echo ""
 echo "##########"
@@ -29,10 +29,10 @@ echo "################"
 echo "# Visual check #"
 echo "################"
 
-python3 -c "import math; ys = [math.sin(i/20)+i/300 for i in range(600)]; from uniplot import plot; plot(ys, title='Sine wave')"
-python3 -c "import math; ys = [[math.sin(i/(10+i/50)) - math.sin(i/100) for i in range(1000)], [math.sin(i/(10+i/50)) - math.sin(i/100) - 1 for i in range(900)]]; from uniplot import plot; plot(ys, lines=True, x_unit='s', title='Double sine wave')"
-python3 -c "import math; ys = [[math.sin(i/(10+i/50)) - math.sin(i/100) for i in range(1000)], [math.sin(i/(10+i/50)) - math.sin(i/100) - 1 for i in range(900)]]; from uniplot import histogram; histogram(ys, title='Histograms of the above', legend_labels=['wave', 'wave with offset of 1'])"
-python3 -c "import math; import numpy as np; dates =  np.arange('2002-10-27T04:30', 4*60, 60, dtype='M8[m]'); from uniplot import plot; plot(xs=dates, ys=[1,2,3,2], title='Plotting time series')"
+python3 examples/1-basic_plot.py
+python3 examples/2-color_plot.py
+python3 examples/3-histograms.py
+python3 examples/4-time_series.py
 
 echo ""
 echo "##############"
