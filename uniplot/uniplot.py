@@ -1,4 +1,4 @@
-from typing import List, Optional, Any
+from typing import List, Optional, Final, Any
 
 from uniplot.multi_series import MultiSeries
 from uniplot.options import Options
@@ -74,6 +74,44 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
                 break
 
         first_iteration = False
+
+
+class plot_gen:
+    def __init__(self, **kwargs):
+        self.default_arguments: Final = kwargs
+        self.last_nr_of_lines: int = 0
+
+    def update(self, **kwargs):
+        header_buffer: List[str] = []
+        body_buffer: List[str] = []
+
+        full_kwargs = {**self.default_arguments, **kwargs}
+        series: MultiSeries = MultiSeries(xs=full_kwargs.get("xs"), ys=full_kwargs.get("ys"))
+        if "xs" in full_kwargs:
+            del full_kwargs["xs"]
+        del full_kwargs["ys"]
+        options: Options = validate_and_transform_options(series=series, kwargs=full_kwargs)
+
+        header_buffer = sections.generate_header(options)
+
+        # Generate and collect plot content
+        body_buffer = []
+        (
+            x_axis_labels,
+            y_axis_labels,
+            pixel_character_matrix,
+        ) = sections.generate_body_raw_elements(series, options)
+        body_buffer += sections.generate_body(
+            x_axis_labels, y_axis_labels, pixel_character_matrix, options
+        )
+
+        # Delete plot before we re-draw
+        elements.erase_previous_lines(self.last_nr_of_lines)
+
+        # Output plot
+        output = "\n".join(header_buffer + body_buffer)
+        print(output)
+        self.last_nr_of_lines = len(header_buffer + body_buffer)
 
 
 def plot_to_string(ys: Any, xs: Optional[Any] = None, **kwargs) -> List[str]:
