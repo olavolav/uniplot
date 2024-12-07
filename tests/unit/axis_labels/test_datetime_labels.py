@@ -18,6 +18,20 @@ def test_datetime_labeling_across_seconds():
     assert " 09:00:30 " in render
 
 
+def test_datetime_labeling_across_seconds_with_nonzero_start():
+    start_datetime = np.datetime64("2024-08-01T09:00:11").astype("datetime64[s]")
+    end_datetime = np.datetime64("2024-08-01T09:01:07").astype("datetime64[s]")
+    ls = datetime_labels(
+        x_min=start_datetime.astype(float),
+        x_max=end_datetime.astype(float),
+        available_space=60,
+        vertical_direction=False,
+    )
+    assert ls is not None
+    render = ls.render()[0]
+    assert " 09:00:30 " in render
+
+
 def test_datetime_labeling_across_minutes():
     start_datetime = np.datetime64("2024-08-01T09:00:00").astype("datetime64[s]")
     end_datetime = np.datetime64("2024-08-01T09:45:00").astype("datetime64[s]")

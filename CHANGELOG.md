@@ -5,6 +5,11 @@ All notable changes to uniplot will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## Unreleased
+### Fixed
+- Fixed datetime labels with non-zero-aligned start time.
+
 ## [0.16.0] - 2024-12-07
 ### Added
 - Examples folder.

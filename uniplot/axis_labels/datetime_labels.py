@@ -55,7 +55,7 @@ def datetime_labels(
 
     data_range = np.timedelta64(x_max_as_dt - x_min_as_dt)
     pseudo_exponent_index, pseudo_exponent = _compute_pseudo_exponent(data_range)
-    label_start = _find_left_zero_datetime(x_min_as_dt, pseudo_exponent)
+    label_start = _find_left_zero_datetime(x_min_as_dt, pseudo_exponent_index)
     if verbose:
         print(f"pseudo-exponent = {pseudo_exponent}, label_start = {label_start}")
 
@@ -139,8 +139,9 @@ def _compute_pseudo_exponent(d_range) -> Tuple[int, str]:
     return (len(DIGIT_TIME_UNITS) - 1, DIGIT_TIME_UNITS[-1])
 
 
-def _find_left_zero_datetime(x_min, unit):
-    return x_min.astype(f"datetime64[{unit}]").astype("datetime64[s]")
+def _find_left_zero_datetime(x_min, unit_index: int):
+    one_higher_unit = DIGIT_TIME_UNITS[max(0, unit_index - 1)]
+    return x_min.astype(f"datetime64[{one_higher_unit}]").astype("datetime64[s]")
 
 
 def _label_range(start, stop, step_count: int, step_unit: str) -> NDArray:
