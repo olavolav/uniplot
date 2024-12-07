@@ -1,4 +1,4 @@
-from typing import List, Optional, Any
+from typing import List, Optional, Final, Any
 
 from uniplot.multi_series import MultiSeries
 from uniplot.options import Options
@@ -78,14 +78,19 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
 
 class plot_gen:
     def __init__(self, **kwargs):
-        self.last_arguments = kwargs
+        self.default_arguments: Final = kwargs
         self.last_nr_of_lines: int = 0
 
-    def send(self, ys: Any, xs: Optional[Any] = None, **kwargs):
+    def update(self, **kwargs):
         header_buffer: List[str] = []
         body_buffer: List[str] = []
-        series: MultiSeries = MultiSeries(xs=xs, ys=ys)
-        options: Options = validate_and_transform_options(series=series, kwargs=kwargs)
+
+        full_kwargs = {**self.default_arguments, **kwargs}
+        series: MultiSeries = MultiSeries(xs=full_kwargs.get("xs"), ys=full_kwargs.get("ys"))
+        if "xs" in full_kwargs:
+            del full_kwargs["xs"]
+        del full_kwargs["ys"]
+        options: Options = validate_and_transform_options(series=series, kwargs=full_kwargs)
 
         header_buffer = sections.generate_header(options)
 
