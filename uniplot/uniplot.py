@@ -55,24 +55,8 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
         if options.interactive:
             print("Move h/j/k/l, zoom u/n, or r to reset. ESC/q to quit")
             key_pressed = getch().lower()
-
-            if key_pressed == "h":
-                options.shift_view_left()
-            elif key_pressed == "l":
-                options.shift_view_right()
-            elif key_pressed == "j":
-                options.shift_view_down()
-            elif key_pressed == "k":
-                options.shift_view_up()
-            elif key_pressed == "u":
-                options.zoom_in()
-            elif key_pressed == "n":
-                options.zoom_out()
-            elif key_pressed == "r":
-                options.reset_view()
-            elif key_pressed in ["q", "\x1b"]:
+            if options.callback_keypressed and (not options.callback_keypressed(options, key_pressed)):
                 break
-
         first_iteration = False
 
 

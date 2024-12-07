@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Callable
 
 
 def _default_gridlines() -> List[float]:
@@ -14,6 +14,26 @@ def _default_ascii_characters() -> List[str]:
     return ["+", "x", "o", "*", "~", "."]
 
 
+def _default_callback_keypressed(options, key_pressed):
+    if key_pressed == "h":
+        options.shift_view_left()
+    elif key_pressed == "l":
+        options.shift_view_right()
+    elif key_pressed == "j":
+        options.shift_view_down()
+    elif key_pressed == "k":
+        options.shift_view_up()
+    elif key_pressed == "u":
+        options.zoom_in()
+    elif key_pressed == "n":
+        options.zoom_out()
+    elif key_pressed == "r":
+        options.reset_view()
+    elif key_pressed in ["q", "\x1b"]:
+        return False
+    return True
+
+
 @dataclass
 class Options:
     """
@@ -23,6 +43,8 @@ class Options:
     `float` values, regardless of the data type that is being plotted.
     """
 
+    # Callback function that is used when a key is pressed in interactive mode.
+    callback_keypressed: Callable = _default_callback_keypressed
     # Character set
     character_set: str = "block"
     # Color mode
