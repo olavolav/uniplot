@@ -153,52 +153,58 @@ below.
 
 In alphabetical order:
 
-* `character_set` - Which Unicode character set to use. Use `"block"` for
-  the [Block Elements character
-  set](https://en.wikipedia.org/wiki/Block_Elements) with 4x resolution, or
-  `"braille"` for the [Braille character
-  set](https://en.wikipedia.org/wiki/Braille_Patterns) with 8x resolution.
-  The latter has a lighter look overall. Defaults to `"block"`.
+#### Basic options
+
 * `color` - Draw series in color. Defaults to `False` when plotting a single
   series, and to `True` when plotting multiple. Also accepts a list of strings,
   to modify the default order of
   `["blue", "magenta", "green", "yellow", "cyan", "red"]`.
-* `force_ascii` - Force ASCII characters for plotting only. This can be useful
-  for compatibility, for example when using uniplot inside of CI/CD systems
-  that do not support Unicode. Defaults to `False`.
-* `force_ascii_characters` -  List of characters to use when plotting in
-  `force_ascii` mode. Default to `["+", "x", "o", "*", "~", "."]`.
 * `height` - The height of the plotting region, in characters. Default is `17`.
 * `interactive` - Enable interactive mode. Defaults to `False`.
 * `legend_labels` - Labels for the series. Can be `None` or a list of strings.
   Defaults to `None`.
 * `lines` - Enable lines between points. Can either be `True` or `False`, or a
-  list of those values for plotting multiple series. Defaults to `False`.
-* `line_length_hard_cap` - Enforce a hard limit on the number of characters per
-  line of the plot area. This may override the `width` option if there is not
-  enough space. Defaults to `None`.
+  list of Boolean values for plotting multiple series. Defaults to `False`.
 * `title` - The title of the plot. Defaults to `None`.
 * `width` - The width of the plotting region, in characters. Default is `60`.
-  Note that if the `line_length_hard_cap` option is used and there is not
-  enough space, the actual width may be smaller.
-* `x_as_log` - Plot the x axis as logarithmic scale. Defaults to `False`.
-* `x_gridlines` - A list of x values that have a vertical line for better
-  orientation. Defaults to `[0]`, or to `[]` if `x_as_log` is enabled.
+  Note that if the `line_length_hard_cap` option (see "Advanced options" below)
+  is used and there is not enough space, the actual width may be smaller.
 * `x_max` - Maximum x value of the view. Defaults to a value that shows all
   data points.
 * `x_min` - Minimum x value of the view. Defaults to a value that shows all
   data points.
 * `x_unit` - Unit of the x axis. This is a string that is appended to the axis
   labels. Defaults to `""`.
-* `y_as_log` - Plot the y axis as logarithmic scale. Defaults to `False`.
-* `y_gridlines` - A list of y values that have a horizontal line for better
-  orientation. Defaults to `[0]`, or to `[]` if `y_as_log` is enabled.
 * `y_max` - Maximum y value of the view. Defaults to a value that shows all
   data points.
 * `y_min` - Minimum y value of the view. Defaults to a value that shows all
   data points.
 * `y_unit` - Unit of the y axis. This is a string that is appended to the axis
   labels. Defaults to `""`.
+
+#### Advanced options
+
+* `character_set` - Which Unicode character set to use. Use `"block"` for
+  the [Block Elements character
+  set](https://en.wikipedia.org/wiki/Block_Elements) with 4x resolution, or
+  `"braille"` for the [Braille character
+  set](https://en.wikipedia.org/wiki/Braille_Patterns) with 8x resolution.
+  The latter has a lighter look overall. Defaults to `"block"`.
+* `force_ascii` - Force ASCII characters for plotting only. This can be useful
+  for compatibility, for example when using uniplot inside of CI/CD systems
+  that do not support Unicode. Defaults to `False`.
+* `force_ascii_characters` -  List of characters to use when plotting in
+  `force_ascii` mode. Default to `["+", "x", "o", "*", "~", "."]`.
+* `line_length_hard_cap` - Enforce a hard limit on the number of characters per
+  line of the plot area. This may override the `width` option if there is not
+  enough space. Defaults to `None`.
+* `x_as_log` - Plot the x axis as logarithmic scale. Defaults to `False`.
+* `x_gridlines` - A list of x values that have a vertical line for better
+  orientation. Defaults to `[0]`, or to `[]` if `x_as_log` is enabled.
+* `y_as_log` - Plot the y axis as logarithmic scale. Defaults to `False`.
+* `y_gridlines` - A list of y values that have a horizontal line for better
+  orientation. Defaults to `[0]`, or to `[]` if `y_as_log` is enabled.
+
 
 ### Changing default parameters
 

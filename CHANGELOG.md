@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Improved
 - Simplified example scripts, and added comments for readability.
+- Improved Readability of the Readme.
 
 ## [0.16.1] -2024-12-07
 ### Fixed
