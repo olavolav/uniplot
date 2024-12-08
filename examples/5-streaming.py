@@ -1,22 +1,26 @@
-from uniplot import plot_gen
-import numpy as np
+import random
 import time
+import datetime
+
+from uniplot import plot_gen
 
 MAX_SECONDS = 30
 
-xs = np.array([np.datetime64("now")])
-ys = np.array([0.0])
+# Initialize lists for values of x and y coordinates
+xs = []
+ys = []
 
-# Initialize plot object
-plt = plot_gen(title="Streaming ...", lines=True)
+# Initialize plot object with default options
+plt = plot_gen(width=100, lines=True, color=True)
 
 for _ in range(MAX_SECONDS):
-    xs = np.append(xs, [np.datetime64("now")])
-    next_input_value = np.random.normal() + ys.sum() / 40.0
-    ys = np.append(ys, [next_input_value])
+    # Append current time stamp
+    xs.append(datetime.datetime.now())
+    # Append a random number (normal distribution)
+    ys.append(random.gauss(0.5, 1.0))
 
     # Draw plot with new values
-    plt.update(xs=xs, ys=ys)
+    plt.update(xs=xs, ys=ys, title=f"Streaming: {len(ys)} data point(s) ...")
 
     # Wait for 1s (simulating the data rate of some input stream)
     time.sleep(1)
