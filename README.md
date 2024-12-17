@@ -35,12 +35,8 @@ fonts](https://www.fileformat.info/info/unicode/block/block_elements/fontsupport
 and the options below to select the character set.
 
 
-## Examples
+## Simple example
 
-Note that all the examples are without color and plotting only a single series
-of data. For using color see the GIF example above.
-
-### Plot sine wave
 
 ```python
 import math
@@ -74,52 +70,7 @@ Result:
          100       200       300       400       500       600
 ```
 
-### Plot global temperature data
-
-Here we are using Pandas to load and prepare global temperature data from the
-[Our World in Data GitHub repository](https://github.com/owid/owid-datasets).
-
-First we load the data, rename a column and and filter the data:
-
-```python
-import pandas as pd
-uri = "https://github.com/owid/owid-datasets/raw/master/datasets/Global%20average%20temperature%20anomaly%20-%20Hadley%20Centre/Global%20average%20temperature%20anomaly%20-%20Hadley%20Centre.csv"
-data = pd.read_csv(uri)
-data = data.rename(columns={"Global average temperature anomaly (Hadley Centre)": "Global"})
-data = data[data.Entity == "median"]
-```
-
-Then we can plot it:
-
-```python
-from uniplot import plot
-plot(xs=data.Year, ys=data.Global, lines=True, title="Global normalized land-sea temperature anomaly", y_unit=" °C")
-```
-
-Result:
-```
-        Global normalized land-sea temperature anomaly
-┌────────────────────────────────────────────────────────────┐
-│                                                          ▞▀│
-│                                                         ▐  │
-│                                                         ▐  │
-│                                                     ▗   ▌  │ 0.6 °C
-│                                           ▙  ▗▄ ▛▄▖▗▘▌ ▞   │
-│                                          ▗▜  ▌ ▜  ▚▞ ▚▞    │
-│                                          ▐▝▖▐      ▘       │
-│                                    ▗   ▗ ▌ ▙▌              │ 0.3 °C
-│                                    ▛▖  ▞▙▘  ▘              │
-│                              ▖  ▗▄▗▘▐ ▐▘▜                  │
-│                            ▟ █  ▞ ▜ ▝▄▘                    │
-│   ▗▚   ▗    ▖       ▗   ▖▗▞ █▐  ▌    ▘                     │
-│▁▁▁▞▐▁▁▗▘▜▗▀▀▌▁▁▁▁▙▁▁▟▁▁▁▙▐▁▁▜▁▌▞▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁│ 0 °C
-│▚ ▐ ▝▖ ▐  ▛  ▌ ▗▄▐ ▌▗▘▌ ▐▝▌    ▝▘                           │
-│ ▌▌  ▌ ▞     ▐▗▘ ▛ ▐▞ ▌ ▐                                   │
-│ ▝   ▝▖▌     ▐▞    ▝▌ ▚▜▐                                   │
-│      ▗▌     ▝        ▝ ▌                                   │
-└────────────────────────────────────────────────────────────┘
-1,950    1,960    1,970   1,980    1,990    2,000   2,010
-```
+For more examples, please see the `examples/` folder.
 
 
 ## Parameters
