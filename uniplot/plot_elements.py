@@ -100,6 +100,10 @@ def character_for_2by4_pixels(
     byte3 = np.multiply(binary_square, BINARY_ENCODING_MATRIX_BRAILLE_BYTE3).sum().astype(int)
     char = bytes([bstr[0], bstr[1]+byte2, bstr[2]+byte3]).decode('utf-8')
 
+    # Reset to no character to make layers opaque
+    if byte2 == 0 and byte3 == 0:
+        char = ""
+
     # We are done if the result is a blank character, or if the result is not
     # blank and we do not need to colorize it
     if char == "" or not color_mode:

@@ -35,7 +35,7 @@ def test_left_half_square():
 
 def test_braille_empty_square():
     square = np.zeros([4, 2])
-    assert character_for_2by4_pixels(square) == "⠀"
+    assert character_for_2by4_pixels(square) == ""
 
 
 def test_braille_full_square():

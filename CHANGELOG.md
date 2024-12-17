@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Simplified example scripts, and added comments for readability.
 - Improved Readability of the Readme.
 
+### Fixed
+- Gridlines were not displayed when using Braille characters.
+
 ## [0.16.1] -2024-12-07
 ### Fixed
 - Fixed datetime labels with non-zero-aligned start time.
