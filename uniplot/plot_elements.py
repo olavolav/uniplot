@@ -130,6 +130,7 @@ def legend(
     color: Union[bool, List[str]],
     force_ascii: bool = False,
     force_ascii_characters: List[str] = [],
+    character_set: str = "box"
 ) -> str:
     """
     Assemble a legend that shows the color of the different curves.
@@ -139,6 +140,8 @@ def legend(
         symbol: str = "█"
         if force_ascii:
             symbol = force_ascii_characters[i % len(force_ascii_characters)]
+        elif character_set == "braille":
+            symbol = "⣿"
 
         label_string = (
             _colorize_char(symbol * 2, i + 1, color) + " " + str(legend).strip()

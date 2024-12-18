@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Gridlines were not displayed when using Braille characters.
+- Legend labels are now drawn correctly when using the Braille character set.
 
 ## [0.16.1] -2024-12-07
 ### Fixed
@@ -22,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Examples folder.
 - Added `plot_gen` function to support streaming use cases, and streaming
-  example script. Thanks to PabloRuizCuevas for idea and PR!
+  example script. Thanks to @PabloRuizCuevas for idea and PR!
 
 ## [0.15.1] - 2024-11-03
 ### Fixed
