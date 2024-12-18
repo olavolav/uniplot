@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## Unreleased
+## [0.16.2] - 2024-12-18
 ### Improved
 - Simplified example scripts, and added comments for readability.
 - Improved Readability of the Readme.
@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Gridlines were not displayed when using Braille characters.
 - Legend labels are now drawn correctly when using the Braille character set.
 
-## [0.16.1] -2024-12-07
+## [0.16.1] - 2024-12-07
 ### Fixed
 - Fixed datetime labels with non-zero-aligned start time.
 
