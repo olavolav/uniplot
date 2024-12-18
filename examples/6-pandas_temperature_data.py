@@ -6,28 +6,38 @@
 import pandas as pd
 from uniplot import plot
 
-# First we load the data, rename a column and and filter the data:
+INPUT_CSV_URI = "https://github.com/owid/owid-datasets/raw/master/datasets/Global%20average%20temperature%20anomaly%20-%20Hadley%20Centre/Global%20average%20temperature%20anomaly%20-%20Hadley%20Centre.csv"
+
 print("Loading data ...")
-uri = "https://github.com/owid/owid-datasets/raw/master/datasets/Global%20average%20temperature%20anomaly%20-%20Hadley%20Centre/Global%20average%20temperature%20anomaly%20-%20Hadley%20Centre.csv"
-data = pd.read_csv(uri)
+raw_data = pd.read_csv(INPUT_CSV_URI)
 # Sinplify column names
-data = data.rename(
-    columns={"Global average temperature anomaly (Hadley Centre)": "Global"}
+raw_data = raw_data.rename(
+    columns={"Global average temperature anomaly (Hadley Centre)": "Anomaly"}
 )
-# Create dattime column (this is optional)
-data["Date"] = pd.to_datetime(data.Year, format="%Y")
+print(f"Done loading dataframe of shape {raw_data.shape}.\n")
 
-print(data.head())
-print(f"Done loading dataframe of shape {data.shape}.\n")
-
-# Filter data, we only need the median values here
-data = data[data.Entity == "median"]
+print("Transform data ...")
+data = pd.DataFrame.from_records(
+    [
+        {
+            # "Year": y,
+            "Lower": g[g.Entity == "lower"]["Anomaly"].mean(),
+            "Median": g[g.Entity == "median"]["Anomaly"].mean(),
+            "Upper": g[g.Entity == "upper"]["Anomaly"].mean(),
+            "Date": pd.to_datetime(y, format="%Y"),
+        }
+        for (y, g) in raw_data.groupby(raw_data.Year)
+    ]
+)
+print(f"Done transforming dataframe to shape {data.shape}.\n")
 
 # Then we can plot it:
 plot(
-    xs=data.Date,
-    ys=data.Global,
+    xs=[data.Date, data.Date],
+    ys=[data.Upper - data.Lower, data.Median],
     lines=True,
     title="Global normalized land-sea temperature anomaly",
     y_unit=" °C",
+    legend_labels=["Temperature anomaly", "Annual variation"],
+    character_set="braille",
 )
