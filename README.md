@@ -93,11 +93,10 @@ difference is that `plot_to_string` does not support interactive mode.
   array for plotting a single series, or a list of those for plotting multiple
   series.
 
-In both cases, NaN values are ignored.
+In both cases, NaN or `None` values are ignored.
 
 Note that since v0.12.0 you can also pass a list or an NumPy array of
-timestamps, and the axis labels should be formatted correctly. Limitations see
-below.
+timestamps, and the axis labels should be formatted correctly.
 
 
 ### Options
@@ -225,46 +224,26 @@ Result:
      -1                        0                       1
 ```
 
-### Plotting time series
+### Streaming
 
-There is inital support for using timestamps for the axis labels. It should
-work with most formats.
+There is initial support for streaming using the `plot_gen` function. The idea
+is have a class that wraps the plot function and the state of plotting, such
+that we can `update` the state of the plot.
 
-Missing so far are nicer axis labels for time stamps, as well as timezone
-support.
+Example, assuming we had a function called `get_new_data` to get new data from
+some source:
+```python3
+from uniplot import plot_gen
 
-Example:
+plt = plot_gen()
+ys = []
 
-```python
-import numpy as np
-dates =  np.arange('2024-02-17T12:10', 4*60, 60, dtype='M8[m]')
-from uniplot import plot
-plot(xs=dates, ys=[1,2,3,2])
+while True:
+    ys.append(get_new_data())
+    plt.update(ys=ys, title=f"Streaming: {len(ys)} data point(s) ...")
 ```
 
-Result:
-```
-┌────────────────────────────────────────────────────────────┐
-│                                       ▝                    │ 3
-│                                                            │
-│                                                            │
-│                                                            │
-│                                                            │
-│                                                            │
-│                                                            │
-│                                                            │
-│                    ▘                                      ▝│ 2
-│                                                            │
-│                                                            │
-│                                                            │
-│                                                            │
-│                                                            │
-│                                                            │
-│                                                            │
-│▖                                                           │ 1
-└────────────────────────────────────────────────────────────┘
-               13:00               14:00               15:00
-```
+See `examples/5-sreaming.py` for a more complete example.
 
 
 ## Installation
