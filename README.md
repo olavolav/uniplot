@@ -134,6 +134,11 @@ In alphabetical order:
 
 #### Advanced options
 
+* `callback_keypressed` - Callback function that is used when a key is pressed
+  in interactive mode with arguments `(options, key_pressed)`. Defaults to the
+  `_default_callback_keypressed` function defined in `uniplot/options.py`. Note
+  that interactive mode will end if the callback function returns a value that
+  evaluates to false.
 * `character_set` - Which Unicode character set to use. Use `"block"` for
   the [Block Elements character
   set](https://en.wikipedia.org/wiki/Block_Elements) with 4x resolution, or
