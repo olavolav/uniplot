@@ -1,5 +1,5 @@
 # Uniplot
-[![Build Status](https://github.com/github/docs/actions/workflows/unit_tests.yml/badge.svg?branch=master)](https://github.com/olavolav/uniplot/actions?query=workflow%3A"Unit+Tests")
+[![Build Status](https://github.com/github/olavolav/uniplot/workflows/unit_tests.yml/badge.svg?branch=master)](https://github.com/olavolav/uniplot/actions?query=workflow%3A"Unit+Tests")
 [![PyPI Version](https://badge.fury.io/py/uniplot.svg)](https://pypi.org/project/uniplot/)
 [![PyPI Downloads](https://pepy.tech/badge/uniplot)](https://pepy.tech/project/uniplot)
 
