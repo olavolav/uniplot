@@ -1,6 +1,7 @@
 import numpy as np
 from numpy.typing import NDArray
-from typing import Tuple, Optional, Final
+from typing import Tuple, List, Dict, Optional, Final
+from collections import defaultdict
 from functools import lru_cache
 
 from uniplot.axis_labels.datetime_label_set import DatetimeLabelSet
@@ -13,12 +14,14 @@ from uniplot.axis_labels.extended_talbot_labels import (
 DIGIT_TIME_UNITS: Final = ["Y", "M", "D", "h", "m", "s"]
 
 # Preference-ordered list of "nice" numbers
-Q_VALUES_DEFAULT: Final = [1, 5, 2, 4, 3]
-Q_VALUES_PER_UNIT: Final = {
-    "M": [1, 4, 3, 2],
-    "h": [1, 12, 6, 3, 2],
-    "m": [1, 15, 10, 5, 2],
-}
+Q_VALUES: Final[Dict[str, List]] = defaultdict(
+    lambda: [1, 5, 2, 4, 3],
+    {
+        "M": [1, 4, 3, 2],
+        "h": [1, 12, 6, 3, 2],
+        "m": [1, 15, 10, 5, 2],
+    },
+)
 # Weights to be able to combine the different scores
 WEIGHTS: Final = np.array([0.4, 0.25, 0.3, 0.2])
 # The "depth" of the search
@@ -70,7 +73,7 @@ def datetime_labels(
         # j is the "skip amount"
         for j in range(1, MAX_SKIP_AMOUNT + 1):
             # i is the index of the currently selected "nice" number q
-            qs = Q_VALUES_PER_UNIT.get(pe, Q_VALUES_DEFAULT)
+            qs = Q_VALUES[pe]
             for i, q in enumerate(qs):
                 labels = _label_range(label_start, x_max_as_dt, q * j, pe)
 
