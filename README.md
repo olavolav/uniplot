@@ -263,7 +263,8 @@ You can run the tests via `poetry run ./run_tests` to make sure your setup is
 good. Then proceed with issues, PRs etc. the usual way.
 
 Should you need to rebuild the Rust dependencies, (1.) run `cargo build` in the
-`uniplot/rustlabels/` directory, and the in the root directory of the project:
+`uniplot/rustlabels/` directory, and (2.) in the root directory of the project
+run:
 ```
 poetry run maturin build -m uniplot/rustlabels/Cargo.toml
 ```
