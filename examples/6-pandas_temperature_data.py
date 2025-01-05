@@ -31,7 +31,7 @@ data = pd.DataFrame.from_records(
 )
 print(f"Done transforming dataframe to shape {data.shape}.\n")
 
-# Then we can plot it:
+# Then we can plot it, and for extra resolution we plot it using Braille characters
 plot(
     xs=[data.Date, data.Date],
     ys=[data.Upper - data.Lower, data.Median],
