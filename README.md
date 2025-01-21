@@ -19,7 +19,8 @@ the problem was.
 
 ## Features
 
-* Unicode drawing, so 4x the resolution (pixels) of usual ASCII plots
+* Unicode drawing, so 4x the resolution (pixels) of usual ASCII plots, or even
+  8x when using Braille characters
 * Super simple API
 * Interactive mode (pass `interactive=True`)
 * Color mode (pass `color=True`) useful in particular when plotting multiple series
