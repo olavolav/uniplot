@@ -1,4 +1,4 @@
-from typing import List, Optional, Final, Any
+from typing import List, Dict, Optional, Final, Any
 
 from uniplot.multi_series import MultiSeries
 from uniplot.options import Options
@@ -22,54 +22,32 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
     - Any additional keyword arguments are passed to the
       `uniplot.options.Options` class.
     """
-    series: MultiSeries = MultiSeries(xs=xs, ys=ys)
-    options: Options = validate_and_transform_options(series=series, kwargs=kwargs)
-
-    header_buffer: List[str] = []
-    header_buffer += sections.generate_header(options)
+    plt = plot_gen(xs=xs,ys=ys,**kwargs)
 
     # Main loop for interactive mode. Will only be executed once when not in
     # interactive mode.
-    body_buffer: List[str] = []
     first_iteration: bool = True
-    while first_iteration or options.interactive:
-        # Generate and collect plot content
-        body_buffer = []
-        (
-            x_axis_labels,
-            y_axis_labels,
-            pixel_character_matrix,
-        ) = sections.generate_body_raw_elements(series, options)
-        body_buffer += sections.generate_body(
-            x_axis_labels, y_axis_labels, pixel_character_matrix, options
-        )
+    while first_iteration or plt.options.interactive:
+        plt.update()
 
-        # Delete plot before we re-draw
-        if not first_iteration:
-            nr_lines_to_erase = len(body_buffer) + int(options.interactive)
-            elements.erase_previous_lines(nr_lines_to_erase)
-
-        # Output plot
-        print("\n".join(header_buffer + body_buffer))
-
-        if options.interactive:
-            print("Move h/j/k/l, zoom u/n, or r to reset. ESC/q to quit")
+        if plt.options.interactive:
+            plt.print_subscript("Move h/j/k/l, zoom u/n, or r to reset. ESC/q to quit")
             key_pressed = getch().lower()
 
             if key_pressed == "h":
-                options.shift_view_left()
+                plt.options.shift_view_left()
             elif key_pressed == "l":
-                options.shift_view_right()
+                plt.options.shift_view_right()
             elif key_pressed == "j":
-                options.shift_view_down()
+                plt.options.shift_view_down()
             elif key_pressed == "k":
-                options.shift_view_up()
+                plt.options.shift_view_up()
             elif key_pressed == "u":
-                options.zoom_in()
+                plt.options.zoom_in()
             elif key_pressed == "n":
-                options.zoom_out()
+                plt.options.zoom_out()
             elif key_pressed == "r":
-                options.reset_view()
+                plt.option.reset_view()
             elif key_pressed in ["q", "\x1b"]:
                 break
 
@@ -77,22 +55,36 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
 
 
 class plot_gen:
-    def __init__(self, **kwargs):
-        self.default_arguments: Final = kwargs
+    def __init__(self, return_string=False, **kwargs):
+        self.default_arguments: Final[Dict] = kwargs
         self.last_nr_of_lines: int = 0
+        self.return_string: Final[bool] = return_string
+        self.series: Optional[MultiSeries] = None
+        self.options: Optional[Options] = None
+        if "ys" in kwargs:
+            self.series = MultiSeries(xs=kwargs.get("xs"), ys=kwargs.get("ys", []))
+            if "xs" in kwargs:
+                del kwargs["xs"]
+            del kwargs["ys"]
+            self.options: Options = validate_and_transform_options(series=self.series, kwargs=kwargs)
 
-    def update(self, **kwargs):
+    def update(self, **kwargs) -> Optional[str]:
         header_buffer: List[str] = []
         body_buffer: List[str] = []
 
         full_kwargs = {**self.default_arguments, **kwargs}
-        series: MultiSeries = MultiSeries(xs=full_kwargs.get("xs"), ys=full_kwargs.get("ys"))
-        if "xs" in full_kwargs:
-            del full_kwargs["xs"]
-        del full_kwargs["ys"]
-        options: Options = validate_and_transform_options(series=series, kwargs=full_kwargs)
 
-        header_buffer = sections.generate_header(options)
+        if "xs" in kwargs or "ys" in kwargs:
+            self.series = MultiSeries(xs=full_kwargs.get("xs"), ys=full_kwargs.get("ys"))
+        if len(kwargs.keys() - ["xs", "ys"]) > 0:
+            # New options provided, so regenerate `self.options`
+            # NOTE This overwrites the view window if not supplied explicitely
+            if "xs" in full_kwargs:
+                del full_kwargs["xs"]
+            del full_kwargs["ys"]
+            self.options = validate_and_transform_options(series=self.series, kwargs=full_kwargs)
+
+        header_buffer = sections.generate_header(self.options)
 
         # Generate and collect plot content
         body_buffer = []
@@ -100,18 +92,25 @@ class plot_gen:
             x_axis_labels,
             y_axis_labels,
             pixel_character_matrix,
-        ) = sections.generate_body_raw_elements(series, options)
+        ) = sections.generate_body_raw_elements(self.series, self.options)
         body_buffer += sections.generate_body(
-            x_axis_labels, y_axis_labels, pixel_character_matrix, options
+            x_axis_labels, y_axis_labels, pixel_character_matrix, self.options
         )
 
         # Delete plot before we re-draw
-        elements.erase_previous_lines(self.last_nr_of_lines)
+        if not self.return_string:
+            elements.erase_previous_lines(self.last_nr_of_lines)
 
         # Output plot
         output = "\n".join(header_buffer + body_buffer)
-        print(output)
         self.last_nr_of_lines = len(header_buffer + body_buffer)
+        if self.return_string:
+            return output
+        print(output)
+
+    def print_subscript(self, text: str) -> None:
+        print(text)
+        self.last_nr_of_lines += len(text.split("\n"))
 
 
 def plot_to_string(ys: Any, xs: Optional[Any] = None, **kwargs) -> List[str]:
@@ -122,20 +121,8 @@ def plot_to_string(ys: Any, xs: Optional[Any] = None, **kwargs) -> List[str]:
     Can be used to integrate uniplot in other applications, or if the output is
     desired to be not stdout.
     """
-    series: MultiSeries = MultiSeries(xs=xs, ys=ys)
-    options: Options = validate_and_transform_options(series=series, kwargs=kwargs)
-
-    header = sections.generate_header(options)
-    (
-        x_axis_labels,
-        y_axis_labels,
-        pixel_character_matrix,
-    ) = sections.generate_body_raw_elements(series, options)
-
-    body = sections.generate_body(
-        x_axis_labels, y_axis_labels, pixel_character_matrix, options
-    )
-    return header + body
+    plt = plot_gen(return_string=True)
+    return plt.update(xs=xs,ys=ys,**kwargs)
 
 
 #####################################
