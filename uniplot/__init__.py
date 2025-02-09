@@ -2,4 +2,4 @@
 # instead of `from uniplot.uniplot import plot`.
 from uniplot.uniplot import plot, plot_gen, plot_to_string, histogram
 
-__all__ = ["plot", "plot_gen" ,"plot_to_string", "histogram"]
+__all__ = ["plot", "plot_gen", "plot_to_string", "histogram"]

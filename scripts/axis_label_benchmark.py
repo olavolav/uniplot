@@ -20,4 +20,4 @@ def single_run():
 print("Measuring ...")
 t = timeit.timeit(single_run, number=NR_RUNS) / NR_RUNS
 
-print(f"Avg. time for single run: {1_000*t}ms (across {NR_RUNS} runs)")
+print(f"Avg. time for single run: {1_000 * t}ms (across {NR_RUNS} runs)")

@@ -8,7 +8,7 @@ echo "##############"
 echo "# Code style #"
 echo "##############"
 
-ruff format uniplot/**/*.py tests/**/*.py scripts/*.py examples/*.py
+ruff format
 
 echo ""
 echo "##########"

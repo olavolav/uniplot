@@ -1,8 +1,8 @@
 import numpy as np
 import datetime
-from typing import Any
+from typing import Any, Final
 
-COLOR_CODES = {
+COLOR_CODES: Final = {
     "blue": "\033[34m",
     "magenta": "\033[35m",
     "green": "\033[32m",

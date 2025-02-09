@@ -2,11 +2,11 @@ import sys
 import re
 import numpy as np
 from numpy.typing import NDArray
-from typing import List, Tuple, Union
+from typing import List, Tuple, Union, Optional, Final
 
 from uniplot.conversions import COLOR_CODES
 
-UNICODE_SQUARES = {
+UNICODE_SQUARES: Final = {
     0: "",
     1: "▘",
     2: "▝",
@@ -24,27 +24,31 @@ UNICODE_SQUARES = {
     14: "▟",
     15: "█",
 }
-BINARY_ENCODING_MATRIX = np.array([[1, 2], [4, 8]])
-BINARY_ENCODING_MATRIX_BRAILLE_BYTE2 = np.array([
-    [0, 0],
-    [0, 0],
-    [0, 0],
-    [1, 2],
-])
-BINARY_ENCODING_MATRIX_BRAILLE_BYTE3 = np.array([
-    [1, 8],
-    [2, 16],
-    [4, 32],
-    [0, 0],
-])
+BINARY_ENCODING_MATRIX: Final = np.array([[1, 2], [4, 8]])
+BINARY_ENCODING_MATRIX_BRAILLE_BYTE2: Final = np.array(
+    [
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [1, 2],
+    ]
+)
+BINARY_ENCODING_MATRIX_BRAILLE_BYTE3: Final = np.array(
+    [
+        [1, 8],
+        [2, 16],
+        [4, 32],
+        [0, 0],
+    ]
+)
 
-CURSOR_UP_ONE = "\x1b[1A"
-ERASE_LINE = "\x1b[2K"
+CURSOR_UP_ONE: Final = "\x1b[1A"
+ERASE_LINE: Final = "\x1b[2K"
 
-DEFAULT_COLORS = list(COLOR_CODES.values())
+DEFAULT_COLORS: Final = list(COLOR_CODES.values())
 
-COLOR_RESET_CODE = "\033[0m"
-COLOR_CODE_REGEX = re.compile(r"\033\[\d+m")
+COLOR_RESET_CODE: Final = "\033[0m"
+COLOR_CODE_REGEX: Final = re.compile(r"\033\[\d+m")
 
 
 def character_for_2by2_pixels(
@@ -95,10 +99,18 @@ def character_for_2by4_pixels(
             max_color - 1
         )
 
-    bstr = bytes('⠀', "utf-8")
-    byte2 = np.multiply(binary_square, BINARY_ENCODING_MATRIX_BRAILLE_BYTE2).sum().astype(int)
-    byte3 = np.multiply(binary_square, BINARY_ENCODING_MATRIX_BRAILLE_BYTE3).sum().astype(int)
-    char = bytes([bstr[0], bstr[1]+byte2, bstr[2]+byte3]).decode('utf-8')
+    bstr = bytes("⠀", "utf-8")
+    byte2 = (
+        np.multiply(binary_square, BINARY_ENCODING_MATRIX_BRAILLE_BYTE2)
+        .sum()
+        .astype(int)
+    )
+    byte3 = (
+        np.multiply(binary_square, BINARY_ENCODING_MATRIX_BRAILLE_BYTE3)
+        .sum()
+        .astype(int)
+    )
+    char = bytes([bstr[0], bstr[1] + byte2, bstr[2] + byte3]).decode("utf-8")
 
     # Reset to no character to make layers opaque
     if byte2 == 0 and byte3 == 0:
@@ -130,7 +142,7 @@ def legend(
     color: Union[bool, List[str]],
     force_ascii: bool = False,
     force_ascii_characters: List[str] = [],
-    character_set: str = "box"
+    character_set: str = "box",
 ) -> str:
     """
     Assemble a legend that shows the color of the different curves.

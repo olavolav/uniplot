@@ -22,7 +22,7 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
     - Any additional keyword arguments are passed to the
       `uniplot.options.Options` class.
     """
-    plt = plot_gen(xs=xs,ys=ys,**kwargs)
+    plt = plot_gen(xs=xs, ys=ys, **kwargs)
 
     # Main loop for interactive mode. Will only be executed once when not in
     # interactive mode.
@@ -66,7 +66,9 @@ class plot_gen:
             if "xs" in kwargs:
                 del kwargs["xs"]
             del kwargs["ys"]
-            self.options: Options = validate_and_transform_options(series=self.series, kwargs=kwargs)
+            self.options: Options = validate_and_transform_options(
+                series=self.series, kwargs=kwargs
+            )
 
     def update(self, **kwargs) -> Optional[str]:
         header_buffer: List[str] = []
@@ -75,14 +77,18 @@ class plot_gen:
         full_kwargs = {**self.default_arguments, **kwargs}
 
         if "xs" in kwargs or "ys" in kwargs:
-            self.series = MultiSeries(xs=full_kwargs.get("xs"), ys=full_kwargs.get("ys"))
+            self.series = MultiSeries(
+                xs=full_kwargs.get("xs"), ys=full_kwargs.get("ys")
+            )
         if len(kwargs.keys() - ["xs", "ys"]) > 0:
             # New options provided, so regenerate `self.options`
             # NOTE This overwrites the view window if not supplied explicitely
             if "xs" in full_kwargs:
                 del full_kwargs["xs"]
             del full_kwargs["ys"]
-            self.options = validate_and_transform_options(series=self.series, kwargs=full_kwargs)
+            self.options = validate_and_transform_options(
+                series=self.series, kwargs=full_kwargs
+            )
 
         header_buffer = sections.generate_header(self.options)
 
@@ -122,7 +128,7 @@ def plot_to_string(ys: Any, xs: Optional[Any] = None, **kwargs) -> List[str]:
     desired to be not stdout.
     """
     plt = plot_gen(return_string=True)
-    return plt.update(xs=xs,ys=ys,**kwargs)
+    return plt.update(xs=xs, ys=ys, **kwargs)
 
 
 #####################################

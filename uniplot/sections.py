@@ -32,11 +32,11 @@ def generate_body(
     lines: List[str] = []
 
     # Print plot (double resolution)
-    lines.append(f"┌{'─'*options.width}┐")
+    lines.append(f"┌{'─' * options.width}┐")
     for i in range(options.height):
         row = pixel_character_matrix[i]
         lines.append(f"│{''.join(row)}│ {y_axis_labels[i]}")
-    lines.append(f"└{'─'*options.width}┘")
+    lines.append(f"└{'─' * options.width}┘")
     lines.append(x_axis_labels)
 
     # Print legend if labels were specified
@@ -48,7 +48,7 @@ def generate_body(
                 color=options.color,
                 force_ascii=options.force_ascii,
                 force_ascii_characters=options.force_ascii_characters,
-                character_set=options.character_set
+                character_set=options.character_set,
             )
         )
 
