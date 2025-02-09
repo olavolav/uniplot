@@ -139,6 +139,7 @@ def character_for_ascii_pixel(
 def legend(
     legend_labels: List[str],
     width: int,
+    line_length_hard_cap: Optional[int],
     color: Union[bool, List[str]],
     force_ascii: bool = False,
     force_ascii_characters: List[str] = [],
@@ -162,16 +163,16 @@ def legend(
 
     full_label_string = "\n".join(label_strings)
 
-    return _center_if_possible(full_label_string, width=width + 2)
+    return _center_if_possible(full_label_string, width + 2, line_length_hard_cap)
 
 
-def plot_title(title: str, width: int) -> str:
+def plot_title(title: str, width: int, line_length_hard_cap: Optional[int]) -> str:
     """
     Returns the centered title string.
 
     Note that this assumes that `title` is not `None`.
     """
-    return _center_if_possible(title, width=width + 2)
+    return _center_if_possible(title, width + 2, line_length_hard_cap)
 
 
 def erase_previous_lines(nr_lines: int) -> None:
@@ -204,15 +205,25 @@ def compute_bar_chart_histogram_points(
 ###########
 
 
-def _center_if_possible(text: str, width: int) -> str:
+def _center_if_possible(
+    text: str, width: int, line_length_hard_cap: Optional[int]
+) -> str:
+    """
+    This centers the input `text` by adding left padding if the width of all
+    lines of `text` is smaller than width. Otherwise, it simply returns the
+    input text and relies on the console line break.
+    """
     lines = text.splitlines()
     max_len = max([len(_text_without_control_chars(line)) for line in lines])
 
-    if max_len >= width:
+    effective_width = (
+        width if line_length_hard_cap is None else min(width, line_length_hard_cap)
+    )
+    if max_len >= effective_width:
         return text
 
     # Apply padding on the left of each line
-    offset = int((width - max_len) / 2)
+    offset = int((effective_width - max_len) / 2)
     return "\n".join([" " * offset + line for line in lines])
 
 

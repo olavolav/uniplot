@@ -17,7 +17,13 @@ def generate_header(options: Options) -> List[str]:
     if options.title is None:
         return []
 
-    return [elements.plot_title(options.title, width=options.width)]
+    return [
+        elements.plot_title(
+            options.title,
+            width=options.width,
+            line_length_hard_cap=options.line_length_hard_cap,
+        )
+    ]
 
 
 def generate_body(
@@ -45,6 +51,7 @@ def generate_body(
             elements.legend(
                 options.legend_labels,
                 width=options.width,
+                line_length_hard_cap=options.line_length_hard_cap,
                 color=options.color,
                 force_ascii=options.force_ascii,
                 force_ascii_characters=options.force_ascii_characters,
