@@ -102,8 +102,8 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
                 height=scaling_factor_height * options.height,
             )
 
-    pixels = _init_character_matrix(width=options.width, height=options.height)
     if options.force_ascii:
+        pixels = _init_character_matrix(width=options.width, height=options.height)
         for row in range(options.height):
             for col in range(options.width):
                 pixels[row, col] = elements.character_for_ascii_pixel(
@@ -112,6 +112,7 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
                     color_mode=options.color,
                 )
     elif options.character_set == "braille":
+        pixels = _init_character_matrix(width=options.width, height=options.height)
         for row in range(options.height):
             for col in range(options.width):
                 pixels[row, col] = elements.character_for_2by4_pixels(
@@ -119,12 +120,14 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
                     color_mode=options.color,
                 )
     else:
-        for row in range(options.height):
-            for col in range(options.width):
-                pixels[row, col] = elements.character_for_2by2_pixels(
-                    matrix[2 * row : 2 * row + 2, 2 * col : 2 * col + 2],
-                    color_mode=options.color,
-                )
+        pixels = _init_character_matrix(width=options.width, height=options.height, value=" ")
+        x, y = np.shape(matrix)
+        non_zeros = np.argwhere(matrix.reshape(x//2,2,y//2,2).sum(axis=(1,3))!=0)
+        for row,col in non_zeros:
+            m = matrix[2 * row : 2 * row + 2, 2 * col : 2 * col + 2]
+            pixels[row,col] = elements.character_for_2by2_pixels(m,
+                color_mode=options.color,
+            )
 
     return pixels
 
