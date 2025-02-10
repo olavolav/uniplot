@@ -246,23 +246,25 @@ def merge_on_top(
     """
     merged_layer = np.copy(low_layer)
 
-    for row in range(height):
-        for col in range(width):
-            if high_layer[row, col] != 0:
-                # Overwrite bottom with top value
-                merged_layer[row, col] = high_layer[row, col]
-            elif with_shadow and merged_layer[row, col] != 0:
-                # So we know that the top layer at position `[row, col]` is
-                # blank but the bottom one is not. So now we check if we should
-                # set this pixel to zero because of shadowing.
-                if (
-                    high_layer[
-                        max(row - 1, 0) : min(row + 2, height),
-                        max(col - 1, 0) : min(col + 2, width),
-                    ]
-                    > 0
-                ).any():
-                    # Apply shadow
-                    merged_layer[row, col] = 0
+    not_zero_high_layer = high_layer != 0
+    merged_layer[not_zero_high_layer] = high_layer[not_zero_high_layer]
+
+    if with_shadow:  # deprecated? 
+        # can be also vectorized if is in use
+        for row in range(height):
+            for col in range(width):
+                if merged_layer[row, col] != 0:
+                    # So we know that the top layer at position `[row, col]` is
+                    # blank but the bottom one is not. So now we check if we should
+                    # set this pixel to zero because of shadowing.
+                    if (
+                        high_layer[
+                            max(row - 1, 0) : min(row + 2, height),
+                            max(col - 1, 0) : min(col + 2, width),
+                        ]
+                        > 0
+                    ).any():
+                        # Apply shadow
+                        merged_layer[row, col] = 0
 
     return merged_layer
