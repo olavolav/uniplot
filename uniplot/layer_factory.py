@@ -103,20 +103,24 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
             )
 
     pixels = _init_character_matrix(width=options.width, height=options.height)
-    for row in range(options.height):
-        for col in range(options.width):
-            if options.force_ascii:
+    if options.force_ascii:
+        for row in range(options.height):
+            for col in range(options.width):
                 pixels[row, col] = elements.character_for_ascii_pixel(
                     matrix[row, col],
                     options.force_ascii_characters,
                     color_mode=options.color,
                 )
-            elif options.character_set == "braille":
+    elif options.character_set == "braille":
+        for row in range(options.height):
+            for col in range(options.width):
                 pixels[row, col] = elements.character_for_2by4_pixels(
                     matrix[4 * row : 4 * row + 4, 2 * col : 2 * col + 2],
                     color_mode=options.color,
                 )
-            else:
+    else:
+        for row in range(options.height):
+            for col in range(options.width):
                 pixels[row, col] = elements.character_for_2by2_pixels(
                     matrix[2 * row : 2 * row + 2, 2 * col : 2 * col + 2],
                     color_mode=options.color,
