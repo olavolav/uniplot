@@ -78,29 +78,26 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
     if not options.force_ascii:
         scaling_factor_width = 2
         scaling_factor_height = 4 if options.character_set == "braille" else 2
-    matrix: NDArray = np.array([])
+
+    # ideally we 1 create empty on
+
+    height, width = scaling_factor_width * options.height, scaling_factor_height * options.width
+    matrix: NDArray = np.zeros((height, width), dtype=int)
 
     for i in range(len(ys)):
-        next_matrix = (i + 1) * pixel_matrix.render(
+        matrix = pixel_matrix.render(
             xs=xs[i],
             ys=ys[i],
             x_min=options.x_min,
             x_max=options.x_max,
             y_min=options.y_min,
             y_max=options.y_max,
-            width=scaling_factor_width * options.width,
-            height=scaling_factor_height * options.height,
+            width=width,
+            height=height,
             lines=options.lines[i],
+            pixels=matrix,
+            layer=(i + 1)
         )
-        if i == 0:
-            matrix = next_matrix
-        else:
-            matrix = pixel_matrix.merge_on_top(
-                low_layer=matrix,
-                high_layer=next_matrix,
-                width=scaling_factor_width * options.width,
-                height=scaling_factor_height * options.height,
-            )
 
     if options.force_ascii:
         pixels = _init_character_matrix(width=options.width, height=options.height)
@@ -120,14 +117,14 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
                     color_mode=options.color,
                 )
     else:
+        # Leverage sparsity by preload empty values, use 4d matrix for doing kernel sum of 4x4
+        # and check empty values, then iterate only non-empty
         pixels = _init_character_matrix(width=options.width, height=options.height, value=" ")
         x, y = np.shape(matrix)
         non_zeros = np.argwhere(matrix.reshape(x//2,2,y//2,2).sum(axis=(1,3))!=0)
         for row,col in non_zeros:
             m = matrix[2 * row : 2 * row + 2, 2 * col : 2 * col + 2]
-            pixels[row,col] = elements.character_for_2by2_pixels(m,
-                color_mode=options.color,
-            )
+            pixels[row,col] = elements.character_for_2by2_pixels(m, color_mode=options.color)
 
     return pixels
 
