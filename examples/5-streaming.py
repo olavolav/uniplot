@@ -23,6 +23,6 @@ for _ in range(MAX_SECONDS):
     plt.update(xs=xs, ys=ys, title=f"Streaming: {len(ys)} data point(s) ...")
 
     # Wait for 1s (simulating the data rate of some input stream)
-    time.sleep(0.5)
+    time.sleep(1)
 
 print("Done.")

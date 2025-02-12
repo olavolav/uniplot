@@ -28,6 +28,8 @@ plt = plot_gen(**kwargs)
 start = time.perf_counter()
 for i in wave_generator():
     deq.append(i)
-    plt.update(ys=deq, title="test") # current error in title
+    deq2 = [0.8+i*0.3 for i in deq]
+    #plt.update(ys=[deq,deq2], title="test") # current error in title
+    plt.update(ys=[deq], title="test") # current error in title
 stop = time.perf_counter()
 print(f"Time: {stop-start}s")
