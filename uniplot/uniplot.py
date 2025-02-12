@@ -80,7 +80,7 @@ class plot_gen:
             self.series = MultiSeries(
                 xs=full_kwargs.get("xs"), ys=full_kwargs.get("ys")
             )
-        if len(kwargs.keys() - ["xs", "ys"]) > 0:
+        if len(kwargs.keys()) > 0 or self.options is None:
             # New options provided, so regenerate `self.options`
             # NOTE This overwrites the view window if not supplied explicitely
             if "xs" in full_kwargs:
