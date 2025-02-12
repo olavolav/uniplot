@@ -3,38 +3,12 @@ import numpy as np
 from random import random
 import datetime
 
-from uniplot import plot, plot_to_string
+from uniplot import plot, plot_to_string, plot_gen
 
 
 def test_normal_plotting():
     x = [math.sin(i / 20) + i / 300 for i in range(600)]
     plot(xs=x, ys=x, title="Sine wave")
-
-
-def test_normal_plotting_to_string():
-    x = [math.sin(i / 20) + i / 300 for i in range(600)]
-    plot_to_string(xs=x, ys=x, title="Sine wave")
-
-
-def test_plotting_with_forced_ascii():
-    ys = [1, 3, -2]
-    strs = plot_to_string(
-        xs=ys,
-        ys=ys,
-        title="Sine wave in ASCII",
-        force_ascii=True,
-    )
-    assert "\n".join(strs).count("+") == len(ys)
-
-
-def test_plotting_with_forced_ascii_and_custom_symbols():
-    ys = [[1, 3, -2], [3, 4, 3, 4, 3, 5], [0]]
-    symbols = ["A", "B", "C"]
-    strs = plot_to_string(ys, force_ascii=True, force_ascii_characters=symbols)
-    plot_str = "\n".join(strs)
-
-    for i in range(2):
-        assert plot_str.count(symbols[i]) == len(ys[i])
 
 
 def test_normal_plotting_with_x_series():
@@ -127,6 +101,56 @@ def test_just_pass_objects_as_labels_works_as_well():
 
 def test_pass_some_empty_series():
     """
-    This is issue #30.
+    This was issue #30.
     """
     plot([[1, 2, 3, 4, 3, 2, 3, 4], [3, 2, 2, 4, 1, 2, 1, 4], [1, 3], []], lines=True)
+
+
+###########################
+# Testing plot_to_string #
+###########################
+
+
+def test_normal_plotting_to_string():
+    x = [math.sin(i / 20) + i / 300 for i in range(600)]
+    plot_to_string(xs=x, ys=x, title="Sine wave")
+
+
+def test_plotting_with_forced_ascii():
+    ys = [1, 3, -2]
+    strs = plot_to_string(
+        xs=ys,
+        ys=ys,
+        title="Sine wave in ASCII",
+        force_ascii=True,
+    )
+    assert "\n".join(strs).count("+") == len(ys)
+
+
+def test_plotting_with_forced_ascii_and_custom_symbols():
+    ys = [[1, 3, -2], [3, 4, 3, 4, 3, 5], [0]]
+    symbols = ["A", "B", "C"]
+    strs = plot_to_string(ys, force_ascii=True, force_ascii_characters=symbols)
+    plot_str = "\n".join(strs)
+
+    for i in range(2):
+        assert plot_str.count(symbols[i]) == len(ys[i])
+
+
+####################
+# Testing plot_gen #
+####################
+
+
+def test_plot_gen_init_and_update():
+    plt = plot_gen(width=30)
+    plt.update(ys=[1, 2, 3], title="Single update")
+
+
+def test_plot_gen_update_without_changing_any_options():
+    """
+    This was issue #41.
+    """
+    plt = plot_gen(title="Test")
+    plt.update(ys=[1, 2, 3])
+    plt.update(ys=[1, 2, 3, 4])
