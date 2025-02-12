@@ -7,24 +7,7 @@ from typing import List, Tuple, Union, Optional, Final
 from uniplot.conversions import COLOR_CODES
 from functools import wraps
 
-UNICODE_SQUARES: Final = {
-    0: "",
-    1: "▘",
-    2: "▝",
-    3: "▀",
-    4: "▖",
-    5: "▌",
-    6: "▞",
-    7: "▛",
-    8: "▗",
-    9: "▚",
-    10: "▐",
-    11: "▜",
-    12: "▄",
-    13: "▙",
-    14: "▟",
-    15: "█",
-}
+UNICODE_SQUARES: Final = ["","▘","▝","▀","▖","▌","▞","▛","▗","▚", "▐", "▜", "▄", "▙", "▟", "█"]
 BINARY_ENCODING_MATRIX: Final = np.array([[1, 2], [4, 8]])
 BINARY_ENCODING_MATRIX_BRAILLE_BYTE2: Final = np.array(
     [
@@ -65,37 +48,7 @@ def np_cache(func):
 
     return wrapper
 
-
 @np_cache
-def character_for_2by2_pixels(
-    square: NDArray, color_mode: Union[bool, List[str]] = False
-) -> str:
-    """
-    Convert 2x2 matrix (non-negative integers) to Unicode Block Elements character
-    representation for plotting.
-    """
-    assert square.shape == (2, 2)
-    assert square.min() >= 0
-
-    # Postprocess to remove everything that is not max color
-    max_color = square.max()
-    if max_color <= 1:
-        binary_square = np.clip(square, a_min=0, a_max=1)
-    else:
-        binary_square = np.clip(square, a_min=max_color - 1, a_max=max_color) - (
-            max_color - 1
-        )
-
-    integer_encoding = np.multiply(binary_square, BINARY_ENCODING_MATRIX).sum()
-    char = UNICODE_SQUARES[integer_encoding]
-
-    # We are done if the result is a blank character, or if the result is not
-    # blank and we do not need to colorize it
-    if char == "" or not color_mode:
-        return char
-    return _colorize_char(char, square.max(), color_mode)
-
-
 def character_for_2by4_pixels(
     square: NDArray, color_mode: Union[bool, List[str]] = False
 ) -> str:
