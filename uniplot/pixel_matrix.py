@@ -19,7 +19,7 @@ def render(
     height: int,
     lines: bool = False,
     pixels: NDArray | None = None,
-    layer: int = 1
+    layer: int = 1,
 ) -> NDArray:
     """
     Turn a list of 2D points into a raster matrix.

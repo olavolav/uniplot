@@ -10,7 +10,8 @@ from uniplot.discretizer import discretize
 
 
 Y_GRIDLINE_CHARACTERS = ["▔", "─", "▁"]
-ad, squares, resets =np.char.add, elements.UNICODE_SQUARES,elements.COLOR_RESET_CODE
+ad, squares, resets = np.char.add, elements.UNICODE_SQUARES, elements.COLOR_RESET_CODE
+
 
 def blank_character_matrix(width: int, height: int) -> NDArray:
     """
@@ -81,7 +82,10 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
 
     # ideally we 1 create empty on
 
-    height, width = scaling_factor_width * options.height, scaling_factor_height * options.width
+    height, width = (
+        scaling_factor_width * options.height,
+        scaling_factor_height * options.width,
+    )
     matrix: NDArray = np.zeros((height, width), dtype=int)
 
     for i in range(len(ys)):
@@ -97,7 +101,7 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
             height=height,
             lines=options.lines[i],
             pixels=matrix,
-            layer=i+1
+            layer=i + 1,
         )
 
     pixels = _init_character_matrix(width=options.width, height=options.height)
@@ -120,23 +124,29 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
                 )
     else:
         color = None
-        encoder2 = np.array([1,2,4,8], ndmin=3)
-        mat= np.swapaxes(matrix.reshape(height//2,2,width//2,2),1,2).reshape((height//2,width//2,4))
+        encoder2 = np.array([1, 2, 4, 8], ndmin=3)
+        mat = np.swapaxes(matrix.reshape(height // 2, 2, width // 2, 2), 1, 2).reshape(
+            (height // 2, width // 2, 4)
+        )
         if options.color:
-            color = mat.max(axis=(2))-1 # check color
-            mat = np.clip(mat,a_min=0,a_max=1) # to black and white
-        new_pix = (mat*encoder2).sum(axis=(2)) # decoder
-        non_zero_mask =(new_pix!=0)
+            color = mat.max(axis=(2)) - 1  # check color
+            mat = np.clip(mat, a_min=0, a_max=1)  # to black and white
+        new_pix = (mat * encoder2).sum(axis=(2))  # decoder
+        non_zero_mask = new_pix != 0
 
         if options.color:
             assert color is not None
-            colors = [COLOR_CODES[c]  for c in options.color] if isinstance(options.color, list) else COLOR_CODES.values()
-            decoder_c = np.array([ad(ad(c,squares),resets) for c in colors])
+            colors = (
+                [COLOR_CODES[c] for c in options.color]
+                if isinstance(options.color, list)
+                else COLOR_CODES.values()
+            )
+            decoder_c = np.array([ad(ad(c, squares), resets) for c in colors])
             index = color[non_zero_mask], new_pix[non_zero_mask]
         else:
             decoder_c = np.array(squares)
             index = new_pix[non_zero_mask]
-        decoder_c[...,0]=""
+        decoder_c[..., 0] = ""
         pixels[non_zero_mask] = decoder_c[index]
         # pixels=decoder_c[new_pix] #also ok, no needs pixels defined
     return pixels

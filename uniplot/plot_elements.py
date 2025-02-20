@@ -7,7 +7,24 @@ from typing import List, Tuple, Union, Optional, Final
 from uniplot.conversions import COLOR_CODES
 from functools import wraps
 
-UNICODE_SQUARES: Final = ["","▘","▝","▀","▖","▌","▞","▛","▗","▚", "▐", "▜", "▄", "▙", "▟", "█"]
+UNICODE_SQUARES: Final = [
+    "",
+    "▘",
+    "▝",
+    "▀",
+    "▖",
+    "▌",
+    "▞",
+    "▛",
+    "▗",
+    "▚",
+    "▐",
+    "▜",
+    "▄",
+    "▙",
+    "▟",
+    "█",
+]
 BINARY_ENCODING_MATRIX: Final = np.array([[1, 2], [4, 8]])
 BINARY_ENCODING_MATRIX_BRAILLE_BYTE2: Final = np.array(
     [
@@ -47,6 +64,7 @@ def np_cache(func):
         return cache[key]
 
     return wrapper
+
 
 @np_cache
 def character_for_2by4_pixels(
