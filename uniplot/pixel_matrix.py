@@ -233,11 +233,7 @@ def render(
 
 
 def merge_on_top(
-    low_layer: NDArray,
-    high_layer: NDArray,
-    width: int,
-    height: int,
-    with_shadow: bool = False,
+    low_layer: NDArray, high_layer: NDArray, width: int, height: int
 ) -> NDArray:
     """
     Put a pixel matrix on top of another, with an optional single solid line of
@@ -253,22 +249,5 @@ def merge_on_top(
 
     not_zero_high_layer = high_layer != 0
     merged_layer[not_zero_high_layer] = high_layer[not_zero_high_layer]
-
-    if with_shadow:  # deprecated?
-        for row in range(height):
-            for col in range(width):
-                if merged_layer[row, col] != 0:
-                    # So we know that the top layer at position `[row, col]` is
-                    # blank but the bottom one is not. So now we check if we should
-                    # set this pixel to zero because of shadowing.
-                    if (
-                        high_layer[
-                            max(row - 1, 0) : min(row + 2, height),
-                            max(col - 1, 0) : min(col + 2, width),
-                        ]
-                        > 0
-                    ).any():
-                        # Apply shadow
-                        merged_layer[row, col] = 0
 
     return merged_layer

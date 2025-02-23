@@ -124,6 +124,7 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
                 )
     else:
         color = None
+        # Used to be character_for_2by2_pixels
         encoder2 = np.array([1, 2, 4, 8], ndmin=3)
         mat = np.swapaxes(matrix.reshape(height // 2, 2, width // 2, 2), 1, 2).reshape(
             (height // 2, width // 2, 4)
