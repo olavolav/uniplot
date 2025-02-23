@@ -35,13 +35,12 @@ def generate_body(
     """
     Generates the body of the plot.
     """
-    lines: List[str] = []
 
+    lines: List[str] = []
     # Print plot (double resolution)
     lines.append(f"┌{'─' * options.width}┐")
-    for i in range(options.height):
-        row = pixel_character_matrix[i]
-        lines.append(f"│{''.join(row)}│ {y_axis_labels[i]}")
+    for y_label, row in zip(y_axis_labels, pixel_character_matrix):
+        lines.append("│" + "".join(row) + "│ " + y_label)
     lines.append(f"└{'─' * options.width}┘")
     lines.append(x_axis_labels)
 

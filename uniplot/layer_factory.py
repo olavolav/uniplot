@@ -4,11 +4,13 @@ from typing import List
 
 import uniplot.pixel_matrix as pixel_matrix
 import uniplot.plot_elements as elements
+from uniplot.conversions import COLOR_CODES
 from uniplot.options import Options
 from uniplot.discretizer import discretize
 
 
 Y_GRIDLINE_CHARACTERS = ["▔", "─", "▁"]
+ad, squares, resets = np.char.add, elements.UNICODE_SQUARES, elements.COLOR_RESET_CODE
 
 
 def blank_character_matrix(width: int, height: int) -> NDArray:
@@ -47,7 +49,6 @@ def render_horizontal_gridline(y: float, options: Options) -> NDArray:
             )
         )
         y_index = int(y_index_superresolution / 3)
-
         character = Y_GRIDLINE_CHARACTERS[y_index_superresolution % 3]
         pixels[y_index, :] = character
 
@@ -78,50 +79,77 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
     if not options.force_ascii:
         scaling_factor_width = 2
         scaling_factor_height = 4 if options.character_set == "braille" else 2
-    matrix: NDArray = np.array([])
+
+    # ideally we 1 create empty on
+
+    height, width = (
+        scaling_factor_width * options.height,
+        scaling_factor_height * options.width,
+    )
+    matrix: NDArray = np.zeros((height, width), dtype=int)
 
     for i in range(len(ys)):
-        next_matrix = (i + 1) * pixel_matrix.render(
+        # I think this overrides not sum so we can avoid posprocess if layers are 2**x
+        matrix = pixel_matrix.render(
             xs=xs[i],
             ys=ys[i],
             x_min=options.x_min,
             x_max=options.x_max,
             y_min=options.y_min,
             y_max=options.y_max,
-            width=scaling_factor_width * options.width,
-            height=scaling_factor_height * options.height,
+            width=width,
+            height=height,
             lines=options.lines[i],
+            pixels=matrix,
+            layer=i + 1,
         )
-        if i == 0:
-            matrix = next_matrix
-        else:
-            matrix = pixel_matrix.merge_on_top(
-                low_layer=matrix,
-                high_layer=next_matrix,
-                width=scaling_factor_width * options.width,
-                height=scaling_factor_height * options.height,
-            )
 
     pixels = _init_character_matrix(width=options.width, height=options.height)
-    for row in range(options.height):
-        for col in range(options.width):
-            if options.force_ascii:
+    if options.force_ascii:
+        pixels = _init_character_matrix(width=options.width, height=options.height)
+        for row in range(options.height):
+            for col in range(options.width):
                 pixels[row, col] = elements.character_for_ascii_pixel(
                     matrix[row, col],
                     options.force_ascii_characters,
                     color_mode=options.color,
                 )
-            elif options.character_set == "braille":
+    elif options.character_set == "braille":
+        pixels = _init_character_matrix(width=options.width, height=options.height)
+        for row in range(options.height):
+            for col in range(options.width):
                 pixels[row, col] = elements.character_for_2by4_pixels(
                     matrix[4 * row : 4 * row + 4, 2 * col : 2 * col + 2],
                     color_mode=options.color,
                 )
-            else:
-                pixels[row, col] = elements.character_for_2by2_pixels(
-                    matrix[2 * row : 2 * row + 2, 2 * col : 2 * col + 2],
-                    color_mode=options.color,
-                )
+    else:
+        color = None
+        # Used to be character_for_2by2_pixels
+        encoder2 = np.array([1, 2, 4, 8], ndmin=3)
+        mat = np.swapaxes(matrix.reshape(height // 2, 2, width // 2, 2), 1, 2).reshape(
+            (height // 2, width // 2, 4)
+        )
+        if options.color:
+            color = mat.max(axis=(2)) - 1  # check color
+            mat = np.clip(mat, a_min=0, a_max=1)  # to black and white
+        new_pix = (mat * encoder2).sum(axis=(2))  # decoder
+        non_zero_mask = new_pix != 0
 
+        if options.color:
+            assert color is not None
+            colors = (
+                [COLOR_CODES[c] for c in options.color]
+                if isinstance(options.color, list)
+                else COLOR_CODES.values()
+            )
+            decoder_c = np.array([ad(ad(c, squares), resets) for c in colors])
+            index = color[non_zero_mask], new_pix[non_zero_mask]
+        else:
+            decoder_c = np.array(squares)
+            index = new_pix[non_zero_mask]
+        decoder_c[..., 0] = ""
+        pixels[non_zero_mask] = decoder_c[index]
+        # pixels=decoder_c[new_pix] #also ok, no needs pixels defined
     return pixels
 
 

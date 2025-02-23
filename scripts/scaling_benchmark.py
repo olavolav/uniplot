@@ -4,6 +4,13 @@ from uniplot import plot
 
 NOTICEABLE_DELAY_SECONDS = 0.2
 
+# Set random seed for reproducibility
+np.random.seed(42)
+
+# Warm-up phase
+plot(np.random.uniform(size=10), lines=False)
+plot(np.random.uniform(size=10), lines=True)
+
 sizes = []
 times = []
 times_with_lines = []
@@ -32,23 +39,29 @@ historical_times_with_lines = [
     36.34388995170593,
 ]
 
+
+def benchmark_plot(ys, lines, num_runs=5):
+    times = []
+    for _ in range(num_runs):
+        start_time = time()
+        plot(ys, lines=lines)
+        end_time = time()
+        times.append(end_time - start_time)
+    return np.mean(times)
+
+
 for expo in range(8):
     size = 10**expo
     sizes.append(size)
     ys = np.random.uniform(size=size)
 
+    print(f"Benchmarking size {size}...")
+
     # Without lines
-    start_time = time()
-    plot(ys, title=f"Plotting 10^{expo} random samples", lines=False)
-    end_time = time()
-    times.append(end_time - start_time)
+    times.append(benchmark_plot(ys, lines=False))
 
     # With lines
-    start_time = time()
-    plot(ys, title=f"Plotting 10^{expo} random samples with lines", lines=True)
-    end_time = time()
-    times_with_lines.append(end_time - start_time)
-
+    times_with_lines.append(benchmark_plot(ys, lines=True))
 
 print("Benchmarking done.")
 
