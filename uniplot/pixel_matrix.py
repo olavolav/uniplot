@@ -18,7 +18,7 @@ def render(
     width: int,
     height: int,
     lines: bool = False,
-    pixels: NDArray | None = None,
+    pixels: Optional[NDArray] = None,
     layer: int = 1,
 ) -> NDArray:
     """
