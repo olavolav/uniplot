@@ -83,8 +83,8 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
     # ideally we 1 create empty on
 
     height, width = (
-        scaling_factor_width * options.height,
-        scaling_factor_height * options.width,
+        scaling_factor_height * options.height,
+        scaling_factor_width * options.width,
     )
     matrix: NDArray = np.zeros((height, width), dtype=int)
 
@@ -106,7 +106,6 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
 
     pixels = _init_character_matrix(width=options.width, height=options.height)
     if options.force_ascii:
-        pixels = _init_character_matrix(width=options.width, height=options.height)
         for row in range(options.height):
             for col in range(options.width):
                 pixels[row, col] = elements.character_for_ascii_pixel(
@@ -115,7 +114,6 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
                     color_mode=options.color,
                 )
     elif options.character_set == "braille":
-        pixels = _init_character_matrix(width=options.width, height=options.height)
         for row in range(options.height):
             for col in range(options.width):
                 pixels[row, col] = elements.character_for_2by4_pixels(
@@ -143,13 +141,12 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
                 else COLOR_CODES.values()
             )
             decoder_c = np.array([ad(ad(c, squares), resets) for c in colors])
-            index = color[non_zero_mask], new_pix[non_zero_mask]
+            index = color[non_zero_mask] % len(colors), new_pix[non_zero_mask]
         else:
             decoder_c = np.array(squares)
             index = new_pix[non_zero_mask]
         decoder_c[..., 0] = ""
         pixels[non_zero_mask] = decoder_c[index]
-        # pixels=decoder_c[new_pix] #also ok, no needs pixels defined
     return pixels
 
 
