@@ -5,7 +5,12 @@ All notable changes to uniplot will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [0.17.0] - 2025-03-08
+### Improved
+- Significant performance improvements using batch logic. Plotting is up to 33x faster
+  for sparse plots. See PRs #40 and #42 on GitHub for details. Thanks a lot to
+  @PabloRuizCuevas for providing ideas, pull request and iterating on it! (See PRs #40
+  and #42 on GitHub for details.)
 ### Fixed
 - `plot_gen` crashed when no options changed in a new iteration. Thanks to
   @PabloRuizCuevas for pointing this out!
