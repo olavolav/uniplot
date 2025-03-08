@@ -26,6 +26,8 @@ def render(
 
     Returns the pixels as 2D array with 1 or 0 integer entries.
 
+    If a `pixels` NDArray is passed in, that is re-used and pixels are bing overwritten.
+
     Note that the row order is optimized for drawing later, so the first row
     corresponds to the highest line of pixels.
     """

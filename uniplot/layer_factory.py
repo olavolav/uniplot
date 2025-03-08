@@ -10,7 +10,6 @@ from uniplot.discretizer import discretize
 
 
 Y_GRIDLINE_CHARACTERS = ["▔", "─", "▁"]
-ad, squares, resets = np.char.add, elements.UNICODE_SQUARES, elements.COLOR_RESET_CODE
 
 
 def blank_character_matrix(width: int, height: int) -> NDArray:
@@ -73,24 +72,21 @@ def render_vertical_gridline(x: float, options: Options) -> NDArray:
 
 
 def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDArray:
-    # Determine if we use Unicode super-resolution :-) or not
+    # Determine scaling factors and resultion of the dor matrix underlying the characters
     scaling_factor_width: int = 1
     scaling_factor_height: int = 1
     if not options.force_ascii:
         scaling_factor_width = 2
         scaling_factor_height = 4 if options.character_set == "braille" else 2
-
-    # ideally we 1 create empty on
-
     height, width = (
         scaling_factor_height * options.height,
         scaling_factor_width * options.width,
     )
-    matrix: NDArray = np.zeros((height, width), dtype=int)
 
+    # Render the `xs` and `ys` into a dot matrix
+    px_matrix: NDArray = np.zeros((height, width), dtype=int)
     for i in range(len(ys)):
-        # I think this overrides not sum so we can avoid posprocess if layers are 2**x
-        matrix = pixel_matrix.render(
+        px_matrix = pixel_matrix.render(
             xs=xs[i],
             ys=ys[i],
             x_min=options.x_min,
@@ -100,37 +96,42 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
             width=width,
             height=height,
             lines=options.lines[i],
-            pixels=matrix,
+            pixels=px_matrix,
             layer=i + 1,
         )
 
-    pixels = _init_character_matrix(width=options.width, height=options.height)
+    # Render the dot matrix into characters
+    char_matrix = _init_character_matrix(width=options.width, height=options.height)
     if options.force_ascii:
+        # If using ASCII characters
         for row in range(options.height):
             for col in range(options.width):
-                pixels[row, col] = elements.character_for_ascii_pixel(
-                    matrix[row, col],
+                char_matrix[row, col] = elements.character_for_ascii_pixel(
+                    px_matrix[row, col],
                     options.force_ascii_characters,
                     color_mode=options.color,
                 )
     elif options.character_set == "braille":
+        # If using Braille characters
         for row in range(options.height):
             for col in range(options.width):
-                pixels[row, col] = elements.character_for_2by4_pixels(
-                    matrix[4 * row : 4 * row + 4, 2 * col : 2 * col + 2],
+                char_matrix[row, col] = elements.character_for_2by4_pixels(
+                    px_matrix[4 * row : 4 * row + 4, 2 * col : 2 * col + 2],
                     color_mode=options.color,
                 )
     else:
+        # If using Box characters
         color = None
         # Used to be character_for_2by2_pixels
-        encoder2 = np.array([1, 2, 4, 8], ndmin=3)
-        mat = np.swapaxes(matrix.reshape(height // 2, 2, width // 2, 2), 1, 2).reshape(
-            (height // 2, width // 2, 4)
-        )
+        # TODO Use such a logic also for the other character sets
+        encoder = np.array([1, 2, 4, 8], ndmin=3)
+        mat = np.swapaxes(
+            px_matrix.reshape(height // 2, 2, width // 2, 2), 1, 2
+        ).reshape((height // 2, width // 2, 4))
         if options.color:
             color = mat.max(axis=(2)) - 1  # check color
             mat = np.clip(mat, a_min=0, a_max=1)  # to black and white
-        new_pix = (mat * encoder2).sum(axis=(2))  # decoder
+        new_pix = (mat * encoder).sum(axis=(2))  # decoder
         non_zero_mask = new_pix != 0
 
         if options.color:
@@ -140,21 +141,29 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
                 if isinstance(options.color, list)
                 else COLOR_CODES.values()
             )
-            decoder_c = np.array([ad(ad(c, squares), resets) for c in colors])
+            decoder_c = np.array(
+                [
+                    np.char.add(
+                        np.char.add(c, elements.UNICODE_SQUARES),
+                        elements.COLOR_RESET_CODE,
+                    )
+                    for c in colors
+                ]
+            )
             index = color[non_zero_mask] % len(colors), new_pix[non_zero_mask]
         else:
-            decoder_c = np.array(squares)
+            decoder_c = np.array(elements.UNICODE_SQUARES)
             index = new_pix[non_zero_mask]
         decoder_c[..., 0] = ""
-        pixels[non_zero_mask] = decoder_c[index]
-    return pixels
+        char_matrix[non_zero_mask] = decoder_c[index]
+    return char_matrix
 
 
 def print_raw_pixel_matrix(pixels: NDArray, verbose: bool = False) -> None:
     """
     Just print the pixels.
 
-    This is mostly used for testing and debugging.
+    Used for testing and debugging.
     """
     join_char = "," if verbose else ""
     for row in pixels:
