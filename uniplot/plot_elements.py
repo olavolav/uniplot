@@ -5,25 +5,26 @@ from numpy.typing import NDArray
 from typing import List, Tuple, Union, Optional, Final
 
 from uniplot.conversions import COLOR_CODES
+from functools import wraps
 
-UNICODE_SQUARES: Final = {
-    0: "",
-    1: "▘",
-    2: "▝",
-    3: "▀",
-    4: "▖",
-    5: "▌",
-    6: "▞",
-    7: "▛",
-    8: "▗",
-    9: "▚",
-    10: "▐",
-    11: "▜",
-    12: "▄",
-    13: "▙",
-    14: "▟",
-    15: "█",
-}
+UNICODE_SQUARES: Final = [
+    "",
+    "▘",
+    "▝",
+    "▀",
+    "▖",
+    "▌",
+    "▞",
+    "▛",
+    "▗",
+    "▚",
+    "▐",
+    "▜",
+    "▄",
+    "▙",
+    "▟",
+    "█",
+]
 BINARY_ENCODING_MATRIX: Final = np.array([[1, 2], [4, 8]])
 BINARY_ENCODING_MATRIX_BRAILLE_BYTE2: Final = np.array(
     [
@@ -51,35 +52,21 @@ COLOR_RESET_CODE: Final = "\033[0m"
 COLOR_CODE_REGEX: Final = re.compile(r"\033\[\d+m")
 
 
-def character_for_2by2_pixels(
-    square: NDArray, color_mode: Union[bool, List[str]] = False
-) -> str:
-    """
-    Convert 2x2 matrix (non-negative integers) to Unicode Block Elements character
-    representation for plotting.
-    """
-    assert square.shape == (2, 2)
-    assert square.min() >= 0
+def np_cache(func):
+    """A simple cache decorator that uses hashable keys for NumPy arrays."""
+    cache = {}
 
-    # Postprocess to remove everything that is not max color
-    max_color = square.max()
-    if max_color <= 1:
-        binary_square = np.clip(square, a_min=0, a_max=1)
-    else:
-        binary_square = np.clip(square, a_min=max_color - 1, a_max=max_color) - (
-            max_color - 1
-        )
+    @wraps(func)
+    def wrapper(arr, **kwargs):
+        key = arr.data.tobytes()  # hashable version
+        if key not in cache:
+            cache[key] = func(arr, **kwargs)
+        return cache[key]
 
-    integer_encoding = np.multiply(binary_square, BINARY_ENCODING_MATRIX).sum()
-    char = UNICODE_SQUARES[integer_encoding]
-
-    # We are done if the result is a blank character, or if the result is not
-    # blank and we do not need to colorize it
-    if char == "" or not color_mode:
-        return char
-    return _colorize_char(char, square.max(), color_mode)
+    return wrapper
 
 
+@np_cache
 def character_for_2by4_pixels(
     square: NDArray, color_mode: Union[bool, List[str]] = False
 ) -> str:

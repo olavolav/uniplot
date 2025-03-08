@@ -43,13 +43,10 @@ def _merge_layers(character_layers: List[NDArray], options: Options) -> NDArray:
     # Merge layers on top
     for character_layer in character_layers:
         # Just checking
-        assert character_layer.shape == (options.height, options.width)
-
-        for row_index in range(options.height):
-            for column_index in range(options.width):
-                if character_layer[row_index, column_index] != "":
-                    merged_layer[row_index, column_index] = character_layer[
-                        row_index, column_index
-                    ]
+        assert character_layer.shape == (options.height, options.width), (
+            f"{character_layer.shape} != {(options.height, options.width)}"
+        )
+        to_replace_mask = character_layer != ""
+        merged_layer[to_replace_mask] = character_layer[to_replace_mask]
 
     return merged_layer

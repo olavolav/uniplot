@@ -1,3 +1,7 @@
+"""
+Smoke tests for the frontend.
+"""
+
 import math
 import numpy as np
 from random import random
@@ -58,6 +62,12 @@ def test_random_line_plotting():
     xs = [random() for _ in range(100)]
     ys = [random() for _ in range(100)]
     plot(xs=xs, ys=ys, lines=True)
+
+
+def test_plotting_using_Braille_characters():
+    xs = [random() for _ in range(100)]
+    ys = [random() for _ in range(100)]
+    plot(xs=xs, ys=ys, character_set="braille")
 
 
 def test_plotting_time_series_with_bounds_set_manually():

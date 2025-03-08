@@ -4,6 +4,7 @@ from typing import List
 
 import uniplot.pixel_matrix as pixel_matrix
 import uniplot.plot_elements as elements
+from uniplot.conversions import COLOR_CODES
 from uniplot.options import Options
 from uniplot.discretizer import discretize
 
@@ -47,7 +48,6 @@ def render_horizontal_gridline(y: float, options: Options) -> NDArray:
             )
         )
         y_index = int(y_index_superresolution / 3)
-
         character = Y_GRIDLINE_CHARACTERS[y_index_superresolution % 3]
         pixels[y_index, :] = character
 
@@ -72,64 +72,98 @@ def render_vertical_gridline(x: float, options: Options) -> NDArray:
 
 
 def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDArray:
-    # Determine if we use Unicode super-resolution :-) or not
+    # Determine scaling factors and resultion of the dor matrix underlying the characters
     scaling_factor_width: int = 1
     scaling_factor_height: int = 1
     if not options.force_ascii:
         scaling_factor_width = 2
         scaling_factor_height = 4 if options.character_set == "braille" else 2
-    matrix: NDArray = np.array([])
+    height, width = (
+        scaling_factor_height * options.height,
+        scaling_factor_width * options.width,
+    )
 
+    # Render the `xs` and `ys` into a dot matrix
+    px_matrix: NDArray = np.zeros((height, width), dtype=int)
     for i in range(len(ys)):
-        next_matrix = (i + 1) * pixel_matrix.render(
+        px_matrix = pixel_matrix.render(
             xs=xs[i],
             ys=ys[i],
             x_min=options.x_min,
             x_max=options.x_max,
             y_min=options.y_min,
             y_max=options.y_max,
-            width=scaling_factor_width * options.width,
-            height=scaling_factor_height * options.height,
+            width=width,
+            height=height,
             lines=options.lines[i],
+            pixels=px_matrix,
+            layer=i + 1,
         )
-        if i == 0:
-            matrix = next_matrix
-        else:
-            matrix = pixel_matrix.merge_on_top(
-                low_layer=matrix,
-                high_layer=next_matrix,
-                width=scaling_factor_width * options.width,
-                height=scaling_factor_height * options.height,
-            )
 
-    pixels = _init_character_matrix(width=options.width, height=options.height)
-    for row in range(options.height):
-        for col in range(options.width):
-            if options.force_ascii:
-                pixels[row, col] = elements.character_for_ascii_pixel(
-                    matrix[row, col],
+    # Render the dot matrix into characters
+    char_matrix = _init_character_matrix(width=options.width, height=options.height)
+    if options.force_ascii:
+        # If using ASCII characters
+        for row in range(options.height):
+            for col in range(options.width):
+                char_matrix[row, col] = elements.character_for_ascii_pixel(
+                    px_matrix[row, col],
                     options.force_ascii_characters,
                     color_mode=options.color,
                 )
-            elif options.character_set == "braille":
-                pixels[row, col] = elements.character_for_2by4_pixels(
-                    matrix[4 * row : 4 * row + 4, 2 * col : 2 * col + 2],
+    elif options.character_set == "braille":
+        # If using Braille characters
+        for row in range(options.height):
+            for col in range(options.width):
+                char_matrix[row, col] = elements.character_for_2by4_pixels(
+                    px_matrix[4 * row : 4 * row + 4, 2 * col : 2 * col + 2],
                     color_mode=options.color,
                 )
-            else:
-                pixels[row, col] = elements.character_for_2by2_pixels(
-                    matrix[2 * row : 2 * row + 2, 2 * col : 2 * col + 2],
-                    color_mode=options.color,
-                )
+    else:
+        # If using Box characters
+        color = None
+        # Used to be character_for_2by2_pixels
+        # TODO Use such a logic also for the other character sets
+        encoder = np.array([1, 2, 4, 8], ndmin=3)
+        mat = np.swapaxes(
+            px_matrix.reshape(height // 2, 2, width // 2, 2), 1, 2
+        ).reshape((height // 2, width // 2, 4))
+        if options.color:
+            color = mat.max(axis=(2)) - 1  # check color
+            mat = np.clip(mat, a_min=0, a_max=1)  # to black and white
+        new_pix = (mat * encoder).sum(axis=(2))  # decoder
+        non_zero_mask = new_pix != 0
 
-    return pixels
+        if options.color:
+            assert color is not None
+            colors = (
+                [COLOR_CODES[c] for c in options.color]
+                if isinstance(options.color, list)
+                else COLOR_CODES.values()
+            )
+            decoder_c = np.array(
+                [
+                    np.char.add(
+                        np.char.add(c, elements.UNICODE_SQUARES),
+                        elements.COLOR_RESET_CODE,
+                    )
+                    for c in colors
+                ]
+            )
+            index = color[non_zero_mask] % len(colors), new_pix[non_zero_mask]
+        else:
+            decoder_c = np.array(elements.UNICODE_SQUARES)
+            index = new_pix[non_zero_mask]
+        decoder_c[..., 0] = ""
+        char_matrix[non_zero_mask] = decoder_c[index]
+    return char_matrix
 
 
 def print_raw_pixel_matrix(pixels: NDArray, verbose: bool = False) -> None:
     """
     Just print the pixels.
 
-    This is mostly used for testing and debugging.
+    Used for testing and debugging.
     """
     join_char = "," if verbose else ""
     for row in pixels:

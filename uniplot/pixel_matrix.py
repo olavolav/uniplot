@@ -18,11 +18,15 @@ def render(
     width: int,
     height: int,
     lines: bool = False,
+    pixels: Optional[NDArray] = None,
+    layer: int = 1,
 ) -> NDArray:
     """
     Turn a list of 2D points into a raster matrix.
 
     Returns the pixels as 2D array with 1 or 0 integer entries.
+
+    If a `pixels` NDArray is passed in, that is re-used and pixels are bing overwritten.
 
     Note that the row order is optimized for drawing later, so the first row
     corresponds to the highest line of pixels.
@@ -36,7 +40,8 @@ def render(
     assert width > 0
     assert height > 0
 
-    pixels = np.zeros((height, width), dtype=int)
+    if pixels is None:
+        pixels = np.zeros((height, width), dtype=int)
 
     x_indices = discretize_array(xs, x_min, x_max, steps=width)
     y_indices = discretize_array(ys, y_min, y_max, steps=height)
@@ -142,14 +147,14 @@ def render(
                 # That means it's a vertical line
                 pixels[
                     max(y_index_smaller, 0) : max(y_index_bigger, 0), x_index_start
-                ] = 1
+                ] = layer
                 continue
 
             if y_index_start == y_index_stop:
                 # That means it's a horizontal line
                 pixels[
                     y_index_start, max(x_index_smaller, 0) : max(x_index_bigger, 0)
-                ] = 1
+                ] = layer
                 continue
 
             if abs(indices_slope) > 1:
@@ -213,7 +218,7 @@ def render(
                 & (xy_indices_of_line[:, 1] <= min(height - 1, y_index_bigger))
             ]
             xy_indices_of_line = xy_indices_of_line.T
-            pixels[xy_indices_of_line[1], xy_indices_of_line[0]] = 1
+            pixels[xy_indices_of_line[1], xy_indices_of_line[0]] = layer
 
     # Filter out NaN and out of view pixels
     xy_indices = xy_indices[
@@ -225,17 +230,12 @@ def render(
     xy_indices = xy_indices.T
 
     # Assemble pixel matrix
-    pixels[xy_indices[1], xy_indices[0]] = 1
-
+    pixels[xy_indices[1], xy_indices[0]] = layer
     return pixels
 
 
 def merge_on_top(
-    low_layer: NDArray,
-    high_layer: NDArray,
-    width: int,
-    height: int,
-    with_shadow: bool = False,
+    low_layer: NDArray, high_layer: NDArray, width: int, height: int
 ) -> NDArray:
     """
     Put a pixel matrix on top of another, with an optional single solid line of
@@ -243,26 +243,13 @@ def merge_on_top(
 
     If activated, this shadow will ensure that later 2x2 squares exclusively
     belong to one particular line.
+
+    TODO I stopped using this but still there is the unused shadow stuff,
+    I would delete it as well as the tests
     """
     merged_layer = np.copy(low_layer)
 
-    for row in range(height):
-        for col in range(width):
-            if high_layer[row, col] != 0:
-                # Overwrite bottom with top value
-                merged_layer[row, col] = high_layer[row, col]
-            elif with_shadow and merged_layer[row, col] != 0:
-                # So we know that the top layer at position `[row, col]` is
-                # blank but the bottom one is not. So now we check if we should
-                # set this pixel to zero because of shadowing.
-                if (
-                    high_layer[
-                        max(row - 1, 0) : min(row + 2, height),
-                        max(col - 1, 0) : min(col + 2, width),
-                    ]
-                    > 0
-                ).any():
-                    # Apply shadow
-                    merged_layer[row, col] = 0
+    not_zero_high_layer = high_layer != 0
+    merged_layer[not_zero_high_layer] = high_layer[not_zero_high_layer]
 
     return merged_layer

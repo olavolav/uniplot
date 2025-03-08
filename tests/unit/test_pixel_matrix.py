@@ -426,48 +426,6 @@ def test_merge_with_empty_lower_layer():
     np.testing.assert_array_equal(result, some_pixels)
 
 
-def test_merge_with_effective_shadow_small_patch():
-    high_layer = np.array([[2, 0, 0], [0, 0, 0]])
-    low_layer = np.array([[1, 1, 1], [1, 1, 1]])
-    desired_layer = np.array([[2, 0, 1], [0, 0, 1]])
-
-    result = merge_on_top(
-        low_layer=low_layer, high_layer=high_layer, width=3, height=2, with_shadow=True
-    )
-
-    np.testing.assert_array_equal(result, desired_layer)
-
-
-def test_merge_with_effective_shadow_bigger_patch():
-    high_layer = np.array(
-        [
-            [0, 2, 0],
-            [2, 0, 0],
-            [0, 0, 0],
-        ]
-    )
-    low_layer = np.array(
-        [
-            [0, 0, 1],
-            [0, 1, 1],
-            [1, 1, 1],
-        ]
-    )
-    desired_layer = np.array(
-        [
-            [0, 2, 0],
-            [2, 0, 0],
-            [0, 0, 1],
-        ]
-    )
-
-    result = merge_on_top(
-        low_layer=low_layer, high_layer=high_layer, width=3, height=3, with_shadow=True
-    )
-
-    np.testing.assert_array_equal(result, desired_layer)
-
-
 def test_merge_without_shadow_bigger_patch():
     high_layer = np.array(
         [
@@ -491,8 +449,6 @@ def test_merge_without_shadow_bigger_patch():
         ]
     )
 
-    result = merge_on_top(
-        low_layer=low_layer, high_layer=high_layer, width=3, height=3, with_shadow=False
-    )
+    result = merge_on_top(low_layer=low_layer, high_layer=high_layer, width=3, height=3)
 
     np.testing.assert_array_equal(result, desired_layer)
