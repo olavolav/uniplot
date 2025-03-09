@@ -47,7 +47,7 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
             elif key_pressed == "n":
                 plt.options.zoom_out()
             elif key_pressed == "r":
-                plt.option.reset_view()
+                plt.options.reset_view()
             elif key_pressed in ["q", "\x1b"]:
                 break
 
