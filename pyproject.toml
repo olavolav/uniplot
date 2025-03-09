@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "uniplot"
-version = "0.17.0"
+version = "0.17.1"
 description = "Lightweight plotting to the terminal. 4x resolution via Unicode."
 authors = ["Olav Stetter <olav.stetter@googlemail.com>"]
 repository = "https://github.com/olavolav/uniplot"
