@@ -31,7 +31,7 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
         plt.update()
 
         if plt.options.interactive:
-            plt.print_subscript("Move h/j/k/l, zoom u/n, or r to reset. ESC/q to quit")
+            plt.print_subscript("Move h/j/k/l, zoom u/n, or r to reset. ESC/q to quit.")
             key_pressed = getch().lower()
 
             if key_pressed == "h":
@@ -109,14 +109,14 @@ class plot_gen:
 
         # Output plot
         output = "\n".join(header_buffer + body_buffer)
-        self.last_nr_of_lines = len(header_buffer + body_buffer)
+        self.last_nr_of_lines = elements.count_lines(output)
         if self.return_string:
             return output
         print(output)
 
     def print_subscript(self, text: str) -> None:
+        self.last_nr_of_lines += elements.count_lines(text)
         print(text)
-        self.last_nr_of_lines += len(text.split("\n"))
 
 
 def plot_to_string(ys: Any, xs: Optional[Any] = None, **kwargs) -> List[str]:

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Fixed
 - Fixed view reset in interactive mode.
+- Fixed incorrect reset after keypress in interactive mode when using legend labels.
 
 ## [0.17.0] - 2025-03-08
 ### Improved

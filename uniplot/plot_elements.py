@@ -187,6 +187,15 @@ def compute_bar_chart_histogram_points(
     return _histogram_to_bar_chart_points(bin_edges, counts)
 
 
+def count_lines(text: str) -> int:
+    """
+    Returns the number of lines that `print(text)` will produce. Note that
+    passing None or an empty string will yield `1`, because that is how the
+    `print` function works in Python.
+    """
+    return text.__str__().count("\n") + 1
+
+
 ###########
 # private #
 ###########

@@ -1,6 +1,6 @@
 import numpy as np
 
-from uniplot.plot_elements import character_for_2by4_pixels, plot_title
+from uniplot.plot_elements import character_for_2by4_pixels, plot_title, count_lines
 
 
 ######################################
@@ -54,3 +54,23 @@ def test_long_title_with_hard_cap():
     result = plot_title(title, 100, 10)
     # Make sure no left padding was applied
     assert result.strip() == result
+
+
+########################
+# Testing: count_lines #
+########################
+
+
+def test_counting_a_single_line():
+    text = "Hello Bob"
+    assert count_lines(text) == 1
+
+
+def test_counting_multiple_lines():
+    text = "Hello Bob\nThe weather \nis:\t\tGREAT!\ntoday."
+    assert count_lines(text) == 4
+
+
+def test_counting_multiple_lines_with_ending_whitespace():
+    text = "Hello Bob\nThe weather \r\n"
+    assert count_lines(text) == 3
