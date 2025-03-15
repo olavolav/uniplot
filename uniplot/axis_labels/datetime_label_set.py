@@ -16,7 +16,7 @@ class DatetimeLabelSet(LabelSet):
         labels: NDArray,
         x_min: float,
         x_max: float,
-        available_space: int,
+        available_space: int = 17,
         unit: str = "",
         log: bool = False,
         vertical_direction: bool = False,
@@ -33,18 +33,15 @@ class DatetimeLabelSet(LabelSet):
     # private #
     ###########
 
-    def _find_shortest_string_representation(
-        self,
-        numbers: NDArray,
-    ) -> List[str]:
+    def _find_shortest_string_representation(self) -> List[str]:
         """
         This method will find the shortest strings for datetime labels that
         give enough information.
         """
         # By default, use NumPy's redering functionality
-        short_labels = list(np.datetime_as_string(numbers, unit="auto"))
+        short_labels = list(np.datetime_as_string(self.labels, unit="auto"))
         # Remove the date if it is the same in all labels
-        if len(set(np.datetime_as_string(numbers, unit="D"))) == 1:
+        if len(set(np.datetime_as_string(self.labels, unit="D"))) == 1:
             short_labels = [t[11:] for t in short_labels]
         # Remove day, and then month, if that is redundant (i.e. all labels
         # have a "-01" at the end)

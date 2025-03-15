@@ -17,9 +17,9 @@ class LabelSet:
     def __init__(
         self,
         labels: NDArray,
-        x_min: float,
-        x_max: float,
-        available_space: int,
+        x_min: float = 0.0,
+        x_max: float = 1.0,
+        available_space: int = 17,
         unit: str = "",
         log: bool = False,
         vertical_direction: bool = False,
@@ -60,7 +60,7 @@ class LabelSet:
         if self._results_already_in_cache:
             return
 
-        str_labels = self._find_shortest_string_representation(self.labels)
+        str_labels = self._find_shortest_string_representation()
 
         if self.vertical_direction:
             # So this is for the y axis case
@@ -127,10 +127,7 @@ class LabelSet:
             self._rendered_result = [line]
         self._results_already_in_cache = True
 
-    def _find_shortest_string_representation(
-        self,
-        numbers: NDArray,
-    ) -> List[str]:
+    def _find_shortest_string_representation(self) -> List[str]:
         """
         This method will find the shortest numerical values for axis labels
         that are different from each other.
@@ -138,16 +135,16 @@ class LabelSet:
         # We actually want to add one more digit than needed for uniqueness
         for nr_digits in range(10):
             test_list = [
-                self._float_format(n, nr_digits) for n in numbers if n is not None
+                self._float_format(n, nr_digits) for n in self.labels if n is not None
             ]
             if len(test_list) == len(set(test_list)):
                 return [
                     "" if n is None else self._float_format(n, nr_digits)
-                    for n in numbers
+                    for n in self.labels
                 ]
 
         # Fallback to naive string conversion
-        return ["" if n is None else str(n) for n in numbers]
+        return ["" if n is None else str(n) for n in self.labels]
 
     def _float_format(self, n: float, nr_digits: int) -> str:
         """
