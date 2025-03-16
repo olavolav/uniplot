@@ -55,7 +55,7 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
 
 
 class plot_gen:
-    def __init__(self, return_string=False, **kwargs):
+    def __init__(self, return_string=False, **kwargs) -> None:
         self.default_arguments: Final[Dict] = kwargs
         self.last_nr_of_lines: int = 0
         self.return_string: Final[bool] = return_string
@@ -66,7 +66,7 @@ class plot_gen:
             if "xs" in kwargs:
                 del kwargs["xs"]
             del kwargs["ys"]
-            self.options: Options = validate_and_transform_options(
+            self.options = validate_and_transform_options(
                 series=self.series, kwargs=kwargs
             )
 
