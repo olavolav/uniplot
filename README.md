@@ -258,8 +258,8 @@ pip install uniplot
 
 ## Contributing
 
-Clone this repository, and make sure you have `uv`
-[installed](https://docs.astral.sh/uv/getting-started/installation/).
+Clone this repository, and make sure you
+[have uv installed](https://docs.astral.sh/uv/getting-started/installation/).
 
 You can run the tests, to make sure your setup is good.
 ```shell
