@@ -39,7 +39,7 @@ class DatetimeLabelSet(LabelSet):
         give enough information.
         """
         # By default, use NumPy's redering functionality
-        short_labels = list(np.datetime_as_string(self.labels, unit="auto"))
+        short_labels = [str(x) for x in np.datetime_as_string(self.labels, unit="auto")]
         # Remove the date if it is the same in all labels
         if len(set(np.datetime_as_string(self.labels, unit="D"))) == 1:
             short_labels = [t[11:] for t in short_labels]
@@ -54,5 +54,5 @@ class DatetimeLabelSet(LabelSet):
         return short_labels
 
     def _spread_greater_than(self, count: int, unit: str) -> bool:
-        x = np.timedelta64(count, unit).astype("<m8[s]")
+        x = np.timedelta64(count, unit).astype("<m8[s]")  # type: ignore
         return (self.x_max_as_dt - self.x_min_as_dt).astype("<m8[s]") > x

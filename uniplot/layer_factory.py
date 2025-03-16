@@ -130,7 +130,7 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
         ).reshape((height // 2, width // 2, 4))
         if options.color:
             color = mat.max(axis=(2)) - 1  # check color
-            mat = np.clip(mat, a_min=0, a_max=1)  # to black and white
+            mat = np.clip(mat, a_min=0, a_max=1)  # type: ignore
         new_pix = (mat * encoder).sum(axis=(2))  # decoder
         non_zero_mask = new_pix != 0
 

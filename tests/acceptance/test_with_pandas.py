@@ -71,7 +71,7 @@ def test_plotting_time_series_from_pandas_index():
 
 def test_plotting_time_series_from_pandas_series():
     N = 150
-    dti = pd.date_range("2024-01-01", periods=N, freq="m")
+    dti = pd.date_range("2024-01-01", periods=N, freq="MS")
 
     data = pd.DataFrame(np.random.randn(N, 1), columns=["value"], index=dti)
     data["date_as_series"] = data.index.to_series()
