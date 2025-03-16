@@ -136,7 +136,7 @@ def datetime_labels(
 
 def _compute_pseudo_exponent(d_range) -> Tuple[int, str]:
     for i, unit in enumerate(DIGIT_TIME_UNITS):
-        td = np.timedelta64(1, unit).astype("timedelta64[s]")
+        td = _timedelta(1, unit)
         if d_range > td:
             return (i, unit)
     return (len(DIGIT_TIME_UNITS) - 1, DIGIT_TIME_UNITS[-1])
@@ -153,13 +153,13 @@ def _label_range(start, stop, step_count: int, step_unit: str) -> NDArray:
 
     # For units where the step size is an equal amount of seconds
     if step_unit not in ["Y", "M"]:
-        step_size = np.timedelta64(step_count, step_unit).astype("timedelta64[s]")
+        step_size = _timedelta(step_count, step_unit)
         return np.arange(start=start, stop=stop, step=step_size)
 
     # Otherwise, manually construct the list
     ls = [start]
     if step_unit == "M":
-        step = np.timedelta64(step_count * 31 + 1, "D").astype("timedelta64[s]")
+        step = _timedelta(step_count * 31 + 1, "D")
         while True:
             l1 = ls[-1] + step
             l1 = l1.astype("datetime64[M]").astype("datetime64[s]")
@@ -170,7 +170,7 @@ def _label_range(start, stop, step_count: int, step_unit: str) -> NDArray:
         return np.array(ls, dtype="datetime64[s]")
 
     # Years
-    step = np.timedelta64(step_count * 365 + 1, "D").astype("timedelta64[s]")
+    step = _timedelta(step_count * 365 + 1, "D")
     while True:
         l1 = ls[-1] + step
         l1 = l1.astype("datetime64[Y]").astype("datetime64[s]")
@@ -186,3 +186,7 @@ def _compute_simplicity_score(q_values, i: int, j: int) -> float:
     Simplicity score according, modified from Talbot.
     """
     return 1 - (i - 1) / (len(q_values) - 1) - j
+
+
+def _timedelta(count: int, unit: str):
+    return np.timedelta64(count, unit).astype("timedelta64[s]")  # type: ignore

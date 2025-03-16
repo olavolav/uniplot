@@ -1,24 +1,30 @@
-[tool.poetry]
+[project]
 name = "uniplot"
 version = "0.17.1"
 description = "Lightweight plotting to the terminal. 4x resolution via Unicode."
-authors = ["Olav Stetter <olav.stetter@googlemail.com>"]
-repository = "https://github.com/olavolav/uniplot"
-license = "MIT"
+authors = [{name = "Olav Stetter", email = "olav.stetter@googlemail.com"}]
+# repository = "https://github.com/olavolav/uniplot"
+license = {file = "LICENSE"}
 readme = "README.md"
-packages = [{ include = "uniplot" }]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy >=1.22.0"
+]
 
-[tool.poetry.dependencies]
-python = ">=3.8"
-numpy = ">=1.22.0"
+[dependency-groups]
+dev = [
+    "pytest >=6.0.1",
+    "mypy ==1.14.1",
+    "pandas >=2.0.3",
+    "polars >=0.20.5",
+    "ruff >=0.9.0"
+]
 
-[tool.poetry.dev-dependencies]
-pytest = ">=6.0.1"
-mypy = "*"
-pandas = "^2.0.3"
-polars = "^0.20.5"
-ruff = "^0.9.0"
+[tool.uv]
+default-groups = []
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools"]
+
+[tool.setuptools]
+py-modules = ["uniplot"]

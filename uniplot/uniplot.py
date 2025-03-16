@@ -59,8 +59,8 @@ class plot_gen:
         self.default_arguments: Final[Dict] = kwargs
         self.last_nr_of_lines: int = 0
         self.return_string: Final[bool] = return_string
-        self.series: Optional[MultiSeries] = None
-        self.options: Optional[Options] = None
+        self.series: MultiSeries = MultiSeries([])
+        self.options: Options = Options()
         if "ys" in kwargs:
             self.series = MultiSeries(xs=kwargs.get("xs"), ys=kwargs.get("ys", []))
             if "xs" in kwargs:
@@ -113,22 +113,23 @@ class plot_gen:
         if self.return_string:
             return output
         print(output)
+        return None
 
     def print_subscript(self, text: str) -> None:
         self.last_nr_of_lines += elements.count_lines(text)
         print(text)
 
 
-def plot_to_string(ys: Any, xs: Optional[Any] = None, **kwargs) -> List[str]:
+def plot_to_string(ys: Any, xs: Optional[Any] = None, **kwargs) -> str:
     """
-    Same as `plot`, but the return type is a list of strings. Ignores the
-    `interactive` option.
+    Same as `plot`, but the return type is string. Ignores the `interactive`
+    option.
 
     Can be used to integrate uniplot in other applications, or if the output is
     desired to be not stdout.
     """
     plt = plot_gen(return_string=True)
-    return plt.update(xs=xs, ys=ys, **kwargs)
+    return str(plt.update(xs=xs, ys=ys, **kwargs))
 
 
 #####################################
