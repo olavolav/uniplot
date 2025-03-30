@@ -73,11 +73,6 @@ def render_vertical_gridline(x: float, options: Options) -> NDArray:
 
 def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDArray:
     # Determine scaling factors and resultion of the dor matrix underlying the characters
-    # scaling_factor_width: int = 1
-    # scaling_factor_height: int = 1
-    # if not options.force_ascii:
-    #     scaling_factor_width = 2
-    #     scaling_factor_height = 4 if options.character_set == "braille" else 2
     (scaling_factor_width, scaling_factor_height, encoder) = _set_up_submatrix_shape_and_encoders(options)
     height, width = (
         scaling_factor_height * options.height,
@@ -105,7 +100,7 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
     char_matrix = _init_character_matrix(width=options.width, height=options.height)
     submatrices = convert_matrix_to_rows_of_submatrices(px_matrix, width_submatrix=scaling_factor_width, height_submatrix=scaling_factor_height)
     if options.color:
-        # color = submatrices.max(axis=(2)) - 1  # check color
+        color_matrix = submatrices.max(axis=(2)) - 1  # check color
         submatrices = np.clip(submatrices, a_min=0, a_max=1)  # type: ignore
     # Encode
     new_pix = (submatrices * encoder).sum(axis=(2))
@@ -116,6 +111,30 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
 
     decoder_c[..., 0] = ""
     char_matrix[non_zero_mask] = decoder_c[index]
+
+    if options.color:
+        assert color_matrix is not None
+        colors = (
+            [COLOR_CODES[c] for c in options.color]
+            if isinstance(options.color, list)
+            else COLOR_CODES.values()
+        )
+        decoder_c = np.array(
+            [
+                np.char.add(
+                    np.char.add(c, elements.UNICODE_SQUARES),
+                    elements.COLOR_RESET_CODE,
+                )
+                for c in colors
+            ]
+        )
+        index = color_matrix[non_zero_mask] % len(colors), new_pix[non_zero_mask]
+    else:
+        decoder_c = np.array(elements.UNICODE_SQUARES)
+        index = new_pix[non_zero_mask]
+    decoder_c[..., 0] = ""
+    char_matrix[non_zero_mask] = decoder_c[index]
+
 
     # if options.force_ascii:
     #     # If using ASCII characters
