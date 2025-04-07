@@ -122,11 +122,7 @@ def character_for_2by4_pixels(
     if byte2 == 0 and byte3 == 0:
         char = ""
 
-    # We are done if the result is a blank character, or if the result is not
-    # blank and we do not need to colorize it
-    if char == "" or not color_mode:
-        return char
-    return _colorize_char(char, square.max(), color_mode)
+    return _colorize_char(char, max_color, color_mode)
 
 
 def character_for_ascii_pixel(
