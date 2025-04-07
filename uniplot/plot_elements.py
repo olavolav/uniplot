@@ -25,6 +25,25 @@ UNICODE_SQUARES: Final = [
     "▟",
     "█",
 ]
+
+BRAILLE_CHARACTERS = [
+    "⠀",
+    "⠁",
+    "⠀",
+    "⠀",
+    "⠀",
+    "⠀",
+    "⠀",
+    "⠀",
+    "⠀",
+    "⠀",
+    "⠀",
+    "⠀",
+    "⠀",
+    "⠀",
+    "⠀",
+]
+
 BINARY_ENCODING_MATRIX: Final = np.array([[1, 2], [4, 8]])
 BINARY_ENCODING_MATRIX_BRAILLE_BYTE2: Final = np.array(
     [
@@ -119,8 +138,7 @@ def character_for_ascii_pixel(
     # `force_ascii` option is enabled.
     if nr < 1:
         return ""
-    char = force_ascii_characters[(nr - 1) % len(force_ascii_characters)]
-    return _colorize_char(char, nr, color_mode)
+    return force_ascii_characters[(nr - 1) % len(force_ascii_characters)]
 
 
 def legend(
@@ -228,7 +246,7 @@ def _text_without_control_chars(text: str):
 
 
 def _colorize_char(char: str, color_nr: int, color_mode: Union[bool, List[str]]) -> str:
-    if char == "" or color_mode is False:
+    if char == "" or color_mode is False or color_nr < 1:
         return char
     colors = (
         _colors_to_codes(color_mode) if isinstance(color_mode, list) else DEFAULT_COLORS

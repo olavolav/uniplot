@@ -73,7 +73,9 @@ def render_vertical_gridline(x: float, options: Options) -> NDArray:
 
 def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDArray:
     # Determine scaling factors and resultion of the dor matrix underlying the characters
-    (scaling_factor_width, scaling_factor_height, encoder) = _set_up_submatrix_shape_and_encoders(options)
+    (scaling_factor_width, scaling_factor_height, encoder) = (
+        _set_up_submatrix_shape_and_encoders(options)
+    )
     height, width = (
         scaling_factor_height * options.height,
         scaling_factor_width * options.width,
@@ -96,13 +98,42 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
             layer=i + 1,
         )
 
-    # Render the dot matrix into characters
+    # Transform matrix to submatrix per output character
     char_matrix = _init_character_matrix(width=options.width, height=options.height)
-    submatrices = convert_matrix_to_rows_of_submatrices(px_matrix, width_submatrix=scaling_factor_width, height_submatrix=scaling_factor_height)
+    submatrices = convert_matrix_to_rows_of_submatrices(
+        px_matrix,
+        width_submatrix=scaling_factor_width,
+        height_submatrix=scaling_factor_height,
+    )
+
+    # Transform pixels to output character
+    if options.force_ascii:
+        # If in ASCII character mode
+        # TODO: This can be cached
+        def mapping(arr):
+            return elements.character_for_ascii_pixel(
+                arr[0],
+                force_ascii_characters=options.force_ascii_characters,
+                color_mode=options.color,
+            )
+
+        return np.apply_along_axis(mapping, 2, submatrices)
+
+    elif options.character_set == "braille":
+        # If in Braille character mode
+        # TODO: This can be cached
+        def mapping(arr):
+            return elements.character_for_2by4_pixels(
+                arr.reshape((4, 2)), color_mode=options.color
+            )
+
+        return np.apply_along_axis(mapping, 2, submatrices)
+
+    # Otherwise, use optimized 2x2 box character code
     if options.color:
         color_matrix = submatrices.max(axis=(2)) - 1  # check color
         submatrices = np.clip(submatrices, a_min=0, a_max=1)  # type: ignore
-    # Encode
+
     new_pix = (submatrices * encoder).sum(axis=(2))
     non_zero_mask = new_pix != 0
 
@@ -134,7 +165,6 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
         index = new_pix[non_zero_mask]
     decoder_c[..., 0] = ""
     char_matrix[non_zero_mask] = decoder_c[index]
-
 
     # if options.force_ascii:
     #     # If using ASCII characters
@@ -215,7 +245,7 @@ def _init_character_matrix(width: int, height: int, value: str = "") -> NDArray:
 
 def _set_up_submatrix_shape_and_encoders(options: Options) -> Tuple[int, int, NDArray]:
     if options.force_ascii:
-        return (1,1,np.array([1], ndmin=3))
+        return (1, 1, np.array([1], ndmin=3))
     if options.character_set == "braille":
-        return (2,4,np.array([1,2,4,8,16,32,64,128], ndmin=3))
-    return (2,2,np.array([1,2,4,8], ndmin=3))
+        return (2, 4, np.array([1, 2, 4, 8, 16, 32, 64, 128], ndmin=3))
+    return (2, 2, np.array([1, 2, 4, 8], ndmin=3))
