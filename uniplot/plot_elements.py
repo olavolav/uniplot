@@ -26,24 +26,6 @@ UNICODE_SQUARES: Final = [
     "█",
 ]
 
-BRAILLE_CHARACTERS = [
-    "⠀",
-    "⠁",
-    "⠀",
-    "⠀",
-    "⠀",
-    "⠀",
-    "⠀",
-    "⠀",
-    "⠀",
-    "⠀",
-    "⠀",
-    "⠀",
-    "⠀",
-    "⠀",
-    "⠀",
-]
-
 BINARY_ENCODING_MATRIX: Final = np.array([[1, 2], [4, 8]])
 BINARY_ENCODING_MATRIX_BRAILLE_BYTE2: Final = np.array(
     [
