@@ -129,7 +129,7 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
             ) + (" " * 20)
 
         x = np.apply_along_axis(mapping, 2, submatrices)
-        return np.strings.strip(x)
+        return np.char.strip(x)
 
     # Otherwise, use optimized 2x2 box character code
     if options.color:
