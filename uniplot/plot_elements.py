@@ -64,7 +64,6 @@ def character_for_2by4_pixels(
 
     # Postprocess to remove everything that is not max color
     max_color = square.max()
-    print(f"DEBUG: max_color = {max_color}")
     if max_color <= 1:
         binary_square = np.clip(square, a_min=0, a_max=1)
     else:
