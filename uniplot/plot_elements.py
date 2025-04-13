@@ -5,7 +5,6 @@ from numpy.typing import NDArray
 from typing import List, Tuple, Union, Optional, Final
 
 from uniplot.conversions import COLOR_CODES
-from functools import wraps
 
 UNICODE_SQUARES: Final = [
     "",
@@ -53,21 +52,6 @@ COLOR_RESET_CODE: Final = "\033[0m"
 COLOR_CODE_REGEX: Final = re.compile(r"\033\[\d+m")
 
 
-def np_cache(func):
-    """A simple cache decorator that uses hashable keys for NumPy arrays."""
-    cache = {}
-
-    @wraps(func)
-    def wrapper(arr, **kwargs):
-        key = arr.data.tobytes()  # hashable version
-        if key not in cache:
-            cache[key] = func(arr, **kwargs)
-        return cache[key]
-
-    return wrapper
-
-
-@np_cache
 def character_for_2by4_pixels(
     square: NDArray, color_mode: Union[bool, List[str]] = False
 ) -> str:
@@ -80,6 +64,7 @@ def character_for_2by4_pixels(
 
     # Postprocess to remove everything that is not max color
     max_color = square.max()
+    print(f"DEBUG: max_color = {max_color}")
     if max_color <= 1:
         binary_square = np.clip(square, a_min=0, a_max=1)
     else:
@@ -116,7 +101,8 @@ def character_for_ascii_pixel(
     # `force_ascii` option is enabled.
     if nr < 1:
         return ""
-    return force_ascii_characters[(nr - 1) % len(force_ascii_characters)]
+    char = force_ascii_characters[(nr - 1) % len(force_ascii_characters)]
+    return _colorize_char(char, nr, color_mode)
 
 
 def legend(
