@@ -16,11 +16,13 @@ def wave_generator(a1=1, frequency=1, phase_shift=0.4, f2=6.1343):
         t += 0.1  # Increment t (time) to move along the wave
 
 
-max_len = 200
+NR_ITERATIONS = 200
 
-deq = deque([0] * max_len, maxlen=max_len)
+deq = deque([0] * NR_ITERATIONS, maxlen=NR_ITERATIONS)
 
-plt = plot_gen(width=100, y_unit="$", title="Price", color=["green"], y_min=-5, y_max=5)
+plt = plot_gen(
+    width=100, y_unit="$", title="Price", color=["green"], y_min=-5, y_max=5, lines=True
+)
 
 start = time.perf_counter()
 for i in wave_generator():
@@ -29,4 +31,6 @@ for i in wave_generator():
     plt.update(ys=[deq])
 stop = time.perf_counter()
 
-print(f"Time: {stop - start}s")
+print(
+    f"Time: {stop - start} s, or {1000.0 * (stop - start) / NR_ITERATIONS} ms per frame."
+)
