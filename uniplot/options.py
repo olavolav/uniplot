@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 from typing import List, Optional, Union
 
+from uniplot.character_sets import ASCII_CHARACTER_SET
+
 
 def _default_gridlines() -> List[float]:
     return [0.0]
@@ -11,7 +13,7 @@ def _default_lines() -> List[bool]:
 
 
 def _default_ascii_characters() -> List[str]:
-    return ["+", "x", "o", "*", "~", "."]
+    return ASCII_CHARACTER_SET
 
 
 @dataclass

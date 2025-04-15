@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Improved
+- Performance improvements now for all character sets, so for ASCII and Braille
+  characters as well.
 ### Changed
 - Switched to [uv](https://docs.astral.sh/uv/) for dependency and build management.
 

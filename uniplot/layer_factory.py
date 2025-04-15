@@ -171,7 +171,7 @@ def _set_up_submatrix_shape_and_encoders(
     options: Options,
 ) -> Tuple[int, int, NDArray, List[str]]:
     if options.force_ascii:
-        return (1, 1, np.array([1], ndmin=3), options.force_ascii_characters)
+        return (1, 1, np.array([1], ndmin=3), [" "] + options.force_ascii_characters)
     if options.character_set == "braille":
         return (
             2,
