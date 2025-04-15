@@ -6,42 +6,6 @@ from typing import List, Tuple, Union, Optional, Final
 
 from uniplot.conversions import COLOR_CODES
 
-UNICODE_SQUARES: Final = [
-    "",
-    "▘",
-    "▝",
-    "▀",
-    "▖",
-    "▌",
-    "▞",
-    "▛",
-    "▗",
-    "▚",
-    "▐",
-    "▜",
-    "▄",
-    "▙",
-    "▟",
-    "█",
-]
-
-BINARY_ENCODING_MATRIX: Final = np.array([[1, 2], [4, 8]])
-BINARY_ENCODING_MATRIX_BRAILLE_BYTE2: Final = np.array(
-    [
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [1, 2],
-    ]
-)
-BINARY_ENCODING_MATRIX_BRAILLE_BYTE3: Final = np.array(
-    [
-        [1, 8],
-        [2, 16],
-        [4, 32],
-        [0, 0],
-    ]
-)
 
 CURSOR_UP_ONE: Final = "\x1b[1A"
 ERASE_LINE: Final = "\x1b[2K"
@@ -50,58 +14,6 @@ DEFAULT_COLORS: Final = list(COLOR_CODES.values())
 
 COLOR_RESET_CODE: Final = "\033[0m"
 COLOR_CODE_REGEX: Final = re.compile(r"\033\[\d+m")
-
-
-def character_for_2by4_pixels(
-    square: NDArray, color_mode: Union[bool, List[str]] = False
-) -> str:
-    """
-    Convert width 2 x height 4 matrix (non-negative integers) to unicode Braille character
-    representation for plotting.
-    """
-    assert square.shape == (4, 2)
-    assert square.min() >= 0
-
-    # Postprocess to remove everything that is not max color
-    max_color = square.max()
-    if max_color <= 1:
-        binary_square = np.clip(square, a_min=0, a_max=1)
-    else:
-        binary_square = np.clip(square, a_min=max_color - 1, a_max=max_color) - (
-            max_color - 1
-        )
-
-    bstr = bytes("⠀", "utf-8")
-    byte2 = (
-        np.multiply(binary_square, BINARY_ENCODING_MATRIX_BRAILLE_BYTE2)
-        .sum()
-        .astype(int)
-    )
-    byte3 = (
-        np.multiply(binary_square, BINARY_ENCODING_MATRIX_BRAILLE_BYTE3)
-        .sum()
-        .astype(int)
-    )
-    char = bytes([bstr[0], bstr[1] + byte2, bstr[2] + byte3]).decode("utf-8")
-
-    # Reset to no character to make layers opaque
-    if byte2 == 0 and byte3 == 0:
-        char = ""
-
-    return _colorize_char(char, max_color, color_mode)
-
-
-def character_for_ascii_pixel(
-    nr: int,
-    force_ascii_characters: List[str],
-    color_mode: Union[bool, List[str]] = False,
-) -> str:
-    # NOTE We assume that this function is only being called when the
-    # `force_ascii` option is enabled.
-    if nr < 1:
-        return ""
-    char = force_ascii_characters[(nr - 1) % len(force_ascii_characters)]
-    return _colorize_char(char, nr, color_mode)
 
 
 def legend(

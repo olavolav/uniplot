@@ -4,6 +4,7 @@ from typing import List, Tuple
 
 import uniplot.pixel_matrix as pixel_matrix
 import uniplot.plot_elements as elements
+import uniplot.character_sets as character_sets
 from uniplot.conversions import COLOR_CODES, convert_matrix_to_rows_of_submatrices
 from uniplot.options import Options
 from uniplot.discretizer import discretize
@@ -73,7 +74,7 @@ def render_vertical_gridline(x: float, options: Options) -> NDArray:
 
 def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDArray:
     # Determine scaling factors and resultion of the dor matrix underlying the characters
-    (scaling_factor_width, scaling_factor_height, encoder) = (
+    (scaling_factor_width, scaling_factor_height, encoder, character_list) = (
         _set_up_submatrix_shape_and_encoders(options)
     )
     height, width = (
@@ -106,32 +107,7 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
         height_submatrix=scaling_factor_height,
     )
 
-    # Transform pixels to output character
-    if options.force_ascii:
-        # If in ASCII character mode
-        # TODO: This can be cached
-        def mapping(arr):
-            return elements.character_for_ascii_pixel(
-                arr[0],
-                force_ascii_characters=options.force_ascii_characters,
-                color_mode=options.color,
-            ) + (" " * 20)
-
-        x = np.apply_along_axis(mapping, 2, submatrices)
-        return np.char.strip(x)
-
-    elif options.character_set == "braille":
-        # If in Braille character mode
-        # TODO: This can be cached
-        def mapping(arr):
-            return elements.character_for_2by4_pixels(
-                arr.reshape((4, 2)), color_mode=options.color
-            ) + (" " * 20)
-
-        x = np.apply_along_axis(mapping, 2, submatrices)
-        return np.char.strip(x)
-
-    # Otherwise, use optimized 2x2 box character code
+    # Optimized code
     if options.color:
         color_matrix = submatrices.max(axis=(2)) - 1  # check color
         submatrices = np.clip(submatrices, a_min=0, a_max=1)  # type: ignore
@@ -139,7 +115,7 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
     new_pix = (submatrices * encoder).sum(axis=(2))
     non_zero_mask = new_pix != 0
 
-    decoder_c = np.array(elements.UNICODE_SQUARES)
+    decoder_c = np.array(character_list)
     index = new_pix[non_zero_mask]
 
     decoder_c[..., 0] = ""
@@ -155,7 +131,7 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
         decoder_c = np.array(
             [
                 np.char.add(
-                    np.char.add(c, elements.UNICODE_SQUARES),
+                    np.char.add(c, character_list),
                     elements.COLOR_RESET_CODE,
                 )
                 for c in colors
@@ -163,7 +139,7 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
         )
         index = color_matrix[non_zero_mask] % len(colors), new_pix[non_zero_mask]
     else:
-        decoder_c = np.array(elements.UNICODE_SQUARES)
+        decoder_c = np.array(character_list)
         index = new_pix[non_zero_mask]
     decoder_c[..., 0] = ""
     char_matrix[non_zero_mask] = decoder_c[index]
@@ -191,9 +167,16 @@ def _init_character_matrix(width: int, height: int, value: str = "") -> NDArray:
     return np.full((height, width), fill_value=value, dtype="<U15")
 
 
-def _set_up_submatrix_shape_and_encoders(options: Options) -> Tuple[int, int, NDArray]:
+def _set_up_submatrix_shape_and_encoders(
+    options: Options,
+) -> Tuple[int, int, NDArray, List[str]]:
     if options.force_ascii:
-        return (1, 1, np.array([1], ndmin=3))
+        return (1, 1, np.array([1], ndmin=3), options.force_ascii_characters)
     if options.character_set == "braille":
-        return (2, 4, np.array([1, 2, 4, 8, 16, 32, 64, 128], ndmin=3))
-    return (2, 2, np.array([1, 2, 4, 8], ndmin=3))
+        return (
+            2,
+            4,
+            np.array([1, 2, 4, 8, 16, 32, 64, 128], ndmin=3),
+            character_sets.BRAILLE_CHARACTER_SET,
+        )
+    return (2, 2, np.array([1, 2, 4, 8], ndmin=3), character_sets.UNICODE_CHARACTER_SET)
