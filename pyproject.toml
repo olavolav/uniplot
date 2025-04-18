@@ -1,6 +1,6 @@
 [project]
 name = "uniplot"
-version = "0.17.1"
+version = "0.18.0"
 description = "Lightweight plotting to the terminal. 4x resolution via Unicode."
 authors = [{name = "Olav Stetter", email = "olav.stetter@googlemail.com"}]
 # repository = "https://github.com/olavolav/uniplot"
