@@ -73,88 +73,73 @@ def render_vertical_gridline(x: float, options: Options) -> NDArray:
 
 
 def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDArray:
-    # Determine scaling factors and resultion of the dor matrix underlying the characters
-    (scaling_factor_width, scaling_factor_height, encoder, character_list) = (
-        _set_up_submatrix_shape_and_encoders(options)
-    )
-    height, width = (
-        scaling_factor_height * options.height,
-        scaling_factor_width * options.width,
-    )
+    # Setup: determine submatrix size, encoder, and character list
+    scale_w, scale_h, encoder, char_list = _set_up_submatrix_shape_and_encoders(options)
+    full_width = scale_w * options.width
+    full_height = scale_h * options.height
 
-    # Render the `xs` and `ys` into a dot matrix
-    px_matrix: NDArray = np.zeros((height, width), dtype=int)
-    for i in range(len(ys)):
+    # Render input points into a full pixel matrix
+    px_matrix = np.zeros((full_height, full_width), dtype=int)
+    for i, (x, y) in enumerate(zip(xs, ys)):
         px_matrix = pixel_matrix.render(
-            xs=xs[i],
-            ys=ys[i],
+            xs=x,
+            ys=y,
             x_min=options.x_min,
             x_max=options.x_max,
             y_min=options.y_min,
             y_max=options.y_max,
-            width=width,
-            height=height,
+            width=full_width,
+            height=full_height,
             lines=options.lines[i],
             pixels=px_matrix,
             layer=i + 1,
-        )
+        )  # type: ignore
 
-    # Transform matrix to submatrix per output character
+    # Initialize output character matrix
     char_matrix = _init_character_matrix(width=options.width, height=options.height)
-    # submatrices: shape (m, n, k)
+
+    # Break down pixel matrix into submatrices per character cell
     submatrices = convert_matrix_to_rows_of_submatrices(
         px_matrix,
-        width_submatrix=scaling_factor_width,
-        height_submatrix=scaling_factor_height,
+        width_submatrix=scale_w,
+        height_submatrix=scale_h,
     )
 
-    color_matrix = submatrices.max(axis=2, keepdims=False) - 1  # shape (m, n)
+    color_matrix = submatrices.max(axis=2) - 1  # For optional color use
+
     if not options.force_ascii:
-        # Get the max value per submatrix
-        max_of_submatrices = submatrices.max(axis=2, keepdims=True)  # shape (m, n, 1)
+        max_vals = submatrices.max(axis=2, keepdims=True)
+        submatrices = ((submatrices == max_vals) & (max_vals > 0)).astype(int)
 
-        # Compare each entry to the max and check that the max is non-zero
-        # This results in a boolean array: True where entry equals max and max > 0
-        submatrices = (submatrices == max_of_submatrices) & (max_of_submatrices > 0)
+    # Encode submatrices into integer values representing character shapes
+    int_matrix = (submatrices * encoder).sum(axis=2)
+    mask_nonzero = int_matrix != 0
 
-        # Convert to integers (0 or 1)
-        submatrices = submatrices.astype(int)
+    # Character decoding and assignment
+    decoder = np.array(char_list)
+    decoder[..., 0] = ""  # Blank character for zero entries
+    char_matrix[mask_nonzero] = decoder[int_matrix[mask_nonzero]]
 
-    # Roll up submatrices to one integer each
-    int_per_char_matrix = (submatrices * encoder).sum(axis=(2))
-    non_zero_mask = int_per_char_matrix != 0
-
-    decoder_c = np.array(character_list)
-    index = int_per_char_matrix[non_zero_mask]
-
-    decoder_c[..., 0] = ""
-    char_matrix[non_zero_mask] = decoder_c[index]
-
+    # Apply color if enabled
     if options.color:
-        assert color_matrix is not None
         colors = (
             [COLOR_CODES[c] for c in options.color]
             if isinstance(options.color, list)
             else COLOR_CODES.values()
         )
-        decoder_c = np.array(
+
+        decoder_colored = np.array(
             [
-                np.char.add(
-                    np.char.add(c, character_list),
-                    elements.COLOR_RESET_CODE,
-                )
+                np.char.add(np.char.add(c, char_list), elements.COLOR_RESET_CODE)
                 for c in colors
             ]
         )
-        index = (
-            color_matrix[non_zero_mask] % len(colors),
-            int_per_char_matrix[non_zero_mask],
+        indices = (
+            color_matrix[mask_nonzero] % len(colors),
+            int_matrix[mask_nonzero],
         )
-    else:
-        decoder_c = np.array(character_list)
-        index = int_per_char_matrix[non_zero_mask]
-    decoder_c[..., 0] = ""
-    char_matrix[non_zero_mask] = decoder_c[index]
+        decoder_colored[..., 0] = ""
+        char_matrix[mask_nonzero] = decoder_colored[indices]
 
     return char_matrix
 
