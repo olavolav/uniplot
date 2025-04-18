@@ -101,22 +101,31 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
 
     # Transform matrix to submatrix per output character
     char_matrix = _init_character_matrix(width=options.width, height=options.height)
+    # submatrices: shape (m, n, k)
     submatrices = convert_matrix_to_rows_of_submatrices(
         px_matrix,
         width_submatrix=scaling_factor_width,
         height_submatrix=scaling_factor_height,
     )
 
-    # Optimized code
-    if options.color:
-        color_matrix = submatrices.max(axis=(2)) - 1  # check color
-        submatrices = np.clip(submatrices, a_min=0, a_max=1)  # type: ignore
+    color_matrix = submatrices.max(axis=2, keepdims=False) - 1  # shape (m, n)
+    if not options.force_ascii:
+        # Get the max value per submatrix
+        max_of_submatrices = submatrices.max(axis=2, keepdims=True)  # shape (m, n, 1)
 
-    new_pix = (submatrices * encoder).sum(axis=(2))
-    non_zero_mask = new_pix != 0
+        # Compare each entry to the max and check that the max is non-zero
+        # This results in a boolean array: True where entry equals max and max > 0
+        submatrices = (submatrices == max_of_submatrices) & (max_of_submatrices > 0)
+
+        # Convert to integers (0 or 1)
+        submatrices = submatrices.astype(int)
+
+    # Roll up submatrices to one integer each
+    int_per_char_matrix = (submatrices * encoder).sum(axis=(2))
+    non_zero_mask = int_per_char_matrix != 0
 
     decoder_c = np.array(character_list)
-    index = new_pix[non_zero_mask]
+    index = int_per_char_matrix[non_zero_mask]
 
     decoder_c[..., 0] = ""
     char_matrix[non_zero_mask] = decoder_c[index]
@@ -137,10 +146,13 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
                 for c in colors
             ]
         )
-        index = color_matrix[non_zero_mask] % len(colors), new_pix[non_zero_mask]
+        index = (
+            color_matrix[non_zero_mask] % len(colors),
+            int_per_char_matrix[non_zero_mask],
+        )
     else:
         decoder_c = np.array(character_list)
-        index = new_pix[non_zero_mask]
+        index = int_per_char_matrix[non_zero_mask]
     decoder_c[..., 0] = ""
     char_matrix[non_zero_mask] = decoder_c[index]
 

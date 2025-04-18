@@ -143,10 +143,9 @@ def test_plotting_with_forced_ascii_and_custom_symbols():
     strs = plot_to_string(
         ys, force_ascii=True, color=False, force_ascii_characters=symbols
     )
-    plot_str = "\n".join(strs)
 
-    for i in range(2):
-        assert plot_str.count(symbols[i]) == len(ys[i])
+    for i in range(len(symbols)):
+        assert strs.count(symbols[i]) == len(ys[i])
 
 
 ####################
