@@ -24,7 +24,9 @@ dev = [
 default-groups = []
 
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-py-modules = ["uniplot"]
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["uniplot*"]
