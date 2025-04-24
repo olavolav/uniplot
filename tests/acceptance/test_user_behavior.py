@@ -129,10 +129,7 @@ def test_normal_plotting_to_string():
 def test_plotting_with_forced_ascii():
     ys = [1, 3, -2]
     strs = plot_to_string(
-        xs=ys,
-        ys=ys,
-        title="Sine wave in ASCII",
-        force_ascii=True,
+        xs=ys, ys=ys, title="Sine wave in ASCII", character_set="ascii"
     )
     assert "\n".join(strs).count("+") == len(ys)
 
@@ -141,7 +138,7 @@ def test_plotting_with_forced_ascii_and_custom_symbols():
     ys = [[1, 3, -2], [3, 4, 3, 4, 3, 5], [0]]
     symbols = ["A", "B", "C"]
     strs = plot_to_string(
-        ys, force_ascii=True, color=False, force_ascii_characters=symbols
+        ys, character_set="ascii", color=False, force_ascii_characters=symbols
     )
 
     for i in range(len(symbols)):

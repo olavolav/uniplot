@@ -139,13 +139,11 @@ In alphabetical order:
   the [Block Elements character
   set](https://en.wikipedia.org/wiki/Block_Elements) with 4x resolution, or
   `"braille"` for the [Braille character
-  set](https://en.wikipedia.org/wiki/Braille_Patterns) with 8x resolution.
-  The latter has a lighter look overall. Defaults to `"block"`.
-* `force_ascii` - Force ASCII characters for plotting only. This can be useful
-  for compatibility, for example when using uniplot inside of CI/CD systems
-  that do not support Unicode. Defaults to `False`.
-* `force_ascii_characters` -  List of characters to use when plotting in
-  `force_ascii` mode. Default to `["+", "x", "o", "*", "~", "."]`.
+  set](https://en.wikipedia.org/wiki/Braille_Patterns) with 8x resolution,
+  `"ascii"` to use ASCII characters only. Braille has the highest resolution,
+  and a lighter look overall. Defaults to `"block"`.
+* `force_ascii_characters` -  List of characters to use when using the
+  ASCII character set. Default to `["+", "x", "o", "*", "~", "."]`.
 * `line_length_hard_cap` - Enforce a hard limit on the number of characters per
   line of the plot area. This may override the `width` option if there is not
   enough space. Defaults to `None`.

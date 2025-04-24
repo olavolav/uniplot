@@ -4,6 +4,7 @@ import numpy as np
 from numpy.typing import NDArray
 from typing import List, Tuple, Union, Optional, Final
 
+from uniplot.options import CharacterSet
 from uniplot.conversions import COLOR_CODES
 
 
@@ -21,9 +22,8 @@ def legend(
     width: int,
     line_length_hard_cap: Optional[int],
     color: Union[bool, List[str]],
-    force_ascii: bool = False,
     force_ascii_characters: List[str] = [],
-    character_set: str = "box",
+    character_set: CharacterSet = CharacterSet.BLOCK,
 ) -> str:
     """
     Assemble a legend that shows the color of the different curves.
@@ -31,9 +31,9 @@ def legend(
     label_strings: List[str] = []
     for i, legend in enumerate(legend_labels):
         symbol: str = "█"
-        if force_ascii:
+        if character_set == CharacterSet.ASCII:
             symbol = force_ascii_characters[i % len(force_ascii_characters)]
-        elif character_set == "braille":
+        elif character_set == CharacterSet.BRAILLE:
             symbol = "⣿"
 
         label_string = (

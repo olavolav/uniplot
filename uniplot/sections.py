@@ -52,7 +52,6 @@ def generate_body(
                 width=options.width,
                 line_length_hard_cap=options.line_length_hard_cap,
                 color=options.color,
-                force_ascii=options.force_ascii,
                 force_ascii_characters=options.force_ascii_characters,
                 character_set=options.character_set,
             )

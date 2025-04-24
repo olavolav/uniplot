@@ -6,7 +6,7 @@ import uniplot.pixel_matrix as pixel_matrix
 import uniplot.plot_elements as elements
 import uniplot.character_sets as character_sets
 from uniplot.conversions import COLOR_CODES, convert_matrix_to_rows_of_submatrices
-from uniplot.options import Options
+from uniplot.options import Options, CharacterSet
 from uniplot.discretizer import discretize
 
 
@@ -31,7 +31,7 @@ def render_horizontal_gridline(y: float, options: Options) -> NDArray:
     if y < options.y_min or y >= options.y_max:
         return pixels
 
-    if options.force_ascii:
+    if options.character_set == CharacterSet.ASCII:
         y_index = (
             options.height
             - 1
@@ -107,7 +107,7 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
 
     color_matrix = submatrices.max(axis=2) - 1  # For optional color use
 
-    if not options.force_ascii:
+    if options.character_set != CharacterSet.ASCII:
         max_vals = submatrices.max(axis=2, keepdims=True)
         submatrices = ((submatrices == max_vals) & (max_vals > 0)).astype(int)
 
@@ -167,9 +167,9 @@ def _init_character_matrix(width: int, height: int, value: str = "") -> NDArray:
 def _set_up_submatrix_shape_and_encoders(
     options: Options,
 ) -> Tuple[int, int, NDArray, List[str]]:
-    if options.force_ascii:
+    if options.character_set == CharacterSet.ASCII:
         return (1, 1, np.array([1], ndmin=3), [" "] + options.force_ascii_characters)
-    if options.character_set == "braille":
+    if options.character_set == CharacterSet.BRAILLE:
         return (
             2,
             4,

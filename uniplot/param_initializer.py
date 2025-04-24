@@ -2,7 +2,7 @@ import numpy as np
 from typing import Dict
 
 from uniplot.multi_series import MultiSeries
-from uniplot.options import Options
+from uniplot.options import Options, CharacterSet
 from uniplot.conversions import floatify, COLOR_CODES
 
 AUTO_WINDOW_ENLARGE_FACTOR = 0.001
@@ -100,6 +100,17 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
         for c in kwargs["color"]:
             if c not in COLOR_CODES.keys():
                 raise ValueError(f"Invalid color '{c}' specified.")
+
+    if "character_set" in kwargs:
+        cs_string = str(kwargs["character_set"]).strip().lower()
+        if cs_string == "ascii":
+            kwargs["character_set"] = CharacterSet.ASCII
+        elif cs_string == "block":
+            kwargs["character_set"] = CharacterSet.BLOCK
+        elif cs_string == "braille":
+            kwargs["character_set"] = CharacterSet.BRAILLE
+        else:
+            raise ValueError("Invalid 'character_set' option.")
 
     if "force_ascii_characters" in kwargs:
         # In ASCII mode, simply slice to only use the first character

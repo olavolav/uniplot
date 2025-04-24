@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import List, Optional, Union
 
 from uniplot.character_sets import ASCII_CHARACTER_SET
@@ -16,6 +17,12 @@ def _default_ascii_characters() -> List[str]:
     return ASCII_CHARACTER_SET
 
 
+class CharacterSet(Enum):
+    ASCII = 1
+    BLOCK = 2
+    BRAILLE = 3
+
+
 @dataclass
 class Options:
     """
@@ -26,11 +33,9 @@ class Options:
     """
 
     # Character set
-    character_set: str = "block"
+    character_set: CharacterSet = CharacterSet.BLOCK
     # Color mode
     color: Union[bool, List[str]] = False
-    # Force ASCII characters for plotting only
-    force_ascii: bool = False
     # List of characters to use when plotting in force_ascii mode.
     force_ascii_characters: List[str] = field(default_factory=_default_ascii_characters)
     # Height of the plotting region, in lines
@@ -73,11 +78,6 @@ class Options:
         # Validate values
         assert self.width > 0
         assert self.height > 0
-
-        # Validate charcter set
-        self.charcter_set = str(self.character_set).strip().lower()
-        if self.character_set not in ["block", "braille"]:
-            raise ValueError("Invalid charcater set.")
 
         # Remember values for resetting later
         self._initial_bounds = (self.x_min, self.x_max, self.y_min, self.y_max)
