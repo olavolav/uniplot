@@ -3,7 +3,51 @@ from numpy.typing import NDArray
 from typing import Optional
 
 
+BATCH_SIZE = 500_000  # Set the batch size for processing
+
+
 def render(
+    xs: NDArray,
+    ys: NDArray,
+    x_min: float,
+    x_max: float,
+    y_min: float,
+    y_max: float,
+    width: int,
+    height: int,
+    lines: bool = False,
+    pixels: Optional[NDArray] = None,
+    layer: int = 1,
+) -> NDArray:
+    # Initialize the pixels array if not provided
+    if pixels is None:
+        pixels = np.zeros((height, width), dtype=int)
+
+    # Process data in batches
+    for start_idx in range(0, len(xs), BATCH_SIZE):
+        end_idx = min(start_idx + BATCH_SIZE, len(xs))
+        xs_batch = xs[start_idx:end_idx]
+        ys_batch = ys[start_idx:end_idx]
+
+        # Call the original render function for this batch
+        pixels = render_batch(
+            xs=xs_batch,
+            ys=ys_batch,
+            x_min=x_min,
+            x_max=x_max,
+            y_min=y_min,
+            y_max=y_max,
+            width=width,
+            height=height,
+            lines=lines,
+            pixels=pixels,  # Keep the same pixels array to accumulate results
+            layer=layer,
+        )
+
+    return pixels
+
+
+def render_batch(
     xs: NDArray,
     ys: NDArray,
     x_min: float,
