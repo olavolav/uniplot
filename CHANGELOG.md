@@ -5,10 +5,17 @@ All notable changes to uniplot will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## Unreleased
+### Changed
+- Merged the `force_ascii` feature into the `character_set` option. ASCII character
+  plotting can now be done via `character_set="ascii"`. This deprecates the
+  `force_ascii` option.
+
 ## [0.18.1] - 2025-04-24
 ### Fixed
-- Packaging fixed after move to uv, as per issues #44 and #46. Thanks to @hmvege for
-  pointing this out and providing a PR with the fix.
+- Packaging fixed after the move to uv, as per issues #44 and #46. Thanks to @hmvege
+  for pointing this out and providing a PR with the fix.
 
 ## [0.18.0] - 2025-04-18
 ### Improved

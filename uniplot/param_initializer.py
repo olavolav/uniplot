@@ -101,6 +101,11 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
             if c not in COLOR_CODES.keys():
                 raise ValueError(f"Invalid color '{c}' specified.")
 
+    # TODO Remove this after July 2025, to give folks 3 months to adapt.
+    if "force_ascii" in kwargs:
+        print("Warning: the force_ascii option is deprecated. Please use the character_set option instead.")
+        del kwargs["force_ascii"]
+
     if "character_set" in kwargs:
         cs_string = str(kwargs["character_set"]).strip().lower()
         if cs_string == "ascii":
