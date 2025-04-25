@@ -1,9 +1,9 @@
 import numpy as np
 from numpy.typing import NDArray
-from typing import Optional
+from typing import Optional, Final
 
 
-BATCH_SIZE = 500_000  # Set the batch size for processing
+BATCH_SIZE: Final = 500_000
 
 
 def render(
@@ -18,36 +18,62 @@ def render(
     lines: bool = False,
     pixels: Optional[NDArray] = None,
     layer: int = 1,
-) -> NDArray:
-    # Initialize the pixels array if not provided
+):
     if pixels is None:
-        pixels = np.zeros((height, width), dtype=int)
+        pixels = np.zeros((height, width), dtype=np.int32)
 
-    # Process data in batches
-    for start_idx in range(0, len(xs), BATCH_SIZE):
-        end_idx = min(start_idx + BATCH_SIZE, len(xs))
-        xs_batch = xs[start_idx:end_idx]
-        ys_batch = ys[start_idx:end_idx]
-
-        # Call the original render function for this batch
-        pixels = render_batch(
-            xs=xs_batch,
-            ys=ys_batch,
+    # Always render points
+    for start in range(0, len(xs), BATCH_SIZE):
+        end = min(start + BATCH_SIZE, len(xs))
+        pixels = render_batch_of_dots(
+            xs=xs[start:end],
+            ys=ys[start:end],
             x_min=x_min,
             x_max=x_max,
             y_min=y_min,
             y_max=y_max,
             width=width,
             height=height,
-            lines=lines,
-            pixels=pixels,  # Keep the same pixels array to accumulate results
+            pixels=pixels,
             layer=layer,
         )
+
+    # Optionally render lines
+    if lines and len(xs) >= 2:
+        # Filter out invalid line segments with NaNs
+        valid = (
+            ~np.isnan(xs[:-1])
+            & ~np.isnan(xs[1:])
+            & ~np.isnan(ys[:-1])
+            & ~np.isnan(ys[1:])
+        )
+        xs0 = xs[:-1][valid]
+        xs1 = xs[1:][valid]
+        ys0 = ys[:-1][valid]
+        ys1 = ys[1:][valid]
+
+        for start in range(0, len(xs0), BATCH_SIZE):
+            end = min(start + BATCH_SIZE, len(xs0))
+            x_pairs = np.stack([xs0[start:end], xs1[start:end]], axis=1).reshape(-1)
+            y_pairs = np.stack([ys0[start:end], ys1[start:end]], axis=1).reshape(-1)
+
+            pixels = render_batch_of_lines(
+                xs=x_pairs,
+                ys=y_pairs,
+                x_min=x_min,
+                x_max=x_max,
+                y_min=y_min,
+                y_max=y_max,
+                width=width,
+                height=height,
+                pixels=pixels,
+                layer=layer,
+            )
 
     return pixels
 
 
-def render_batch(
+def render_batch_of_dots(
     xs: NDArray,
     ys: NDArray,
     x_min: float,
@@ -56,110 +82,124 @@ def render_batch(
     y_max: float,
     width: int,
     height: int,
-    lines: bool = False,
     pixels: Optional[NDArray] = None,
     layer: int = 1,
 ) -> NDArray:
-    """
-    Render 2D points or line segments to a raster image.
-
-    Coordinate system:
-    - (x_min, y_min) is the bottom-left of the plot area.
-    - (x_max, y_max) is the top-right of the plot area.
-    - The output array uses image-style coordinates:
-        - [0, 0] is the top-left corner.
-        - Y increases downward.
-    """
     if pixels is None:
-        pixels = np.zeros((height, width), dtype=int)
+        pixels = np.zeros((height, width), dtype=np.int32)
 
     if len(xs) == 0:
         return pixels
 
-    # Normalize coordinates to pixel indices
+    valid = ~np.isnan(xs) & ~np.isnan(ys)
+
+    xs_pix = (width - 1) * (xs[valid] - x_min) / (x_max - x_min)
+    ys_pix = (height - 1) * (ys[valid] - y_min) / (y_max - y_min)
+
+    xi = np.round(xs_pix).astype(int)
+    yi = np.round(ys_pix).astype(int)
+    yi = height - 1 - yi  # flip Y for image coordinates
+    valid = (
+        (~np.isnan(xi))
+        & (xi >= 0)
+        & (xi < width)
+        & (~np.isnan(yi))
+        & (yi >= 0)
+        & (yi < height)
+    )
+    pixels[yi[valid], xi[valid]] = layer
+    return pixels
+
+
+def render_batch_of_lines(
+    xs: NDArray,
+    ys: NDArray,
+    x_min: float,
+    x_max: float,
+    y_min: float,
+    y_max: float,
+    width: int,
+    height: int,
+    pixels: Optional[NDArray] = None,
+    layer: int = 1,
+) -> NDArray:
+    if pixels is None:
+        pixels = np.zeros((height, width), dtype=np.int32)
+
+    if len(xs) == 0:
+        return pixels
+
     xs_pix = (width - 1) * (xs - x_min) / (x_max - x_min)
     ys_pix = (height - 1) * (ys - y_min) / (y_max - y_min)
 
-    if not lines:
-        xi = np.round(xs_pix).astype(int)
-        yi = np.round(ys_pix).astype(int)
-        yi = height - 1 - yi  # flip Y
-        valid = (xi >= 0) & (xi < width) & (yi >= 0) & (yi < height)
-        pixels[yi[valid], xi[valid]] = layer  # Set pixels to layer value directly
-        return pixels
+    # Rasterize line segments
+    x0, x1 = xs_pix[::2], xs_pix[1::2]
+    y0, y1 = ys_pix[::2], ys_pix[1::2]
 
-    # Filter out lines with NaNs
-    mask = (
-        (~np.isnan(xs_pix[:-1]))
-        & (~np.isnan(xs_pix[1:]))
-        & (~np.isnan(ys_pix[:-1]))
-        & (~np.isnan(ys_pix[1:]))
-    )
-    x0 = xs_pix[:-1][mask]
-    y0 = ys_pix[:-1][mask]
-    x1 = xs_pix[1:][mask]
-    y1 = ys_pix[1:][mask]
+    # Filter out invalid segments
+    valid = ~np.isnan(x0) & ~np.isnan(x1) & ~np.isnan(y0) & ~np.isnan(y1)
+    x0, x1 = x0[valid], x1[valid]
+    y0, y1 = y0[valid], y1[valid]
 
     dx = x1 - x0
     dy = y1 - y0
-
     steep = np.abs(dy) > np.abs(dx)
 
     all_x, all_y = [], []
 
-    shallow_mask = ~steep
-    if np.any(shallow_mask):
-        x0s = x0[shallow_mask].copy()
-        x1s = x1[shallow_mask].copy()
-        y0s = y0[shallow_mask].copy()
-        y1s = y1[shallow_mask].copy()
+    # Shallow lines
+    mask = ~steep
+    if np.any(mask):
+        x0s, x1s = x0[mask], x1[mask]
+        y0s, y1s = y0[mask], y1[mask]
 
-        swap_mask = x0s > x1s
-        x0s[swap_mask], x1s[swap_mask] = x1s[swap_mask], x0s[swap_mask]
-        y0s[swap_mask], y1s[swap_mask] = y1s[swap_mask], y0s[swap_mask]
+        swap = x0s > x1s
+        x0s[swap], x1s[swap] = x1s[swap], x0s[swap]
+        y0s[swap], y1s[swap] = y1s[swap], y0s[swap]
 
-        n = np.maximum(np.ceil(x1s - x0s).astype(int) + 1, 2)
+        n = np.maximum(np.round(x1s - x0s).astype(int) + 1, 1)
         steps = np.arange(n.max())
         steps = steps[None, :] * np.ones((len(n), 1))
-        mask = steps < n[:, None]
-        x_vals = x0s[:, None] + (steps * (x1s - x0s)[:, None] / (n - 1)[:, None])
-        y_vals = y0s[:, None] + (steps * (y1s - y0s)[:, None] / (n - 1)[:, None])
-        all_x.append(x_vals[mask])
-        all_y.append(y_vals[mask])
+        mask_steps = steps < n[:, None]
 
-    if np.any(steep):
-        x0s = x0[steep].copy()
-        x1s = x1[steep].copy()
-        y0s = y0[steep].copy()
-        y1s = y1[steep].copy()
+        x_vals = np.round(x0s)[:, None] + steps
+        t = (x_vals - x0s[:, None]) / (x1s - x0s)[:, None]
+        y_vals = y0s[:, None] + t * (y1s - y0s)[:, None]
 
-        swap_mask = y0s > y1s
-        x0s[swap_mask], x1s[swap_mask] = x1s[swap_mask], x0s[swap_mask]
-        y0s[swap_mask], y1s[swap_mask] = y1s[swap_mask], y0s[swap_mask]
+        all_x.append(x_vals[mask_steps])
+        all_y.append(y_vals[mask_steps])
 
-        n = np.maximum(np.ceil(y1s - y0s).astype(int) + 1, 2)
+    # Steep lines
+    mask = steep
+    if np.any(mask):
+        x0s, x1s = x0[mask], x1[mask]
+        y0s, y1s = y0[mask], y1[mask]
+
+        swap = y0s > y1s
+        x0s[swap], x1s[swap] = x1s[swap], x0s[swap]
+        y0s[swap], y1s[swap] = y1s[swap], y0s[swap]
+
+        n = np.maximum(np.round(y1s - y0s).astype(int) + 1, 1)
         steps = np.arange(n.max())
         steps = steps[None, :] * np.ones((len(n), 1))
-        mask = steps < n[:, None]
-        y_vals = y0s[:, None] + (steps * (y1s - y0s)[:, None] / (n - 1)[:, None])
-        x_vals = x0s[:, None] + (steps * (x1s - x0s)[:, None] / (n - 1)[:, None])
-        all_x.append(x_vals[mask])
-        all_y.append(y_vals[mask])
+        mask_steps = steps < n[:, None]
+
+        y_vals = np.round(y0s)[:, None] + steps
+        t = (y_vals - y0s[:, None]) / (y1s - y0s)[:, None]
+        x_vals = x0s[:, None] + t * (x1s - x0s)[:, None]
+
+        all_x.append(x_vals[mask_steps])
+        all_y.append(y_vals[mask_steps])
 
     if not all_x:
         return pixels
 
     x_all = np.round(np.concatenate(all_x)).astype(int)
     y_all = np.round(np.concatenate(all_y)).astype(int)
-
-    y_all = height - 1 - y_all  # flip y
+    y_all = height - 1 - y_all  # flip Y for image coordinates
 
     valid = (x_all >= 0) & (x_all < width) & (y_all >= 0) & (y_all < height)
-    x_all = x_all[valid]
-    y_all = y_all[valid]
-
-    # Set pixels to the layer value directly for valid positions
-    pixels[y_all, x_all] = layer
+    pixels[y_all[valid], x_all[valid]] = layer
 
     return pixels
 
