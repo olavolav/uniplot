@@ -166,6 +166,18 @@ def render_batch_of_lines(
         t = (x_vals - x0s[:, None]) / (x1s - x0s)[:, None]
         y_vals = y0s[:, None] + t * (y1s - y0s)[:, None]
 
+        # Clip x_vals and y_vals to stay within segment endpoints (prevent overshoot)
+        x_vals = np.clip(
+            x_vals,
+            np.minimum(x0s[:, None], x1s[:, None]),
+            np.maximum(x0s[:, None], x1s[:, None]),
+        )
+        y_vals = np.clip(
+            y_vals,
+            np.minimum(y0s[:, None], y1s[:, None]),
+            np.maximum(y0s[:, None], y1s[:, None]),
+        )
+
         all_x.append(x_vals[mask_steps])
         all_y.append(y_vals[mask_steps])
 
@@ -187,6 +199,18 @@ def render_batch_of_lines(
         y_vals = np.round(y0s)[:, None] + steps
         t = (y_vals - y0s[:, None]) / (y1s - y0s)[:, None]
         x_vals = x0s[:, None] + t * (x1s - x0s)[:, None]
+
+        # Clip x_vals and y_vals to stay within segment endpoints (prevent overshoot)
+        y_vals = np.clip(
+            y_vals,
+            np.minimum(y0s[:, None], y1s[:, None]),
+            np.maximum(y0s[:, None], y1s[:, None]),
+        )
+        x_vals = np.clip(
+            x_vals,
+            np.minimum(x0s[:, None], x1s[:, None]),
+            np.maximum(x0s[:, None], x1s[:, None]),
+        )
 
         all_x.append(x_vals[mask_steps])
         all_y.append(y_vals[mask_steps])
