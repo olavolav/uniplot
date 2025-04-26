@@ -143,7 +143,7 @@ In alphabetical order:
   `"ascii"` to use ASCII characters only. Braille has the highest resolution,
   and a lighter look overall. Defaults to `"block"`.
 * `force_ascii_characters` -  List of characters to use when using the
-  ASCII character set. Default to `["+", "x", "o", "*", "~", "."]`.
+  ASCII character set. Defaults to `["+", "x", "o", "*", "~", "."]`.
 * `line_length_hard_cap` - Enforce a hard limit on the number of characters per
   line of the plot area. This may override the `width` option if there is not
   enough space. Defaults to `None`.
