@@ -41,7 +41,6 @@ def render(
 
     # Optionally render lines
     if lines and len(xs) >= 2:
-        # Filter out invalid line segments with NaNs
         valid = (
             ~np.isnan(xs[:-1])
             & ~np.isnan(xs[1:])
@@ -159,11 +158,9 @@ def _render_batch_of_lines(
     xs_pix = (width - 1) * (xs - x_min) / (x_max - x_min)
     ys_pix = (height - 1) * (ys - y_min) / (y_max - y_min)
 
-    # Rasterize line segments
     x0, x1 = xs_pix[::2], xs_pix[1::2]
     y0, y1 = ys_pix[::2], ys_pix[1::2]
 
-    # Filter out invalid segments
     valid = ~np.isnan(x0) & ~np.isnan(x1) & ~np.isnan(y0) & ~np.isnan(y1)
     x0, x1 = x0[valid], x1[valid]
     y0, y1 = y0[valid], y1[valid]
@@ -190,10 +187,11 @@ def _render_batch_of_lines(
         mask_steps = steps < n[:, None]
 
         x_vals = np.round(x0s)[:, None] + steps
-        t = (x_vals - x0s[:, None]) / (x1s - x0s)[:, None]
+        safe_dx = x1s - x0s
+        safe_dx[safe_dx == 0] = 1
+        t = (x_vals - x0s[:, None]) / safe_dx[:, None]
         y_vals = y0s[:, None] + t * (y1s - y0s)[:, None]
 
-        # Clip x_vals and y_vals to stay within segment endpoints (prevent overshoot)
         x_vals = np.clip(
             x_vals,
             np.minimum(x0s[:, None], x1s[:, None]),
@@ -224,10 +222,11 @@ def _render_batch_of_lines(
         mask_steps = steps < n[:, None]
 
         y_vals = np.round(y0s)[:, None] + steps
-        t = (y_vals - y0s[:, None]) / (y1s - y0s)[:, None]
+        safe_dy = y1s - y0s
+        safe_dy[safe_dy == 0] = 1
+        t = (y_vals - y0s[:, None]) / safe_dy[:, None]
         x_vals = x0s[:, None] + t * (x1s - x0s)[:, None]
 
-        # Clip x_vals and y_vals to stay within segment endpoints (prevent overshoot)
         y_vals = np.clip(
             y_vals,
             np.minimum(y0s[:, None], y1s[:, None]),
@@ -247,7 +246,7 @@ def _render_batch_of_lines(
 
     x_all = np.round(np.concatenate(all_x)).astype(int)
     y_all = np.round(np.concatenate(all_y)).astype(int)
-    y_all = height - 1 - y_all  # flip Y for image coordinates
+    y_all = height - 1 - y_all
 
     valid = (x_all >= 0) & (x_all < width) & (y_all >= 0) & (y_all < height)
     pixels[y_all[valid], x_all[valid]] = layer
