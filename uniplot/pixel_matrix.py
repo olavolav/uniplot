@@ -3,7 +3,7 @@ from numpy.typing import NDArray
 from typing import Optional, Final
 
 
-BATCH_SIZE: Final = 500_000
+BATCH_SIZE: Final = 10_000
 
 
 def render(
@@ -18,14 +18,15 @@ def render(
     lines: bool = False,
     pixels: Optional[NDArray] = None,
     layer: int = 1,
+    batch_size: int = BATCH_SIZE,
 ):
     if pixels is None:
         pixels = np.zeros((height, width), dtype=np.int32)
 
     # Always render points
-    for start in range(0, len(xs), BATCH_SIZE):
-        end = min(start + BATCH_SIZE, len(xs))
-        pixels = render_batch_of_dots(
+    for start in range(0, len(xs), batch_size):
+        end = min(start + batch_size, len(xs))
+        pixels = _render_batch_of_dots(
             xs=xs[start:end],
             ys=ys[start:end],
             x_min=x_min,
@@ -52,12 +53,12 @@ def render(
         ys0 = ys[:-1][valid]
         ys1 = ys[1:][valid]
 
-        for start in range(0, len(xs0), BATCH_SIZE):
-            end = min(start + BATCH_SIZE, len(xs0))
+        for start in range(0, len(xs0), batch_size):
+            end = min(start + batch_size, len(xs0))
             x_pairs = np.stack([xs0[start:end], xs1[start:end]], axis=1).reshape(-1)
             y_pairs = np.stack([ys0[start:end], ys1[start:end]], axis=1).reshape(-1)
 
-            pixels = render_batch_of_lines(
+            pixels = _render_batch_of_lines(
                 xs=x_pairs,
                 ys=y_pairs,
                 x_min=x_min,
@@ -73,7 +74,33 @@ def render(
     return pixels
 
 
-def render_batch_of_dots(
+def merge_on_top(
+    low_layer: NDArray, high_layer: NDArray, width: int, height: int
+) -> NDArray:
+    """
+    Put a pixel matrix on top of another, with an optional single solid line of
+    "shadow", including diagonal fields.
+
+    If activated, this shadow will ensure that later 2x2 squares exclusively
+    belong to one particular line.
+
+    TODO I stopped using this but still there is the unused shadow stuff,
+    I would delete it as well as the tests
+    """
+    merged_layer = np.copy(low_layer)
+
+    not_zero_high_layer = high_layer != 0
+    merged_layer[not_zero_high_layer] = high_layer[not_zero_high_layer]
+
+    return merged_layer
+
+
+###########
+# private #
+###########
+
+
+def _render_batch_of_dots(
     xs: NDArray,
     ys: NDArray,
     x_min: float,
@@ -111,7 +138,7 @@ def render_batch_of_dots(
     return pixels
 
 
-def render_batch_of_lines(
+def _render_batch_of_lines(
     xs: NDArray,
     ys: NDArray,
     x_min: float,
@@ -226,24 +253,3 @@ def render_batch_of_lines(
     pixels[y_all[valid], x_all[valid]] = layer
 
     return pixels
-
-
-def merge_on_top(
-    low_layer: NDArray, high_layer: NDArray, width: int, height: int
-) -> NDArray:
-    """
-    Put a pixel matrix on top of another, with an optional single solid line of
-    "shadow", including diagonal fields.
-
-    If activated, this shadow will ensure that later 2x2 squares exclusively
-    belong to one particular line.
-
-    TODO I stopped using this but still there is the unused shadow stuff,
-    I would delete it as well as the tests
-    """
-    merged_layer = np.copy(low_layer)
-
-    not_zero_high_layer = high_layer != 0
-    merged_layer[not_zero_high_layer] = high_layer[not_zero_high_layer]
-
-    return merged_layer

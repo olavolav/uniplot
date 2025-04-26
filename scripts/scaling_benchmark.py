@@ -17,7 +17,7 @@ times_with_lines = []
 
 # Historical data
 historical_version = "v0.9.1"
-historical_sizes = [1, 10, 100, 1000, 10000, 100000, 1000000, 10000000]
+historical_sizes = [1, 10, 100, 1_000, 10_000, 100_000, 1_000_000, 10_000_000]
 historical_times = [
     0.014598846435546875,
     0.016776084899902344,
@@ -79,6 +79,8 @@ plot(
     x_as_log=True,
     y_as_log=True,
     y_gridlines=[NOTICEABLE_DELAY_SECONDS],
+    character_set="ascii",
+    color=False,
 )
 
 plot(
@@ -91,6 +93,8 @@ plot(
     x_as_log=True,
     y_as_log=True,
     y_gridlines=[NOTICEABLE_DELAY_SECONDS],
+    character_set="ascii",
+    color=False,
 )
 
 # Combined plot
@@ -104,4 +108,6 @@ plot(
     x_as_log=True,
     y_as_log=True,
     y_gridlines=[NOTICEABLE_DELAY_SECONDS],
+    character_set="ascii",
+    color=False,
 )
