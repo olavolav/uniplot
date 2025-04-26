@@ -1,6 +1,11 @@
+from functools import partial
+
 import numpy as np
 from time import time
 from uniplot import plot
+
+results_plot = partial(plot, character_set="ascii", color=False)
+
 
 NOTICEABLE_DELAY_SECONDS = 0.2
 
@@ -17,7 +22,7 @@ times_with_lines = []
 
 # Historical data
 historical_version = "v0.9.1"
-historical_sizes = [1, 10, 100, 1000, 10000, 100000, 1000000, 10000000]
+historical_sizes = [1, 10, 100, 1_000, 10_000, 100_000, 1_000_000, 10_000_000]
 historical_times = [
     0.014598846435546875,
     0.016776084899902344,
@@ -69,7 +74,7 @@ print(f"sizes = {sizes}")
 print(f"times = {times}")
 print(f"times_with_lines = {times_with_lines}")
 
-plot(
+results_plot(
     xs=[historical_sizes, sizes],
     ys=[historical_times, times],
     lines=True,
@@ -79,9 +84,11 @@ plot(
     x_as_log=True,
     y_as_log=True,
     y_gridlines=[NOTICEABLE_DELAY_SECONDS],
+    character_set="ascii",
+    color=False,
 )
 
-plot(
+results_plot(
     xs=[historical_sizes, sizes],
     ys=[historical_times_with_lines, times_with_lines],
     lines=True,
@@ -91,10 +98,12 @@ plot(
     x_as_log=True,
     y_as_log=True,
     y_gridlines=[NOTICEABLE_DELAY_SECONDS],
+    character_set="ascii",
+    color=False,
 )
 
 # Combined plot
-plot(
+results_plot(
     xs=[sizes, sizes],
     ys=[times, times_with_lines],
     lines=True,
@@ -104,4 +113,6 @@ plot(
     x_as_log=True,
     y_as_log=True,
     y_gridlines=[NOTICEABLE_DELAY_SECONDS],
+    character_set="ascii",
+    color=False,
 )

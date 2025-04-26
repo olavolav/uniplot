@@ -103,7 +103,9 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
 
     # TODO Remove this after July 2025, to give folks 3 months to adapt.
     if "force_ascii" in kwargs:
-        print("Warning: the force_ascii option is deprecated. Please use the character_set option instead.")
+        print(
+            "Warning: the force_ascii option is deprecated. Please use the character_set option instead."
+        )
         del kwargs["force_ascii"]
 
     if "character_set" in kwargs:

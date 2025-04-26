@@ -7,6 +7,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## Unreleased
+### Improved
+- Improved line drawing performance 5-10x.
+
+     Sample size versus plotting time, dots only, log-log
+┌────────────────────────────────────────────────────────────┐
+│                                                           +│
+│                                                         ++ │
+│───────────────────────────────────────────────────────++──x│
+│                                                      +  xx │
+│                                                    ++  x   │ 0.1 s
+│                                                  ++  xx    │
+│                                               +++   x      │
+│                                            +++    xx       │
+│  +++++++++                            +++++     xxx        │
+│++         ++++++++++++++++++++++++++++        xx           │
+│                                             xx             │ 10^-2 s
+│                                            x               │
+│                                        xxxx                │
+│                                    xxxx                    │
+│                             xxxxxxx                        │
+│xxxxxx       xxxxxxxxxxxxxxxx                               │ 10^-3 s
+│      xxxxxxx                                               │
+└────────────────────────────────────────────────────────────┘
+ 1               100             10^4             10^6
+                          ++ v0.9.1
+                          xx current
+   Sample size versus plotting time, dots + lines, log-log
+┌────────────────────────────────────────────────────────────┐
+│                                                          ++│
+│                                                        ++  │ 10 s
+│                                                     +++    │
+│                                                  +++    xxx│
+│                                                ++     xx   │
+│                                             +++    xxx     │ 1 s
+│                                          +++    xxx        │
+│───────────────────────────────────────+++─────xx───────────│
+│                                    +++     xxx             │ 0.1 s
+│                                ++++     xxx                │
+│++++                       +++++     xxxx                   │
+│    +++++++++++++++++++++++       xxx                       │
+│                               xxx                          │ 10^-2 s
+│                             xx                             │
+│                          xxx                               │
+│           xxxxxxxxxxxxxxx                                  │ 10^-3 s
+│xxxxxxxxxxx                                                 │
+└────────────────────────────────────────────────────────────┘
+ 1               100             10^4             10^6
+                          ++ v0.9.1
+                          xx current
+
 ### Changed
 - Merged the `force_ascii` feature into the `character_set` option. ASCII character
   plotting can now be done via `character_set="ascii"`. This deprecates the

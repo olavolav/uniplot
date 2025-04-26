@@ -79,7 +79,7 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
     full_height = scale_h * options.height
 
     # Render input points into a full pixel matrix
-    px_matrix = np.zeros((full_height, full_width), dtype=int)
+    px_matrix = np.zeros((full_height, full_width), dtype=np.int32)
     for i, (x, y) in enumerate(zip(xs, ys)):
         px_matrix = pixel_matrix.render(
             xs=x,
