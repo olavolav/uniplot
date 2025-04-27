@@ -261,7 +261,7 @@ Clone this repository, and make sure you
 
 You can run the tests, to make sure your setup is good.
 ```shell
-uv run --group dev ./run_tests.sh
+uv run ./run_tests.sh
 ```
 
 Then proceed with issues, PRs etc. the usual way.
