@@ -10,8 +10,8 @@ ANSI_COLOR_CODES: Final = {
     "yellow": "\033[33m",
     "cyan": "\033[36m",
     "red": "\033[31m",
-    "black": "\033[31m",
-    "white": "\033[31m",
+    "black": "\033[30m",
+    "white": "\033[37m",
 }
 DEFAULT_COLORS_NAMES: Final = list(ANSI_COLOR_CODES.keys())
 DEFAULT_COLORS: Final = list(ANSI_COLOR_CODES.values())
