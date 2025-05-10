@@ -109,7 +109,9 @@ In alphabetical order:
 * `color` - Draw series in color. Defaults to `False` when plotting a single
   series, and to `True` when plotting multiple. Also accepts a list of strings,
   to modify the default order of
-  `["blue", "magenta", "green", "yellow", "cyan", "red"]`.
+  `["blue", "magenta", "green", "yellow", "cyan", "red"]`, or a list of tuples
+  with RGB colors, as in `[(87,120,163),(228,147,67)]`. You can also mix named
+  and RGB colors.
 * `height` - The height of the plotting region, in characters. Default is `17`.
 * `interactive` - Enable interactive mode. Defaults to `False`.
 * `legend_labels` - Labels for the series. Can be `None` or a list of strings.

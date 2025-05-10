@@ -20,6 +20,16 @@ def test_normal_plotting_with_x_series():
     plot(xs=x, ys=x, title="Diagonal")
 
 
+def test_plotting_with_named_terminal_color():
+    ys = [1, 3, -2, 5]
+    plot(ys, color=["red"])
+
+
+def test_plotting_with_named_rbg_color():
+    ys = [1, 3, -2, 5]
+    plot(ys, color=[(1, 2, 255)])
+
+
 def test_logarithmic_plotting():
     xs = range(1, 1000, 20)
     ys = [x**2 + 1e-6 for x in xs]

@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## Unreleased
+### Added
+- Support for RGB colors, by passing tuples with red, green and blue values to the
+`color` option.
+
 ## [0.19.0] - 2025-04-26
 ### Improved
 - Improved line drawing performance 5-10x.

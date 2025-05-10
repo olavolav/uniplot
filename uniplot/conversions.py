@@ -1,17 +1,7 @@
 import datetime
-from typing import Any, Final
+from typing import Any
 import numpy as np
 from numpy.typing import NDArray
-
-
-COLOR_CODES: Final = {
-    "blue": "\033[34m",
-    "magenta": "\033[35m",
-    "green": "\033[32m",
-    "yellow": "\033[33m",
-    "cyan": "\033[36m",
-    "red": "\033[31m",
-}
 
 
 def floatify(x: Any) -> float:

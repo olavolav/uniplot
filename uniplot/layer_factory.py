@@ -3,11 +3,11 @@ from numpy.typing import NDArray
 from typing import List, Tuple
 
 import uniplot.pixel_matrix as pixel_matrix
-import uniplot.plot_elements as elements
 import uniplot.character_sets as character_sets
-from uniplot.conversions import COLOR_CODES, convert_matrix_to_rows_of_submatrices
+from uniplot.conversions import convert_matrix_to_rows_of_submatrices
 from uniplot.options import Options, CharacterSet
 from uniplot.discretizer import discretize
+from uniplot.color import COLOR_RESET_CODE
 
 
 Y_GRIDLINE_CHARACTERS = ["▔", "─", "▁"]
@@ -80,7 +80,7 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
 
     # Render input points into a full pixel matrix
     px_matrix = np.zeros((full_height, full_width), dtype=np.int32)
-    for i, (x, y) in enumerate(zip(xs, ys)):
+    for series_index, (x, y, lines) in enumerate(zip(xs, ys, options.lines)):
         px_matrix = pixel_matrix.render(
             xs=x,
             ys=y,
@@ -90,9 +90,9 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
             y_max=options.y_max,
             width=full_width,
             height=full_height,
-            lines=options.lines[i],
+            lines=lines,
             pixels=px_matrix,
-            layer=i + 1,
+            layer=series_index + 1,
         )  # type: ignore
 
     # Initialize output character matrix
@@ -122,20 +122,16 @@ def render_points(xs: List[NDArray], ys: List[NDArray], options: Options) -> NDA
 
     # Apply color if enabled
     if options.color:
-        colors = (
-            [COLOR_CODES[c] for c in options.color]
-            if isinstance(options.color, list)
-            else COLOR_CODES.values()
-        )
+        color_enable_strings = [c.enable_str() for c in options.color]
 
         decoder_colored = np.array(
             [
-                np.char.add(np.char.add(c, char_list), elements.COLOR_RESET_CODE)
-                for c in colors
+                np.char.add(np.char.add(c, char_list), COLOR_RESET_CODE)
+                for c in color_enable_strings
             ]
         )
         indices = (
-            color_matrix[mask_nonzero] % len(colors),
+            color_matrix[mask_nonzero] % len(color_enable_strings),
             int_matrix[mask_nonzero],
         )
         decoder_colored[..., 0] = ""
@@ -161,7 +157,7 @@ def print_raw_pixel_matrix(pixels: NDArray, verbose: bool = False) -> None:
 
 
 def _init_character_matrix(width: int, height: int, value: str = "") -> NDArray:
-    return np.full((height, width), fill_value=value, dtype="<U15")
+    return np.full((height, width), fill_value=value, dtype="<U25")
 
 
 def _set_up_submatrix_shape_and_encoders(

@@ -1,8 +1,9 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from uniplot.character_sets import ASCII_CHARACTER_SET
+from uniplot.color import Color
 
 
 def _default_gridlines() -> List[float]:
@@ -17,6 +18,7 @@ def _default_ascii_characters() -> List[str]:
     return ASCII_CHARACTER_SET
 
 
+# TODO Move to separate file
 class CharacterSet(Enum):
     ASCII = 1
     BLOCK = 2
@@ -35,7 +37,7 @@ class Options:
     # Character set
     character_set: CharacterSet = CharacterSet.BLOCK
     # Color mode
-    color: Union[bool, List[str]] = False
+    color: Optional[List[Color]] = None
     # List of characters to use when plotting in force_ascii mode.
     force_ascii_characters: List[str] = field(default_factory=_default_ascii_characters)
     # Height of the plotting region, in lines

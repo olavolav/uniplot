@@ -1,27 +1,21 @@
 import sys
-import re
 import numpy as np
 from numpy.typing import NDArray
-from typing import List, Tuple, Union, Optional, Final
+from typing import List, Tuple, Optional, Final
 
 from uniplot.options import CharacterSet
-from uniplot.conversions import COLOR_CODES
+import uniplot.color as color
 
 
 CURSOR_UP_ONE: Final = "\x1b[1A"
 ERASE_LINE: Final = "\x1b[2K"
-
-DEFAULT_COLORS: Final = list(COLOR_CODES.values())
-
-COLOR_RESET_CODE: Final = "\033[0m"
-COLOR_CODE_REGEX: Final = re.compile(r"\033\[\d+m")
 
 
 def legend(
     legend_labels: List[str],
     width: int,
     line_length_hard_cap: Optional[int],
-    color: Union[bool, List[str]],
+    color: Optional[List[color.Color]],
     force_ascii_characters: List[str] = [],
     character_set: CharacterSet = CharacterSet.BLOCK,
 ) -> str:
@@ -117,21 +111,20 @@ def _center_if_possible(
 
 
 def _text_without_control_chars(text: str):
-    return COLOR_CODE_REGEX.sub("", text)
+    return color.COLOR_CODE_REGEX.sub("", text)
 
 
-def _colorize_char(char: str, color_nr: int, color_mode: Union[bool, List[str]]) -> str:
-    if char == "" or color_mode is False or color_nr < 1:
+def _colorize_char(
+    char: str, color_nr: int, color_mode: Optional[List[color.Color]]
+) -> str:
+    if char == "" or (not color_mode) or color_nr < 1:
         return char
-    colors = (
-        _colors_to_codes(color_mode) if isinstance(color_mode, list) else DEFAULT_COLORS
-    )
-    color_code = colors[(color_nr - 1) % len(colors)]
-    return color_code + char + COLOR_RESET_CODE
+    color = color_mode[(color_nr - 1) % len(color_mode)]
+    return color.colorize(char)
 
 
 def _colors_to_codes(colors: List[str]):
-    return [COLOR_CODES.get(i, " ") for i in colors]
+    return [color.ANSI_COLOR_CODES.get(i, " ") for i in colors]
 
 
 def _histogram_to_bar_chart_points(bin_edges, counts) -> Tuple:

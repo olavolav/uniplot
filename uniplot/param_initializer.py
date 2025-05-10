@@ -3,7 +3,8 @@ from typing import Dict
 
 from uniplot.multi_series import MultiSeries
 from uniplot.options import Options, CharacterSet
-from uniplot.conversions import floatify, COLOR_CODES
+from uniplot.conversions import floatify
+from uniplot.color import Color, DEFAULT_COLORS_NAMES
 
 AUTO_WINDOW_ENLARGE_FACTOR = 0.001
 
@@ -96,10 +97,11 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
     # By default, enable color for multiple series, disable color for a single
     # one
     kwargs["color"] = kwargs.get("color", len(series) > 1)
+    # Convert list of color specifications to Color objects
     if isinstance(kwargs["color"], list):
-        for c in kwargs["color"]:
-            if c not in COLOR_CODES.keys():
-                raise ValueError(f"Invalid color '{c}' specified.")
+        kwargs["color"] = [Color.from_param(cs) for cs in kwargs["color"]]
+    if kwargs["color"] is True:
+        kwargs["color"] = [Color.from_terminal(cs) for cs in DEFAULT_COLORS_NAMES]
 
     # TODO Remove this after July 2025, to give folks 3 months to adapt.
     if "force_ascii" in kwargs:
