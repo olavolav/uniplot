@@ -26,6 +26,6 @@ jobs:
 
     - name: Run all example scripts
       run: |
-        for example in examples/*.py do
+        for example in examples/*.py; do
           uv run python3 $example
         done
