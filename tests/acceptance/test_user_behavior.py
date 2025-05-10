@@ -30,6 +30,11 @@ def test_plotting_with_named_rbg_color():
     plot(ys, color=[(1, 2, 255)])
 
 
+def test_plotting_with_color_theme():
+    ys = [1, 3, -2, 5]
+    plot(ys, color="mathematica")
+
+
 def test_logarithmic_plotting():
     xs = range(1, 1000, 20)
     ys = [x**2 + 1e-6 for x in xs]

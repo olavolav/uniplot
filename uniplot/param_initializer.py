@@ -4,7 +4,8 @@ from typing import Dict
 from uniplot.multi_series import MultiSeries
 from uniplot.options import Options, CharacterSet
 from uniplot.conversions import floatify
-from uniplot.colors import Color, DEFAULT_COLORS_NAMES
+from uniplot.colors import Color
+from uniplot.color_themes import COLOR_THEMES
 
 AUTO_WINDOW_ENLARGE_FACTOR = 0.001
 
@@ -97,11 +98,19 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
     # By default, enable color for multiple series, disable color for a single
     # one
     kwargs["color"] = kwargs.get("color", len(series) > 1)
+    # If it is a string, it refers to a color theme
+    if isinstance(kwargs["color"], str):
+        theme_str = kwargs["color"].strip().lower()
+        if theme_str not in COLOR_THEMES:
+            raise ValueError(
+                f"Color theme '{kwargs['color']}' not found. If you intended to specify a single color, pass a list with that entry."
+            )
+        kwargs["color"] = COLOR_THEMES[theme_str]
     # Convert list of color specifications to Color objects
-    if isinstance(kwargs["color"], list):
+    elif isinstance(kwargs["color"], list):
         kwargs["color"] = [Color.from_param(cs) for cs in kwargs["color"]]
     if kwargs["color"] is True:
-        kwargs["color"] = [Color.from_terminal(cs) for cs in DEFAULT_COLORS_NAMES]
+        kwargs["color"] = COLOR_THEMES["default"]
 
     # TODO Remove this after July 2025, to give folks 3 months to adapt.
     if "force_ascii" in kwargs:

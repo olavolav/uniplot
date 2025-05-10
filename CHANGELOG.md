@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for RGB colors, by passing tuples with red, green and blue values to the
 `color` option.
 - Support for specifying colors in hexadecimal format, for example `"#ff0000"`.
+- Support for color themes, when specifying a single string as the `color` option.
 
 ## [0.19.0] - 2025-04-26
 ### Improved

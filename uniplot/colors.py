@@ -2,7 +2,7 @@ import re
 from dataclasses import dataclass
 from typing import Tuple, Optional, Any, Final
 
-
+# Ref.: https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
 ANSI_COLOR_CODES: Final = {
     "blue": "\033[34m",
     "magenta": "\033[35m",
@@ -10,6 +10,8 @@ ANSI_COLOR_CODES: Final = {
     "yellow": "\033[33m",
     "cyan": "\033[36m",
     "red": "\033[31m",
+    "black": "\033[31m",
+    "white": "\033[31m",
 }
 DEFAULT_COLORS_NAMES: Final = list(ANSI_COLOR_CODES.keys())
 DEFAULT_COLORS: Final = list(ANSI_COLOR_CODES.values())
