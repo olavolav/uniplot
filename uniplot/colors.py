@@ -36,6 +36,8 @@ class Color:
     @classmethod
     def from_param(cls, color_data: Any) -> "Color":
         if isinstance(color_data, str):
+            if color_data[0] == "#":
+                return cls.from_hex(color_data)
             return cls.from_terminal(color_data)
         if isinstance(color_data, tuple) and len(color_data) == 3:
             return cls.from_rgb(*color_data)
@@ -47,6 +49,12 @@ class Color:
         if color_name not in ANSI_COLOR_CODES:
             raise ValueError(f"Invalid color str: '{color_name}'")
         return cls(terminal_color=color_name)
+
+    @classmethod
+    def from_hex(cls, color_name: str) -> "Color":
+        hex_str = str(color_name).strip().lower().lstrip("#")
+        r, g, b = tuple(int(hex_str[i : i + 2], 16) for i in (0, 2, 4))
+        return cls.from_rgb(r, g, b)
 
     @classmethod
     def from_rgb(cls, r: int, g: int, b: int) -> "Color":

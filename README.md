@@ -111,7 +111,7 @@ In alphabetical order:
   to modify the default order of
   `["blue", "magenta", "green", "yellow", "cyan", "red"]`, or a list of tuples
   with RGB colors, as in `[(87,120,163),(228,147,67)]`. You can also mix named
-  and RGB colors.
+  and RGB colors, or even hexadecimal RGB colors like `"#B4FBB8"`.
 * `height` - The height of the plotting region, in characters. Default is `17`.
 * `interactive` - Enable interactive mode. Defaults to `False`.
 * `legend_labels` - Labels for the series. Can be `None` or a list of strings.
