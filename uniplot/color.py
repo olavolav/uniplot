@@ -37,10 +37,8 @@ class Color:
     def from_param(cls, color_data: Any) -> "Color":
         if isinstance(color_data, str):
             return cls.from_terminal(color_data)
-        if isinstance(color_data, tuple):
-            # TODO Make this more flexible
-            r, g, b = color_data
-            return cls.from_rgb(r, g, b)
+        if isinstance(color_data, tuple) and len(color_data) == 3:
+            return cls.from_rgb(*color_data)
         raise TypeError(f"Unsupported color type: {type(color_data)}")
 
     @classmethod
@@ -52,9 +50,9 @@ class Color:
 
     @classmethod
     def from_rgb(cls, r: int, g: int, b: int) -> "Color":
-        r = _clip_to_valid_int(r)
-        g = _clip_to_valid_int(g)
-        b = _clip_to_valid_int(b)
+        r = cls._clip_to_valid_int(r)
+        g = cls._clip_to_valid_int(g)
+        b = cls._clip_to_valid_int(b)
         return cls(rgb=(r, g, b))
 
     def is_enabled(self) -> bool:
@@ -72,6 +70,6 @@ class Color:
         # Template: '\033[38;2;146;255;12mHello!\033[0m'
         return f"\033[38;2;{r};{g};{b}m"
 
-
-def _clip_to_valid_int(x, x_min=0, x_max=255):
-    return max(min(int(x), x_max), x_min)
+    @staticmethod
+    def _clip_to_valid_int(x, x_min=0, x_max=255):
+        return max(min(int(x), x_max), x_min)
