@@ -22,4 +22,10 @@ jobs:
       uses: astral-sh/setup-uv@v5
 
     - name: Run test script
-      run: uv run --group dev ./run_tests.sh
+      run: uv run ./run_tests.sh
+
+    - name: Run all example scripts
+      run: |
+        for example in examples/*.py do
+          uv run python3 $example
+        done
