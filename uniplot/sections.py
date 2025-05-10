@@ -42,7 +42,8 @@ def generate_body(
     for y_label, row in zip(y_axis_labels, pixel_character_matrix):
         lines.append("│" + "".join(row) + "│ " + y_label)
     lines.append(f"└{'─' * options.width}┘")
-    lines.append(x_axis_labels)
+    if len(x_axis_labels) > 0:
+        lines.append(x_axis_labels)
 
     # Print legend if labels were specified
     if options.legend_labels is not None:
@@ -67,18 +68,21 @@ def generate_body_raw_elements(
     Generates the x-axis labels, y-axis labels, and the pixel character matrix.
     """
     # Prepare y axis labels
-    label_fn = datetime_labels if series.y_is_time_series else extended_talbot_labels
-    y_axis_label_set = label_fn(
-        x_min=options.y_min,
-        x_max=options.y_max,
-        available_space=options.height,
-        unit=options.y_unit,
-        log=options.y_as_log,
-        vertical_direction=True,
-    )  # type: ignore
     y_axis_labels = [""] * options.height
-    if y_axis_label_set is not None:
-        y_axis_labels = y_axis_label_set.render()
+    if options.y_labels:
+        label_fn = (
+            datetime_labels if series.y_is_time_series else extended_talbot_labels
+        )
+        y_axis_label_set = label_fn(
+            x_min=options.y_min,
+            x_max=options.y_max,
+            available_space=options.height,
+            unit=options.y_unit,
+            log=options.y_as_log,
+            vertical_direction=True,
+        )  # type: ignore
+        if y_axis_label_set is not None:
+            y_axis_labels = y_axis_label_set.render()
 
     # Observe line_length_hard_cap
     if options.line_length_hard_cap is not None:
@@ -93,18 +97,21 @@ def generate_body_raw_elements(
                 raise
 
     # Prepare x axis labels
-    label_fn = datetime_labels if series.x_is_time_series else extended_talbot_labels
-    x_axis_label_set = label_fn(
-        x_min=options.x_min,
-        x_max=options.x_max,
-        available_space=options.width,
-        unit=options.x_unit,
-        log=options.x_as_log,
-        vertical_direction=False,
-    )  # type: ignore
     x_axis_labels = ""
-    if x_axis_label_set is not None:
-        x_axis_labels = x_axis_label_set.render()[0]
+    if options.x_labels:
+        label_fn = (
+            datetime_labels if series.x_is_time_series else extended_talbot_labels
+        )
+        x_axis_label_set = label_fn(
+            x_min=options.x_min,
+            x_max=options.x_max,
+            available_space=options.width,
+            unit=options.x_unit,
+            log=options.x_as_log,
+            vertical_direction=False,
+        )  # type: ignore
+        if x_axis_label_set is not None:
+            x_axis_labels = x_axis_label_set.render()[0]
 
     # Prepare graph surface
     pixel_character_matrix = layer_assembly.assemble_scatter_plot(

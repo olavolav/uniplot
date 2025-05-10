@@ -14,5 +14,7 @@ for theme in COLOR_THEMES.keys():
         title=f"Color theme: {theme}",
         x_gridlines=[],
         y_gridlines=[],
+        x_labels=False,
+        y_labels=False,
     )
     print()

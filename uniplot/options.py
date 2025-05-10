@@ -51,6 +51,8 @@ class Options:
     x_as_log: bool = False
     # Vertical gridlines
     x_gridlines: List[float] = field(default_factory=_default_gridlines)
+    # Enable x axis labels
+    x_labels: bool = True
     # Maximum x value of the current view
     x_max: float = 1.0
     # Minimum x value of the current view
@@ -61,6 +63,8 @@ class Options:
     x_unit: str = ""
     # Horizontal gridlines
     y_gridlines: List[float] = field(default_factory=_default_gridlines)
+    # Enable y axis labels
+    y_labels: bool = True
     # Maximum y value of the current view
     y_max: float = 1.0
     # Minimum y value of the current view

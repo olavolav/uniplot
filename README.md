@@ -153,9 +153,11 @@ In alphabetical order:
 * `x_as_log` - Plot the x axis as logarithmic scale. Defaults to `False`.
 * `x_gridlines` - A list of x values that have a vertical line for better
   orientation. Defaults to `[0]`, or to `[]` if `x_as_log` is enabled.
+* `x_labels` - Ebale axis labels for the x axis. Defaults to `True`.
 * `y_as_log` - Plot the y axis as logarithmic scale. Defaults to `False`.
 * `y_gridlines` - A list of y values that have a horizontal line for better
   orientation. Defaults to `[0]`, or to `[]` if `y_as_log` is enabled.
+* `y_labels` - Ebale axis labels for the y axis. Defaults to `True`.
 
 
 ### Changing default parameters

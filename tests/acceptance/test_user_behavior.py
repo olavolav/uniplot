@@ -160,6 +160,11 @@ def test_plotting_with_forced_ascii_and_custom_symbols():
         assert strs.count(symbols[i]) == len(ys[i])
 
 
+def test_plotting_to_string_without_axis_labels():
+    ys = [1, 2, 3]
+    plot_to_string(ys, x_labels=False, y_labels=False)
+
+
 ####################
 # Testing plot_gen #
 ####################
