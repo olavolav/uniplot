@@ -5,10 +5,10 @@ All notable changes to uniplot will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+
+## [0.20.1] - 2025-05-10
 ### Added
 - Added `x_labels` and `y_labels` options to disable axis labels.
-
 ### Fixed
 - Fixed black and white terminal colors.
 
