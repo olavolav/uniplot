@@ -123,10 +123,6 @@ def _colorize_char(
     return color.colorize(char)
 
 
-def _colors_to_codes(colors: List[str]):
-    return [color.ANSI_COLOR_CODES.get(i, " ") for i in colors]
-
-
 def _histogram_to_bar_chart_points(bin_edges, counts) -> Tuple:
     bins = len(bin_edges) - 1
     # Draw vertical and horizontal lines to connect points
