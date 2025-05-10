@@ -6,12 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## Unreleased
+## [0.20.0] - 2025-05-10
 ### Added
 - Support for RGB colors, by passing tuples with red, green and blue values to the
 `color` option.
 - Support for specifying colors in hexadecimal format, for example `"#ff0000"`.
 - Support for color themes, when specifying a single string as the `color` option.
+- Support for Python 3.12 and 3.13.
 
 ## [0.19.0] - 2025-04-26
 ### Improved

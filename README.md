@@ -107,11 +107,12 @@ In alphabetical order:
 #### Basic options
 
 * `color` - Draw series in color. Defaults to `False` when plotting a single
-  series, and to `True` when plotting multiple. Also accepts a list of strings,
-  to modify the default order of
-  `["blue", "magenta", "green", "yellow", "cyan", "red"]`, or a list of tuples
-  with RGB colors, as in `[(87,120,163),(228,147,67)]`. You can also mix named
-  and RGB colors, or even hexadecimal RGB colors like `"#B4FBB8"`.
+  series, and to `True` when plotting multiple. Also accepts a list of colors,
+  identified by strings like `"red"` for simple ANSI colors, tuples of RGB
+  values like `(255,0,0)`, or hexadecimal RGB colors like `"#B4FBB8"`.
+  Alternaively, you can specify a color theme, as defined in
+  `uniplot/color_themes.py`. Note that for RGB colors you need to use a
+  terminal that supports them.
 * `height` - The height of the plotting region, in characters. Default is `17`.
 * `interactive` - Enable interactive mode. Defaults to `False`.
 * `legend_labels` - Labels for the series. Can be `None` or a list of strings.
