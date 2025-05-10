@@ -4,7 +4,7 @@ from typing import Dict
 from uniplot.multi_series import MultiSeries
 from uniplot.options import Options, CharacterSet
 from uniplot.conversions import floatify
-from uniplot.color import Color, DEFAULT_COLORS_NAMES
+from uniplot.colors import Color, DEFAULT_COLORS_NAMES
 
 AUTO_WINDOW_ENLARGE_FACTOR = 0.001
 

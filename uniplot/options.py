@@ -1,9 +1,8 @@
 from dataclasses import dataclass, field
-from enum import Enum
 from typing import List, Optional
 
-from uniplot.character_sets import ASCII_CHARACTER_SET
-from uniplot.color import Color
+from uniplot.character_sets import ASCII_CHARACTER_SET, CharacterSet
+from uniplot.colors import Color
 
 
 def _default_gridlines() -> List[float]:
@@ -16,13 +15,6 @@ def _default_lines() -> List[bool]:
 
 def _default_ascii_characters() -> List[str]:
     return ASCII_CHARACTER_SET
-
-
-# TODO Move to separate file
-class CharacterSet(Enum):
-    ASCII = 1
-    BLOCK = 2
-    BRAILLE = 3
 
 
 @dataclass

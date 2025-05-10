@@ -4,7 +4,7 @@ from numpy.typing import NDArray
 from typing import List, Tuple, Optional, Final
 
 from uniplot.options import CharacterSet
-import uniplot.color as color
+import uniplot.colors as colors
 
 
 CURSOR_UP_ONE: Final = "\x1b[1A"
@@ -15,7 +15,7 @@ def legend(
     legend_labels: List[str],
     width: int,
     line_length_hard_cap: Optional[int],
-    color: Optional[List[color.Color]],
+    color: Optional[List[colors.Color]],
     force_ascii_characters: List[str] = [],
     character_set: CharacterSet = CharacterSet.BLOCK,
 ) -> str:
@@ -111,11 +111,11 @@ def _center_if_possible(
 
 
 def _text_without_control_chars(text: str):
-    return color.COLOR_CODE_REGEX.sub("", text)
+    return colors.COLOR_CODE_REGEX.sub("", text)
 
 
 def _colorize_char(
-    char: str, color_nr: int, color_mode: Optional[List[color.Color]]
+    char: str, color_nr: int, color_mode: Optional[List[colors.Color]]
 ) -> str:
     if char == "" or (not color_mode) or color_nr < 1:
         return char

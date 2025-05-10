@@ -1,4 +1,4 @@
-from uniplot.color import Color
+from uniplot.colors import Color
 
 
 def test_init_color_from_param_with_terminal_name():

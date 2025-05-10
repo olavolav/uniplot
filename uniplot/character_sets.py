@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import List, Final
 
 ASCII_CHARACTER_SET: Final[List[str]] = ["+", "x", "o", "*", "~", "."]
@@ -277,3 +278,9 @@ BRAILLE_CHARACTER_SET: Final[List[str]] = [
     "⣾",
     "⣿",
 ]
+
+
+class CharacterSet(Enum):
+    ASCII = 1
+    BLOCK = 2
+    BRAILLE = 3

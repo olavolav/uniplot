@@ -7,7 +7,7 @@ import uniplot.character_sets as character_sets
 from uniplot.conversions import convert_matrix_to_rows_of_submatrices
 from uniplot.options import Options, CharacterSet
 from uniplot.discretizer import discretize
-from uniplot.color import COLOR_RESET_CODE
+from uniplot.colors import COLOR_RESET_CODE
 
 
 Y_GRIDLINE_CHARACTERS = ["▔", "─", "▁"]
