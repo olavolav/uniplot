@@ -37,15 +37,16 @@ def generate_body(
     """
 
     lines: List[str] = []
-    # Print plot (double resolution)
+    # Add plot area
     lines.append(f"┌{'─' * options.width}┐")
     for y_label, row in zip(y_axis_labels, pixel_character_matrix):
-        lines.append("│" + "".join(row) + "│ " + y_label)
+        row = ("│" + "".join(row) + "│ " + y_label).rstrip()
+        lines.append(row)
     lines.append(f"└{'─' * options.width}┘")
     if len(x_axis_labels) > 0:
         lines.append(x_axis_labels)
 
-    # Print legend if labels were specified
+    # Add legend labels, if labels were specified
     if options.legend_labels is not None:
         lines.append(
             elements.legend(

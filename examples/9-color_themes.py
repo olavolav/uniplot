@@ -6,6 +6,7 @@ xs = [[i, i + NR_LINES] for i in range(NR_LINES)]
 ys = [[0, 1] for _ in range(NR_LINES)]
 
 for theme in COLOR_THEMES.keys():
+    print()
     plot(
         xs=xs,
         ys=ys,
@@ -17,4 +18,3 @@ for theme in COLOR_THEMES.keys():
         x_labels=False,
         y_labels=False,
     )
-    print()
