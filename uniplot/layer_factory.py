@@ -20,7 +20,7 @@ def blank_character_matrix(width: int, height: int) -> NDArray:
     return _init_character_matrix(width, height, value=" ")
 
 
-def render_horizontal_gridline(y: float, options: Options) -> NDArray:
+def render_horizontal_gridline(y: float, options: Options, index: int = 0) -> NDArray:
     """
     Render the pixel matrix that only consists of a line where the `y` value is.
 
@@ -39,7 +39,11 @@ def render_horizontal_gridline(y: float, options: Options) -> NDArray:
                 x=y, x_min=options.y_min, x_max=options.y_max, steps=options.height
             )
         )
-        pixels[y_index, :] = "─"
+        character = "─"
+        if options.y_gridlines_color and len(options.y_gridlines_color) > 0:
+            color = options.y_gridlines_color[index % len(options.y_gridlines_color)]
+            character = color.colorize(character)
+        pixels[y_index, :] = character
     else:
         y_index_superresolution = (
             3 * options.height
@@ -50,12 +54,15 @@ def render_horizontal_gridline(y: float, options: Options) -> NDArray:
         )
         y_index = int(y_index_superresolution / 3)
         character = Y_GRIDLINE_CHARACTERS[y_index_superresolution % 3]
+        if options.y_gridlines_color and len(options.y_gridlines_color) > 0:
+            color = options.y_gridlines_color[index % len(options.y_gridlines_color)]
+            character = color.colorize(character)
         pixels[y_index, :] = character
 
     return pixels
 
 
-def render_vertical_gridline(x: float, options: Options) -> NDArray:
+def render_vertical_gridline(x: float, options: Options, index: int = 0) -> NDArray:
     """
     Render the pixel matrix that only consists of a line where the `x` value is.
     """
@@ -67,7 +74,11 @@ def render_vertical_gridline(x: float, options: Options) -> NDArray:
         x=x, x_min=options.x_min, x_max=options.x_max, steps=options.width
     )
 
-    pixels[:, x_index] = "│"
+    character = "│"
+    if options.x_gridlines_color and len(options.x_gridlines_color) > 0:
+        color = options.x_gridlines_color[index % len(options.x_gridlines_color)]
+        character = color.colorize(character)
+    pixels[:, x_index] = character
 
     return pixels
 

@@ -14,12 +14,12 @@ def assemble_scatter_plot(
 
     # Gridlines
     horizontal_gridline_layers = [
-        layer_factory.render_horizontal_gridline(y=y, options=options)
-        for y in options.y_gridlines
+        layer_factory.render_horizontal_gridline(y=y, options=options, index=i)
+        for i, y in enumerate(options.y_gridlines)
     ]
     vertical_gridline_layers = [
-        layer_factory.render_vertical_gridline(x=x, options=options)
-        for x in options.x_gridlines
+        layer_factory.render_vertical_gridline(x=x, options=options, index=i)
+        for i, x in enumerate(options.x_gridlines)
     ]
 
     # Pixels

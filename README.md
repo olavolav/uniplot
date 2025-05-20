@@ -153,10 +153,14 @@ In alphabetical order:
 * `x_as_log` - Plot the x axis as logarithmic scale. Defaults to `False`.
 * `x_gridlines` - A list of x values that have a vertical line for better
   orientation. Defaults to `[0]`, or to `[]` if `x_as_log` is enabled.
+* `x_gridlines_color` - A boolean or a list of colors for the vertical
+  gridlines, as specified above for the `color` option. Defaults to `False`.
 * `x_labels` - Enable axis labels for the x axis. Defaults to `True`.
 * `y_as_log` - Plot the y axis as logarithmic scale. Defaults to `False`.
 * `y_gridlines` - A list of y values that have a horizontal line for better
   orientation. Defaults to `[0]`, or to `[]` if `y_as_log` is enabled.
+* `y_gridlines_color` - A boolean or a list of colors for the horizontal
+  gridlines, as specified above for the `color` option. Defaults to `False`.
 * `y_labels` - Enable axis labels for the y axis. Defaults to `True`.
 
 

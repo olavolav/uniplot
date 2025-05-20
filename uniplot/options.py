@@ -51,6 +51,8 @@ class Options:
     x_as_log: bool = False
     # Vertical gridlines
     x_gridlines: List[float] = field(default_factory=_default_gridlines)
+    # Color of vertical gridlines
+    x_gridlines_color: Optional[List[Color]] = None
     # Enable x axis labels
     x_labels: bool = True
     # Maximum x value of the current view
@@ -63,6 +65,8 @@ class Options:
     x_unit: str = ""
     # Horizontal gridlines
     y_gridlines: List[float] = field(default_factory=_default_gridlines)
+    # Color of horizontal gridlines
+    y_gridlines_color: Optional[List[Color]] = None
     # Enable y axis labels
     y_labels: bool = True
     # Maximum y value of the current view

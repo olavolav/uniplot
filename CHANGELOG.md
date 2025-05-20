@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## Unreleased
-### Improved
+### Added
+- Support for colored gridlines with the options `x_gridlines_color` and
+  `y_gridlines_color`.
+### Fixed
 - Width is now exact when y axis labels are disabled.
 
 ## [0.20.1] - 2025-05-10

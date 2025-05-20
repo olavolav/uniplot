@@ -85,6 +85,16 @@ def test_plotting_using_Braille_characters():
     plot(xs=xs, ys=ys, character_set="braille")
 
 
+def test_plotting_with_colored_gridlines():
+    plot(
+        [1, 2, -3, 4],
+        lines=True,
+        y_gridlines_color=["red"],
+        x_gridlines_color="tableau",
+        x_gridlines=[-2, -1, 0, 0.5, 1.5, 2],
+    )
+
+
 def test_plotting_time_series_with_bounds_set_manually():
     dates = np.arange("2024-02-17T09:21", 4 * 60, 60, dtype="M8[m]")
     plot(xs=dates, ys=[1, 2, 3, 2], x_min=dates[0], x_max=dates[-1])

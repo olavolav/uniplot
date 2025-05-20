@@ -55,6 +55,12 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
         if kwargs.get("y_max"):
             kwargs["y_max"] = np.log10(kwargs["y_max"])
 
+    # Colors of gridlines
+    kwargs["x_gridlines_color"] = kwargs.get("x_gridlines_color", False)
+    kwargs["x_gridlines_color"] = _init_color_from_arg(kwargs["x_gridlines_color"])
+    kwargs["y_gridlines_color"] = kwargs.get("y_gridlines_color", False)
+    kwargs["y_gridlines_color"] = _init_color_from_arg(kwargs["y_gridlines_color"])
+
     # Set x bounds to show all points by default
     x_enlarge_delta = AUTO_WINDOW_ENLARGE_FACTOR * (
         floatify(series.x_max()) - floatify(series.x_min())
@@ -98,19 +104,7 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
     # By default, enable color for multiple series, disable color for a single
     # one
     kwargs["color"] = kwargs.get("color", len(series) > 1)
-    # If it is a string, it refers to a color theme
-    if isinstance(kwargs["color"], str):
-        theme_str = kwargs["color"].strip().lower()
-        if theme_str not in COLOR_THEMES:
-            raise ValueError(
-                f"Color theme '{kwargs['color']}' not found. If you intended to specify a single color, pass a list with that entry."
-            )
-        kwargs["color"] = COLOR_THEMES[theme_str]
-    # Convert list of color specifications to Color objects
-    elif isinstance(kwargs["color"], list):
-        kwargs["color"] = [Color.from_param(cs) for cs in kwargs["color"]]
-    if kwargs["color"] is True:
-        kwargs["color"] = COLOR_THEMES["default"]
+    kwargs["color"] = _init_color_from_arg(kwargs["color"])
 
     # TODO Remove this after July 2025, to give folks 3 months to adapt.
     if "force_ascii" in kwargs:
@@ -157,3 +151,30 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
         )
 
     return options
+
+
+###########
+# private #
+###########
+
+
+def _init_color_from_arg(color_arg):
+    # If it is a string, it refers to a color theme
+    if isinstance(color_arg, str):
+        theme_str = color_arg.strip().lower()
+        if theme_str not in COLOR_THEMES:
+            raise ValueError(
+                f"Color theme '{color_arg}' not found. If you intended to specify a single color, pass a list with that entry."
+            )
+        return COLOR_THEMES[theme_str]
+
+    # Convert list of color specifications to Color objects
+    if isinstance(color_arg, list):
+        return [Color.from_param(cs) for cs in color_arg]
+
+    # Default when passing bool value
+    if color_arg is True:
+        return COLOR_THEMES["default"]
+
+    # Otherwise assume no color
+    return False
