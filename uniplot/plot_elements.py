@@ -29,8 +29,6 @@ def legend(
     if len(legend_labels) == 0:
         return ""
 
-    print(legend_placement)
-
     label_strings: List[str] = []
     for i, legend in enumerate(legend_labels):
         symbol: str = "█"
