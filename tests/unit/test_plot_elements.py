@@ -1,4 +1,49 @@
-from uniplot.plot_elements import plot_title, count_lines
+from uniplot.plot_elements import legend, plot_title, count_lines
+from uniplot.legend_placements import LegendPlacement
+
+
+###################
+# Testing: legend #
+###################
+
+
+def test_single_legend_label():
+    label_strings = ["A"]
+    result = legend(
+        legend_labels=label_strings, width=60, line_length_hard_cap=False, color=False
+    )
+    assert len(result) > 0
+    assert "A" in result
+    # Default is in a single line
+    assert len(result.splitlines()) == 1
+
+
+def test_enough_legend_labels_for_a_line_break():
+    label_strings = ["A", "B", "c" * 10]
+    result = legend(
+        legend_labels=label_strings,
+        width=12,
+        line_length_hard_cap=False,
+        color=False,
+        legend_placement=LegendPlacement.AUTO,
+    )
+    assert len(result) > 0
+    assert "A" in result
+    assert len(result.splitlines()) == 2
+
+
+def test_legend_labels_in_vertical_mode():
+    label_strings = ["A", "B", "C"]
+    result = legend(
+        legend_labels=label_strings,
+        width=19,
+        line_length_hard_cap=False,
+        color=False,
+        legend_placement=LegendPlacement.VERTICAL,
+    )
+    assert len(result) > 0
+    assert "A" in result
+    assert len(result.splitlines()) == 3
 
 
 #######################

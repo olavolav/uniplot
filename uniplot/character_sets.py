@@ -284,3 +284,14 @@ class CharacterSet(Enum):
     ASCII = 1
     BLOCK = 2
     BRAILLE = 3
+
+    @classmethod
+    def from_string(cls, label: str) -> "CharacterSet":
+        cs_string = str(label).strip().lower()
+        if cs_string == "ascii":
+            return CharacterSet.ASCII
+        if cs_string == "block":
+            return CharacterSet.BLOCK
+        if cs_string == "braille":
+            return CharacterSet.BRAILLE
+        raise ValueError("Invalid 'character_set' option.")

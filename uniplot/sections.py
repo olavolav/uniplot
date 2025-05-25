@@ -56,6 +56,7 @@ def generate_body(
                 color=options.color,
                 force_ascii_characters=options.force_ascii_characters,
                 character_set=options.character_set,
+                legend_placement=options.legend_placement,
             )
         )
 

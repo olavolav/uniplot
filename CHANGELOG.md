@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Support for colored gridlines with the options `x_gridlines_color` and
   `y_gridlines_color`.
+- Support for horizontally placed legend labels with the `legend_placement`
+  option.
 ### Fixed
 - Width is now exact when y axis labels are disabled.
 

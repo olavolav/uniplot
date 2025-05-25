@@ -3,12 +3,15 @@ import numpy as np
 from numpy.typing import NDArray
 from typing import List, Tuple, Optional, Final
 
-from uniplot.options import CharacterSet
+from uniplot.character_sets import CharacterSet
+from uniplot.legend_placements import LegendPlacement
 import uniplot.colors as colors
 
 
 CURSOR_UP_ONE: Final = "\x1b[1A"
 ERASE_LINE: Final = "\x1b[2K"
+
+LEGEND_VERTICAL_SPACING: Final = 3
 
 
 def legend(
@@ -18,10 +21,16 @@ def legend(
     color: Optional[List[colors.Color]],
     force_ascii_characters: List[str] = [],
     character_set: CharacterSet = CharacterSet.BLOCK,
+    legend_placement: LegendPlacement = LegendPlacement.AUTO,
 ) -> str:
     """
     Assemble a legend that shows the color of the different curves.
     """
+    if len(legend_labels) == 0:
+        return ""
+
+    print(legend_placement)
+
     label_strings: List[str] = []
     for i, legend in enumerate(legend_labels):
         symbol: str = "█"
@@ -35,9 +44,31 @@ def legend(
         )
         label_strings.append(label_string)
 
+    if legend_placement == LegendPlacement.AUTO:
+        # If possible, group multiple labels into a single line
+        i = 1  # start at 2nd label
+        while i < len(label_strings):
+            len_previous_label = _effective_len(label_strings[i - 1])
+            len_current_label = _effective_len(label_strings[i])
+            if len_previous_label + LEGEND_VERTICAL_SPACING + len_current_label < width:
+                # We can merge these lines
+                label_strings[i - 1] = (
+                    label_strings[i - 1]
+                    + (" " * LEGEND_VERTICAL_SPACING)
+                    + label_strings[i]
+                )
+                del label_strings[i]
+            else:
+                # We cannot merge these lines
+                i += 1
+
     full_label_string = "\n".join(label_strings)
 
-    return _center_if_possible(full_label_string, width + 2, line_length_hard_cap)
+    if legend_placement == LegendPlacement.AUTO:
+        return _center_each_line_if_possible(
+            full_label_string, width + 2, line_length_hard_cap
+        )
+    return _center_block_if_possible(full_label_string, width + 2, line_length_hard_cap)
 
 
 def plot_title(title: str, width: int, line_length_hard_cap: Optional[int]) -> str:
@@ -46,7 +77,7 @@ def plot_title(title: str, width: int, line_length_hard_cap: Optional[int]) -> s
 
     Note that this assumes that `title` is not `None`.
     """
-    return _center_if_possible(title, width + 2, line_length_hard_cap)
+    return _center_block_if_possible(title, width + 2, line_length_hard_cap)
 
 
 def erase_previous_lines(nr_lines: int) -> None:
@@ -88,7 +119,20 @@ def count_lines(text: str) -> int:
 ###########
 
 
-def _center_if_possible(
+def _center_each_line_if_possible(
+    text: str, width: int, line_length_hard_cap: Optional[int]
+) -> str:
+    lines = text.splitlines()
+    centered_lines = [
+        _center_block_if_possible(
+            line, width=width, line_length_hard_cap=line_length_hard_cap
+        )
+        for line in lines
+    ]
+    return "\n".join(centered_lines)
+
+
+def _center_block_if_possible(
     text: str, width: int, line_length_hard_cap: Optional[int]
 ) -> str:
     """
@@ -112,6 +156,10 @@ def _center_if_possible(
 
 def _text_without_control_chars(text: str):
     return colors.COLOR_CODE_REGEX.sub("", text)
+
+
+def _effective_len(text: str) -> int:
+    return len(_text_without_control_chars(text))
 
 
 def _colorize_char(

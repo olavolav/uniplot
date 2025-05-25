@@ -56,6 +56,9 @@ class Color:
     def from_hex(cls, color_name: str) -> "Color":
         hex_str = str(color_name).strip().lower().lstrip("#")
         r, g, b = tuple(int(hex_str[i : i + 2], 16) for i in (0, 2, 4))
+        r = cls._clip_to_valid_int(r)
+        g = cls._clip_to_valid_int(g)
+        b = cls._clip_to_valid_int(b)
         return cls.from_rgb(r, g, b)
 
     @classmethod
@@ -77,9 +80,12 @@ class Color:
         if self.terminal_color:
             return ANSI_COLOR_CODES[self.terminal_color]
         r, g, b = self.rgb  # type: ignore
-        # Template: '\033[38;2;146;255;12mHello!\033[0m'
         return f"\033[38;2;{r};{g};{b}m"
 
     @staticmethod
-    def _clip_to_valid_int(x, x_min=0, x_max=255):
-        return max(min(int(x), x_max), x_min)
+    def _clip_to_valid_int(x) -> int:
+        if x < 0 or x > 255:
+            print(
+                f"Warning: Color value of {x} invalid, clipping to valid range 0 - 255."
+            )
+        return max(min(int(x), 255), 0)

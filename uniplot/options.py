@@ -3,6 +3,7 @@ from typing import List, Optional
 
 from uniplot.character_sets import ASCII_CHARACTER_SET, CharacterSet
 from uniplot.colors import Color
+from uniplot.legend_placements import LegendPlacement
 
 
 def _default_gridlines() -> List[float]:
@@ -38,6 +39,8 @@ class Options:
     interactive: bool = False
     # Labels for the series
     legend_labels: Optional[List[str]] = None
+    # Legend placement
+    legend_placement: LegendPlacement = LegendPlacement.AUTO
     # Draw lines between points
     lines: List[bool] = field(default_factory=_default_lines)
     # Enforce a hard limit on the number of characters per line. This may

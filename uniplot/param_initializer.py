@@ -6,6 +6,7 @@ from uniplot.options import Options, CharacterSet
 from uniplot.conversions import floatify
 from uniplot.colors import Color
 from uniplot.color_themes import COLOR_THEMES
+from uniplot.legend_placements import LegendPlacement
 
 AUTO_WINDOW_ENLARGE_FACTOR = 0.001
 
@@ -101,6 +102,11 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
             for s in list(kwargs["legend_labels"])[0 : len(series)]
         ]
 
+    if "legend_placement" in kwargs:
+        kwargs["legend_placement"] = LegendPlacement.from_string(
+            kwargs["legend_placement"]
+        )
+
     # By default, enable color for multiple series, disable color for a single
     # one
     kwargs["color"] = kwargs.get("color", len(series) > 1)
@@ -114,15 +120,7 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
         del kwargs["force_ascii"]
 
     if "character_set" in kwargs:
-        cs_string = str(kwargs["character_set"]).strip().lower()
-        if cs_string == "ascii":
-            kwargs["character_set"] = CharacterSet.ASCII
-        elif cs_string == "block":
-            kwargs["character_set"] = CharacterSet.BLOCK
-        elif cs_string == "braille":
-            kwargs["character_set"] = CharacterSet.BRAILLE
-        else:
-            raise ValueError("Invalid 'character_set' option.")
+        kwargs["character_set"] = CharacterSet.from_string(kwargs["character_set"])
 
     if "force_ascii_characters" in kwargs:
         # In ASCII mode, simply slice to only use the first character

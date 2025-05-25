@@ -147,6 +147,9 @@ In alphabetical order:
   and a lighter look overall. Defaults to `"block"`.
 * `force_ascii_characters` -  List of characters to use when using the
   ASCII character set. Defaults to `["+", "x", "o", "*", "~", "."]`.
+* `legend_placement` - Arrangement of the legend labels. `"auto"` attempts to
+  place them one or more rows next to each other, while `"vertical"` is a
+  block with one label per row. Defaults to `"auto"`.
 * `line_length_hard_cap` - Enforce a hard limit on the number of characters per
   line of the plot area. This may override the `width` option if there is not
   enough space. Defaults to `None`.
