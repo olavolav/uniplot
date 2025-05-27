@@ -41,7 +41,7 @@ and the options below to select the character set.
 
 ```python
 import math
-x = [math.sin(i/20)+i/300 for i in range(600)]
+x = [math.sin(i / 20) + i / 300 for i in range(600)]
 from uniplot import plot
 plot(x, title="Sine wave")
 ```
