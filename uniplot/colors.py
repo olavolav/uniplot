@@ -43,7 +43,9 @@ class Color:
             return cls.from_terminal(color_data)
         if isinstance(color_data, tuple) and len(color_data) == 3:
             return cls.from_rgb(*color_data)
-        raise TypeError(f"Unsupported color type: {type(color_data)}")
+        if color_data == False:  # noqa: E712
+            return Color(terminal_color=None, rgb=None)
+        raise TypeError(f"Unsupported color: {color_data}")
 
     @classmethod
     def from_terminal(cls, color_name: str) -> "Color":

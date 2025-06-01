@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## Unreleased
+### Added
+- Example widget, to illustrate how to (one of multiple ways) build
+  interactive applications on top of uniplot.
+
 ## [0.21.1] - 2025-05-25
 ### Fixed
 - Removed debugging output.
