@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Improved
 - Improved line drawing performance 5-10x.
 
+```
      Sample size versus plotting time, dots only, log-log
 ┌────────────────────────────────────────────────────────────┐
 │                                                           +│
@@ -65,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  1               100             10^4             10^6
                           ++ v0.9.1
                           xx current
+
    Sample size versus plotting time, dots + lines, log-log
 ┌────────────────────────────────────────────────────────────┐
 │                                                          ++│
@@ -88,6 +90,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  1               100             10^4             10^6
                           ++ v0.9.1
                           xx current
+```
 
 ### Changed
 - Merged the `force_ascii` feature into the `character_set` option. ASCII character
