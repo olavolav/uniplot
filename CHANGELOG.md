@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
+- Experimental: Support for 3 ways to move in interactive mode: Vim-style,
+  arrow keys and FPS-style.
 - Example widget, to illustrate how to (one of multiple ways) build
   interactive applications on top of uniplot.
 

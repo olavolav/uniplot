@@ -1,11 +1,11 @@
 from typing import List, Dict, Optional, Final, Any
+from readchar import readkey, key
 
 from uniplot.multi_series import MultiSeries
 from uniplot.options import Options
 from uniplot.param_initializer import validate_and_transform_options
 import uniplot.sections as sections
 import uniplot.plot_elements as elements
-from uniplot.getch import getch
 
 
 def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
@@ -31,24 +31,25 @@ def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
         plt.update()
 
         if plt.options.interactive:
-            plt.print_subscript("Move h/j/k/l, zoom u/n, or r to reset. ESC/q to quit.")
-            key_pressed = getch().lower()
+            plt.print_subscript("Move h/j/k/l, zoom u/n, or r to reset. q to quit.")
+            key_pressed = readkey()
 
-            if key_pressed == "h":
+            # Here we support 3 ways to move: Vim-style, arrow keys and FPS-style
+            if key_pressed in ["h", key.LEFT, "a"]:
                 plt.options.shift_view_left()
-            elif key_pressed == "l":
+            elif key_pressed in ["l", key.RIGHT, "d"]:
                 plt.options.shift_view_right()
-            elif key_pressed == "j":
+            elif key_pressed in ["j", key.DOWN, "s"]:
                 plt.options.shift_view_down()
-            elif key_pressed == "k":
+            elif key_pressed in ["k", key.UP, "w"]:
                 plt.options.shift_view_up()
-            elif key_pressed == "u":
+            elif key_pressed in ["u", "]"]:
                 plt.options.zoom_in()
-            elif key_pressed == "n":
+            elif key_pressed in ["n", "["]:
                 plt.options.zoom_out()
             elif key_pressed == "r":
                 plt.options.reset_view()
-            elif key_pressed in ["q", "\x1b"]:
+            elif key_pressed in ["q", "Q", key.ESC]:
                 break
 
         first_iteration = False

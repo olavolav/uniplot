@@ -25,7 +25,6 @@ the problem was.
 * Interactive mode (pass `interactive=True`)
 * Color mode (pass `color=True`) useful in particular when plotting multiple series
 * It's fast: Plotting 1M data points takes 26ms thanks to NumPy magic
-* Only one dependency: NumPy (but you have that anyway don't you)
 
 Please note that Unicode drawing will work correctly only when using a font
 that fully supports the [Block Elements character
@@ -234,6 +233,16 @@ Result:
 └────────────────────────────────────────────────────────────┘
      -1                        0                       1
 ```
+
+### Arrow keys and FPS-style keys
+
+In interactive mode, we now also support wasd or FPS-style keyboard layout and
+the arrow keys. Arrows should work on most platforms like Mac, Linux or Windows. We might make the keyboard layout fully configurable, to change the current Vim-inspired one, at a later date. For now, you have 3 ways to move the view:
+
+* Vim-style: `h` left, `j` down, `k` up, `l` right, `u` zoom in, `n` zoom out.
+* FPS-style: `a` left, `s` down, `w` up, `d` right, `]` zoom in, `[` zoom out.
+* Arrow keys: movement obvious, `]` zoom in, `[` zoom out.
+
 
 ### Streaming
 

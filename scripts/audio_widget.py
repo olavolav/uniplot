@@ -3,7 +3,7 @@ from wave import open as open_wave
 import numpy as np
 
 from uniplot import plot_gen
-from uniplot.getch import getch
+from readchar import readkey
 
 MAX_FRAMES = 100_000
 MONO_DISPLAY_OFFSET = 20_000
@@ -41,7 +41,7 @@ while True:
         x_gridlines=x_gridlines,
         x_gridlines_color=x_gridlines_color,
     )
-    key_pressed = getch().lower()
+    key_pressed = readkey()
     if key_pressed == "h":
         x_gridlines[-1] -= 5_000
     elif key_pressed == "l":
