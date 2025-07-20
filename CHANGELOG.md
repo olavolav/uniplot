@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## Unreleased
+### Fixed
+- Fixed an isse with floating point axis labels that did not have the correct
+  number of digits because they were not rounded correctly.
+
 ## [0.21.2] - 2025-06-10
 ### Added
 - Experimental: Support for 3 ways to move in interactive mode: Vim-style,

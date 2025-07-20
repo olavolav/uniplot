@@ -58,6 +58,25 @@ def test_floating_point_wrapping_issue():
     assert "-0.4" in render
 
 
+def test_floating_point_rounding_issue():
+    """
+    This is covering an issue observed in testing, where labels 0.99 and
+    1.00 were displayed as "0" and "1". The underlying reason was that
+    0.99 at zero digits would incorrectyly render to "0". This test ensures
+    that we have fixed the issue.
+    """
+    ls = LabelSet(
+        labels=np.array([0.99, 1]),
+        x_min=0.985,
+        x_max=1.05,
+        available_space=17,
+        vertical_direction=True,
+    )
+    render = ls.render()
+    assert "0.99" in render
+    assert "1.00" in render
+
+
 def test_string_representation_of_full_integers():
     """
     Make sure we add the right number of digits.

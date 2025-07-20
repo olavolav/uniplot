@@ -153,7 +153,7 @@ class LabelSet:
         Ref.: https://docs.python.org/3.8/library/string.html#format-specification-mini-language
         """
         if nr_digits == 0:
-            return ("{:,d}").format(int(n))
+            return ("{:,d}").format(round(n))
         return ("{:,." + str(nr_digits) + "f}").format(float(n))
 
     def _add_log_to_label(self, label) -> str:
