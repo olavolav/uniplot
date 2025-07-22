@@ -82,6 +82,8 @@ class LabelSet:
                     self.available_space - 1,
                 )
             )
+            # This is only done for the vertical direction. For horizontal labels,
+            # regular spacing seems not noticable.
             self._spacing_is_regular = self._compute_spacing_of_indices_is_regular(
                 indices
             )
