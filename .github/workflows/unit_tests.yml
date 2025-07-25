@@ -22,7 +22,7 @@ jobs:
       uses: astral-sh/setup-uv@v5
 
     - name: Run test script
-      run: uv run ./run_tests.sh
+      run: make test
 
     - name: Run all example scripts
       run: |
