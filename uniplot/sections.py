@@ -37,12 +37,21 @@ def generate_body(
     """
 
     lines: List[str] = []
-    # Add plot area
-    lines.append(f"┌{'─' * options.width}┐")
+    # Top
+    if options.rounded_corners:
+        lines.append(f"╭{'─' * options.width}╮")
+    else:
+        lines.append(f"┌{'─' * options.width}┐")
+    # Body
     for y_label, row in zip(y_axis_labels, pixel_character_matrix):
         row = ("│" + "".join(row) + "│ " + y_label).rstrip()
         lines.append(row)
-    lines.append(f"└{'─' * options.width}┘")
+    # Bottom
+    if options.rounded_corners:
+        lines.append(f"╰{'─' * options.width}╯")
+    else:
+        lines.append(f"└{'─' * options.width}┘")
+
     if len(x_axis_labels) > 0:
         lines.append(x_axis_labels)
 

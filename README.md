@@ -152,6 +152,7 @@ In alphabetical order:
 * `line_length_hard_cap` - Enforce a hard limit on the number of characters per
   line of the plot area. This may override the `width` option if there is not
   enough space. Defaults to `None`.
+* `rounded_corners` - Draw bounding box with round corners. Defaults to `False.
 * `x_as_log` - Plot the x axis as logarithmic scale. Defaults to `False`.
 * `x_gridlines` - A list of x values that have a vertical line for better
   orientation. Defaults to `[0]`, or to `[]` if `x_as_log` is enabled.

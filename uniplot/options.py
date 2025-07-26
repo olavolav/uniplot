@@ -46,6 +46,8 @@ class Options:
     # Enforce a hard limit on the number of characters per line. This may
     # override the `width` option if there is not enough space.
     line_length_hard_cap: Optional[int] = None
+    # Rounded corners
+    rounded_corners: bool = False
     # Title of the plot
     title: Optional[str] = None
     # Width of the plotting region, in characters

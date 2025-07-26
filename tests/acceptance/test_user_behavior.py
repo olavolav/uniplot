@@ -73,6 +73,10 @@ def test_just_single_point_plotting():
     plot(x)
 
 
+def test_with_rounded_corners():
+    plot([1, 2, 3], rounded_corners=True)
+
+
 def test_random_line_plotting():
     xs = [random() for _ in range(100)]
     ys = [random() for _ in range(100)]
