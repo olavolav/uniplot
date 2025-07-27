@@ -1,4 +1,5 @@
-.PHONY: *
+EXAMPLES := $(wildcard examples/*.py)
+.PHONY: test help format linter type_check visual_check unit_test $(EXAMPLES) run_all_examples build clean
 
 test: format linter type_check visual_check unit_test
 
@@ -44,11 +45,20 @@ unit_test:
 	uv run python3 -m pytest tests/
 	@echo
 
-run_all_examples:
-	@echo "Running all examples..."
-	@for example in examples/*.py; do \
-		uv run python3 $$example; \
-	done
+$(EXAMPLES):
+	@echo "Running example: $@"
+	uv run python3 $@
+
+run_all_examples: $(EXAMPLES)
+	@echo "Ran all examples."
+
+dist/:
+	@echo "Building package ..."
+	uv build
+
+publish: clean dist/
+	@echo "Publishing package ..."
+	uv publish
 
 clean:
 	rm -rf dist/
