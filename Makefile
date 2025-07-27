@@ -1,5 +1,5 @@
 EXAMPLES := $(wildcard examples/*.py)
-.PHONY: test help format linter type_check visual_check unit_test $(EXAMPLES) run_all_examples build clean
+.PHONY: test help format linter type_check visual_check unit_test $(EXAMPLES) run_all_examples publish clean
 
 test: format linter type_check visual_check unit_test
 
