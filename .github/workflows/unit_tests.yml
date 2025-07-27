@@ -25,7 +25,4 @@ jobs:
       run: make test
 
     - name: Run all example scripts
-      run: |
-        for example in examples/*.py; do
-          uv run python3 $example
-        done
+      run: make run_all_examples

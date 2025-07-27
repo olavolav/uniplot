@@ -271,7 +271,7 @@ See `examples/5-sreaming.py` for a more complete example.
 
 Install via pip using:
 
-```sh
+```shell
 pip install uniplot
 ```
 
@@ -281,9 +281,15 @@ pip install uniplot
 Clone this repository, and make sure you
 [have uv installed](https://docs.astral.sh/uv/getting-started/installation/).
 
-You can run the tests, to make sure your setup is good.
+On most Linux-like systems like MacOS you can run:
 ```shell
-uv run ./run_tests.sh
+make
+```
+See the `Makefile` for details and more granular commands.
+
+Alternatively, on systems like Windows that do not have `make` installed, you can run:
+```shell
+uv run scripts/run_tests.sh
 ```
 
 Then proceed with issues, PRs etc. the usual way.
