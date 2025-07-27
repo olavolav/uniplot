@@ -8,9 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.21.3] - 2025-07-27
 ### Added
-- Adds `rounded_corners` option, for round corners of the bounding box.
+- Adds the `rounded_corners` option, for round corners of the bounding box.
 ### Fixed
-- Fixed an isse with floating point axis labels that did not have the correct
+- Fixes an issue with floating-point axis labels that did not have the correct
   number of digits because they were not rounded correctly.
 
 ## [0.21.2] - 2025-06-10
