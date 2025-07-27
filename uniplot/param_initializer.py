@@ -112,13 +112,6 @@ def validate_and_transform_options(series: MultiSeries, kwargs: Dict = {}) -> Op
     kwargs["color"] = kwargs.get("color", len(series) > 1)
     kwargs["color"] = _init_color_from_arg(kwargs["color"])
 
-    # TODO Remove this after July 2025, to give folks 3 months to adapt.
-    if "force_ascii" in kwargs:
-        print(
-            "Warning: the force_ascii option is deprecated. Please use the character_set option instead."
-        )
-        del kwargs["force_ascii"]
-
     if "character_set" in kwargs:
         kwargs["character_set"] = CharacterSet.from_string(kwargs["character_set"])
 
