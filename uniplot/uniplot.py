@@ -10,7 +10,7 @@ import uniplot.plot_elements as elements
 
 def plot(ys: Any, xs: Optional[Any] = None, **kwargs) -> None:
     """
-    2D scatter dot plot on the terminal.
+    2D plot on the terminal.
 
     Parameters:
 
