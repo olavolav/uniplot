@@ -109,7 +109,7 @@ In alphabetical order:
   series, and to `True` when plotting multiple. Also accepts a list of colors,
   identified by strings like `"red"` for simple ANSI colors, tuples of RGB
   values like `(255,0,0)`, or hexadecimal RGB colors like `"#B4FBB8"`.
-  Alternaively, you can specify a color theme, as defined in
+  Alternaively, you can specify a color theme as a string, as defined in
   `uniplot/color_themes.py`. Note that for RGB colors you need to use a
   terminal that supports them.
 * `height` - The height of the plotting region, in characters. Default is `17`.
@@ -264,7 +264,7 @@ while True:
     plt.update(ys=ys, title=f"Streaming: {len(ys)} data point(s) ...")
 ```
 
-See `examples/5-sreaming.py` for a more complete example.
+See `examples/5-streaming.py` for a more complete example.
 
 
 ## Installation
