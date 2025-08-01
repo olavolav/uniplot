@@ -138,24 +138,13 @@ def plot_to_string(ys: Any, xs: Optional[Any] = None, **kwargs) -> str:
 #####################################
 
 
-def histogram(
+def prepare_histogram(
     xs: Any,
     bins: int = 20,
     bins_min: Optional[float] = None,
     bins_max: Optional[float] = None,
     **kwargs,
-) -> None:
-    """
-    Plot a histogram to the terminal.
-
-    Parameters:
-
-    - `xs` are the values of the points to plot. This parameter is mandatory
-      and can either be a list or a list of lists, or the equivalent NumPy
-      array.
-    - Any additional keyword arguments are passed to the
-      `uniplot.options.Options` class.
-    """
+):
     # HACK Use the `MultiSeries` constructor to cast values to uniform format
     multi_series = MultiSeries(ys=xs)
 
@@ -189,4 +178,49 @@ def histogram(
         xs_histo_series.append(xs_barchart)
         ys_histo_series.append(ys_barchart)
 
+    return xs_histo_series, ys_histo_series, kwargs
+
+
+def histogram(
+    xs: Any,
+    bins: int = 20,
+    bins_min: Optional[float] = None,
+    bins_max: Optional[float] = None,
+    **kwargs,
+) -> None:
+    """
+    Plot a histogram to the terminal.
+
+    Parameters:
+
+    - `xs` are the values of the points to plot. This parameter is mandatory
+      and can either be a list or a list of lists, or the equivalent NumPy
+      array.
+    - Any additional keyword arguments are passed to the
+      `uniplot.options.Options` class.
+    """
+    xs_histo_series, ys_histo_series, kwargs = prepare_histogram(
+        xs, bins, bins_min, bins_max, **kwargs
+    )
     plot(xs=xs_histo_series, ys=ys_histo_series, **kwargs)
+
+
+def histogram_to_string(
+    xs: Any,
+    bins: int = 20,
+    bins_min: Optional[float] = None,
+    bins_max: Optional[float] = None,
+    **kwargs,
+) -> str:
+    """
+    Same as `histogram`, but the return type is string. Ignores the `interactive`
+    option.
+
+    Can be used to integrate uniplot in other applications, or if the output is
+    desired to be not stdout.
+    """
+    xs_histo_series, ys_histo_series, kwargs = prepare_histogram(
+        xs, bins, bins_min, bins_max, **kwargs
+    )
+    plt = plot_gen(return_string=True)
+    return str(plt.update(xs=xs_histo_series, ys=ys_histo_series, **kwargs))
