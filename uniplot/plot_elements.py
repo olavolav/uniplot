@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 from numpy.typing import NDArray
-from typing import List, Tuple, Optional, Final
+from typing import List, Tuple, Optional, Final, Any
 
 from uniplot.character_sets import CharacterSet
 from uniplot.legend_placements import LegendPlacement
@@ -86,6 +86,40 @@ def erase_previous_lines(nr_lines: int) -> None:
         sys.stdout.write(ERASE_LINE)
         sys.stdout.write(CURSOR_UP_ONE)
         sys.stdout.write(ERASE_LINE)
+
+
+def prepare_histogram(
+    multi_series: Any,
+    bins: int = 20,
+    bins_min: Optional[float] = None,
+    bins_max: Optional[float] = None,
+) -> Tuple[List, List]:
+    bins_min_real: float = bins_min if bins_min is not None else multi_series.y_min()
+    bins_max_real: float = bins_max if bins_max is not None else multi_series.y_max()
+    assert bins_max_real > bins_min_real
+
+    # Depending on whether the bin limits were supplied as arguments, expand
+    # the width automatically
+    delta: float = bins_max_real - bins_min_real
+    if bins_min is None:
+        bins_min_real = bins_min_real - 0.1 * delta
+    if bins_max is None:
+        bins_max_real = bins_max_real + 0.1 * delta
+
+    # Compute bin edges
+    bin_edges = [
+        bins_min_real + i * (bins_max_real - bins_min_real) / bins
+        for i in range(bins + 1)
+    ]
+
+    xs_histo_series = []
+    ys_histo_series = []
+    for s in multi_series.ys:
+        xs_barchart, ys_barchart = compute_bar_chart_histogram_points(s, bin_edges)
+        xs_histo_series.append(xs_barchart)
+        ys_histo_series.append(ys_barchart)
+
+    return (xs_histo_series, ys_histo_series)
 
 
 def compute_bar_chart_histogram_points(

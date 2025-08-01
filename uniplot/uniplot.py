@@ -138,49 +138,6 @@ def plot_to_string(ys: Any, xs: Optional[Any] = None, **kwargs) -> str:
 #####################################
 
 
-def prepare_histogram(
-    xs: Any,
-    bins: int = 20,
-    bins_min: Optional[float] = None,
-    bins_max: Optional[float] = None,
-    **kwargs,
-):
-    # HACK Use the `MultiSeries` constructor to cast values to uniform format
-    multi_series = MultiSeries(ys=xs)
-
-    # Histograms usually make sense only with lines
-    kwargs["lines"] = kwargs.get("lines", True)
-
-    bins_min_real: float = bins_min if bins_min is not None else multi_series.y_min()
-    bins_max_real: float = bins_max if bins_max is not None else multi_series.y_max()
-    assert bins_max_real > bins_min_real
-
-    # Depending on whether the bin limits were supplied as arguments, expand
-    # the width automatically
-    delta: float = bins_max_real - bins_min_real
-    if bins_min is None:
-        bins_min_real = bins_min_real - 0.1 * delta
-    if bins_max is None:
-        bins_max_real = bins_max_real + 0.1 * delta
-
-    # Compute bin edges
-    bin_edges = [
-        bins_min_real + i * (bins_max_real - bins_min_real) / bins
-        for i in range(bins + 1)
-    ]
-
-    xs_histo_series = []
-    ys_histo_series = []
-    for s in multi_series.ys:
-        xs_barchart, ys_barchart = elements.compute_bar_chart_histogram_points(
-            s, bin_edges
-        )
-        xs_histo_series.append(xs_barchart)
-        ys_histo_series.append(ys_barchart)
-
-    return xs_histo_series, ys_histo_series, kwargs
-
-
 def histogram(
     xs: Any,
     bins: int = 20,
@@ -199,10 +156,15 @@ def histogram(
     - Any additional keyword arguments are passed to the
       `uniplot.options.Options` class.
     """
-    xs_histo_series, ys_histo_series, kwargs = prepare_histogram(
-        xs, bins, bins_min, bins_max, **kwargs
+    # HACK Use the `MultiSeries` constructor to cast values to uniform format
+    multi_series = MultiSeries(ys=xs)
+    xs_histo, ys_histo = elements.prepare_histogram(
+        multi_series, bins, bins_min, bins_max
     )
-    plot(xs=xs_histo_series, ys=ys_histo_series, **kwargs)
+
+    # Histograms usually make sense only with lines
+    kwargs["lines"] = True
+    plot(xs=xs_histo, ys=ys_histo, **kwargs)
 
 
 def histogram_to_string(
@@ -219,8 +181,13 @@ def histogram_to_string(
     Can be used to integrate uniplot in other applications, or if the output is
     desired to be not stdout.
     """
-    xs_histo_series, ys_histo_series, kwargs = prepare_histogram(
-        xs, bins, bins_min, bins_max, **kwargs
+    # HACK Use the `MultiSeries` constructor to cast values to uniform format
+    multi_series = MultiSeries(ys=xs)
+    xs_histo, ys_histo = elements.prepare_histogram(
+        multi_series, bins, bins_min, bins_max
     )
+
     plt = plot_gen(return_string=True)
-    return str(plt.update(xs=xs_histo_series, ys=ys_histo_series, **kwargs))
+    # Histograms usually make sense only with lines
+    kwargs["lines"] = True
+    return str(plt.update(xs=xs_histo, ys=ys_histo, **kwargs))

@@ -7,7 +7,12 @@ import numpy as np
 from random import random
 import datetime
 
-from uniplot import plot, plot_to_string, plot_gen
+from uniplot import plot, plot_to_string, plot_gen, histogram, histogram_to_string
+
+
+################
+# Testing plot #
+################
 
 
 def test_normal_plotting():
@@ -196,3 +201,23 @@ def test_plot_gen_update_without_changing_any_options():
     plt = plot_gen(title="Test")
     plt.update(ys=[1, 2, 3])
     plt.update(ys=[1, 2, 3, 4])
+
+
+#####################
+# Testing histogram #
+#####################
+
+
+def test_plotting_a_histogram():
+    xs = [1, 2, 3, 2, 3, 2, 1]
+    histogram(xs)
+
+
+###############################
+# Testing histogram_to_string #
+###############################
+
+
+def test_plotting_a_histogram_to_string():
+    xs = [1, 2, 3, 2, 3, 2, 1]
+    histogram_to_string(xs)
