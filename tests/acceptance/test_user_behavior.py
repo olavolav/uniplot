@@ -30,7 +30,16 @@ def test_plotting_with_named_terminal_color():
     plot(ys, color=["red"])
 
 
-def test_plotting_with_named_rbg_color():
+def test_plotting_with_single_named_terminal_color():
+    """
+    We want this to at least work, possibly with a warning, so that the
+    options as so obvious that the user can guess them.
+    """
+    ys = [1, 3, -2, 5]
+    plot(ys, color="red")
+
+
+def test_plotting_with_rbg_color():
     ys = [1, 3, -2, 5]
     plot(ys, color=[(1, 2, 255)])
 

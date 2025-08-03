@@ -154,9 +154,16 @@ def _init_color_from_arg(color_arg):
     if isinstance(color_arg, str):
         theme_str = color_arg.strip().lower()
         if theme_str not in COLOR_THEMES:
-            raise ValueError(
-                f"Color theme '{color_arg}' not found. If you intended to specify a single color, pass a list with that entry."
-            )
+            try:
+                c = Color.from_terminal(theme_str)
+                print(
+                    f'Warning: Please use a list such as ["{color_arg}"] to specify a single named color.'
+                )
+                return [c]
+            except ValueError:
+                raise ValueError(
+                    f"Color theme '{color_arg}' not found. If you intended to specify a single color, pass a list with that entry."
+                )
         return COLOR_THEMES[theme_str]
 
     # Convert list of color specifications to Color objects
