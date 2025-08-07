@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.21.4] - 2025-08-03
 ### Added
 - Adds `histogram_to_string` to output histogram plot as string. Thanks to
-  @stodoran for suggestion and PR!
-- The `color` option now also supports a single named color, though outputting
+  @stodoran for the suggestion and PR!
+- The `color` option now also supports a single named color, though it outputs
   a warning.
 
 ## [0.21.3] - 2025-07-27
