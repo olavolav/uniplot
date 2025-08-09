@@ -134,7 +134,7 @@ def _compute_simplicity_score(labels: NDArray, i: int, j: int) -> float:
     """
     # Indicator variable that is one if zero is part of the labels, and zero otherwise
     # NOTE It might make sense to extend this to all gridline values, plus zero
-    v = int(any(np.isclose(labels, np.zeros(len(labels)))))
+    v = int(any([abs(label) < 1e-6 for label in labels]))
     return 1 - (i - 1) / (len(Q_VALUES) - 1) - j + v
 
 

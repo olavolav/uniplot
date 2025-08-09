@@ -412,6 +412,62 @@ wheels = [
 ]
 
 [[package]]
+name = "pyinstrument"
+version = "5.0.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ba/a5/f11adb20528285ab85878f8fe1a22d5759c68c49ad3b545d1c1808ab52da/pyinstrument-5.0.3.tar.gz", hash = "sha256:88281dfe65e5d6b42035bba72808cbcd4cb46cd0a0ba35da23d3e74a41ebdd05", size = 264026 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5f/34/bfe2e0fc21f99063737dce043a02b561021648907ab865afc282c68b45a5/pyinstrument-5.0.3-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:b5aaf098234bbb877cbf90978fe7db4fc3e42311715a58e9d0757ddc8673f6aa", size = 129695 },
+    { url = "https://files.pythonhosted.org/packages/d8/56/5f53c2630d0da5d51f9fc26a9a34d6f03d0ce98efd73562ee46108e88cab/pyinstrument-5.0.3-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:9297d078178038a12b9416d285af53525e14368c7f5e40596e8e9f9124f47366", size = 122274 },
+    { url = "https://files.pythonhosted.org/packages/47/0d/f10bc4e6444b054989bab01a6ab011fda68cf108dd273fea819dc16ac95c/pyinstrument-5.0.3-cp310-cp310-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:2b98e12a5deb4d854446d605db28ca02803ec7c7f79d6ba58b7fa198ed9bf7f8", size = 146985 },
+    { url = "https://files.pythonhosted.org/packages/c9/d7/297bb17bc33654c2e0cce69303531c68ee9bca386dc5f98f90f0c67f9cea/pyinstrument-5.0.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:81e6ce653de7bf3b085920cc5a6aed432f87a4c00eede37f71a01457a72351a9", size = 145682 },
+    { url = "https://files.pythonhosted.org/packages/ff/4c/6f2869ce87ba83a208505cc28f61355dceb8a030a604bbab6c3dae094c03/pyinstrument-5.0.3-cp310-cp310-musllinux_1_2_aarch64.whl", hash = "sha256:72ff11e851bdd226928ce4ee8e01b5a90cd53c39c5cec7c5dac225f4bf54b141", size = 145940 },
+    { url = "https://files.pythonhosted.org/packages/ba/b2/3edc84b48794e5fde4c83403b7c46c4a6bb1a189383b1a0fee1e192916b4/pyinstrument-5.0.3-cp310-cp310-musllinux_1_2_x86_64.whl", hash = "sha256:ed72bd5052fcc0366c3792fdd099eccf88397f5a9e48b04c09a8d2c79aef30e0", size = 145446 },
+    { url = "https://files.pythonhosted.org/packages/fd/40/f1ed9eb80fa3afb43d89e2de99de51f4b27cf5d58bc1fe4b3c07922fb18a/pyinstrument-5.0.3-cp310-cp310-win32.whl", hash = "sha256:6b57d402d34b5c02c0a2ad808b854565feaa8d6c17631a4fc6014dc755fa6c9a", size = 123490 },
+    { url = "https://files.pythonhosted.org/packages/d6/76/a3b99d1a4b1cd335b8a25e073e7c56059299666f711577f7ea11cc06cf70/pyinstrument-5.0.3-cp310-cp310-win_amd64.whl", hash = "sha256:338c83e7f33627ac32ec84317aa478e2c85e6ae1f6294cec3927c212137fb13a", size = 124364 },
+    { url = "https://files.pythonhosted.org/packages/3c/1d/061b0b345517361a2a5d8266a6ed77a44aa38be9b692e34a5ed680745f10/pyinstrument-5.0.3-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:e4712e480d2dea9181b8c5a81af3500c6711d018f4e4064cea18285fe6578f61", size = 129447 },
+    { url = "https://files.pythonhosted.org/packages/b3/a5/94ee6578370932ecb31c6b06e3e4b5161df7f5499b4360e4a43aa2c66f07/pyinstrument-5.0.3-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:31faf45a5f1043e850f6902be27ad8460a672dc0d8e74902b85511c562494dbe", size = 122155 },
+    { url = "https://files.pythonhosted.org/packages/e4/3f/b222c5c68b82c662497880af63b712ad1dfead865411c148cc6fcd18cdd1/pyinstrument-5.0.3-cp311-cp311-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:961ef61f16f4e65219da2a4ca6e84090a8e7588590b57f6400a2fc1b4cce2673", size = 145443 },
+    { url = "https://files.pythonhosted.org/packages/12/3c/a9cb109460b0e9a70a39decba9d9f2a1086475b414039dd19f02ff4ca420/pyinstrument-5.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:fc336cfac38dcba4432af7be3bc3744943c9c489fe2217b226b893b195971598", size = 144130 },
+    { url = "https://files.pythonhosted.org/packages/04/ad/d61dca0941e7b526cf7028bffb79fc7826e0c8ce9b12046de5ce41bb3bb0/pyinstrument-5.0.3-cp311-cp311-musllinux_1_2_aarch64.whl", hash = "sha256:5e1ceb1fccc5825e601dd0044512daa480396df69ff98b83aee4fe172bc6a015", size = 144600 },
+    { url = "https://files.pythonhosted.org/packages/bd/3f/f4b0c62191de2b0783d86bdca00f29b835327b1d878673061bc01ba96548/pyinstrument-5.0.3-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:d0336740e4296004725908e836a2bd533cbaffd8ca538e08e2a61d1c34ded169", size = 143977 },
+    { url = "https://files.pythonhosted.org/packages/43/9f/139a2292f3a51d86715fe5ab3186ae85babdd8f3e05a9685a396a23e5209/pyinstrument-5.0.3-cp311-cp311-win32.whl", hash = "sha256:a9dced692a030df1144d8b6a58524e28ce9acf5382c21b23eae3a38cbdd74a4a", size = 123473 },
+    { url = "https://files.pythonhosted.org/packages/db/8a/efd216eb02b77574d24161d57cc2591ddacb292d66b06cc294faef2ac718/pyinstrument-5.0.3-cp311-cp311-win_amd64.whl", hash = "sha256:064f5546354327667cce54a001957797b8a18140e6014aa4bc391baac9947f5b", size = 124262 },
+    { url = "https://files.pythonhosted.org/packages/d1/68/c7c2429dffc1dceaaa93d003a37fa00beff06285bf0f15551b9a053e2a93/pyinstrument-5.0.3-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:c6176f037cb4c673d0f121cb4117b1366aac3d80e451a3d3af84ba2b145194fc", size = 129579 },
+    { url = "https://files.pythonhosted.org/packages/1e/65/dfcf67493e2513e7541b3e7a9d67741af1fdbb0a9cd621945b83c10a4a4e/pyinstrument-5.0.3-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:df8b02262208a1310a11f0c037e4efeb8d628660be60e3c9917d9ff950fa1519", size = 122126 },
+    { url = "https://files.pythonhosted.org/packages/9c/66/1bfbb59ffeb4864f6d4f8fd701d9986ddbf66aa940cf8459eca6f32864f5/pyinstrument-5.0.3-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:df477beeb37ba35b7d1f3cbefc973d3cc09a9281195ac18d72d4c92f8916c323", size = 146733 },
+    { url = "https://files.pythonhosted.org/packages/6b/72/4f20451833fb4ad37d6ab5bd076e0e06778315f33f24e2320be283a9ab45/pyinstrument-5.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:d54799accccb2a8611d0975ff696e20c775af55d4ed2f8e0e07806bb5db5b015", size = 145675 },
+    { url = "https://files.pythonhosted.org/packages/96/d5/15bf3832ebc3172ebe7b0f29dadeaa65802b511fe95fa1acad0314a7a3dc/pyinstrument-5.0.3-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:97eaa3bbe181903ccf955ade86d31aca7805d3bc06f5e742d767845005a3ca75", size = 145715 },
+    { url = "https://files.pythonhosted.org/packages/18/13/b9754a10267573bca108c645dbe1cc5ada3aa0524987ec2bf84fe3a2e30c/pyinstrument-5.0.3-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:2ecfff795dce1fcbedef4f6a63cd2ae549688fb1b6fbc8fa16d852d70da3da80", size = 145499 },
+    { url = "https://files.pythonhosted.org/packages/2c/85/aa5bc8ecf93f1fb30a69e90f6c5c53db0e3772b2630f58042fa32aaa27bb/pyinstrument-5.0.3-cp312-cp312-win32.whl", hash = "sha256:9b513ff9960f131bf1ab46034315146b825ccd7d6f84680f2a3642b24abe7f3c", size = 123546 },
+    { url = "https://files.pythonhosted.org/packages/0c/7f/113b16d55e8d2dd9143628eec39b138fd6c52f72dcd11b4dae4a3845da4d/pyinstrument-5.0.3-cp312-cp312-win_amd64.whl", hash = "sha256:88df7e3ab11604ae7cef1f576c097a08752bf8fc13c5755803bd3cd92f15aba3", size = 124314 },
+    { url = "https://files.pythonhosted.org/packages/b3/5a/80c94bd2a7344c130c560e2cf23327cab992ac9f237e12556e0d4594d75b/pyinstrument-5.0.3-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:aa6eb04572c6cb00c204e7ae287403becca90f3b00b56b43df2d2f81d726ed5b", size = 129584 },
+    { url = "https://files.pythonhosted.org/packages/9f/3e/0191d18804bda94adc8f111f00fc1eef9752f71028e2900a1a26ccb31098/pyinstrument-5.0.3-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:12a71a39b82a49482fd14c2478d04a3ef69bfad393c31ea1fa9d2de3f4d8becd", size = 122124 },
+    { url = "https://files.pythonhosted.org/packages/b8/84/2fb4bac6921a67793b61212789b276f708edb1bfa4fdc70e47d6565dec4e/pyinstrument-5.0.3-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:bc858887463d12c66ac642b1791c1a3b535ebe0db0bef26901bd6e7210a43cf1", size = 146928 },
+    { url = "https://files.pythonhosted.org/packages/30/f6/22e85d453315fb679fc7017050f9c5366bd42aa9bab442d5806e08d1789f/pyinstrument-5.0.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:861c549be809759f0b236d6e9844a22a91343d952a1e35983ae193863d0ef276", size = 145848 },
+    { url = "https://files.pythonhosted.org/packages/c5/58/5fbe58383d3a1d3e127161b5095e2a4211a17a3312f021ba1a5c754a686d/pyinstrument-5.0.3-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:2ec782f1946fe280ca4efa2280b5ad64e318378241421554134adcb4265dc1f8", size = 145850 },
+    { url = "https://files.pythonhosted.org/packages/4d/06/d7bfa9d8ab9af1fcc028c6cf7cace7ccf53324690094f66217eb286d75cd/pyinstrument-5.0.3-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:87a558b1f39dc556621ef7e9482c0d2884af7df2aae35b90edad02fe099d28ab", size = 145653 },
+    { url = "https://files.pythonhosted.org/packages/e7/9b/f6538ec597dcf810e393bd88da314e43e785b10f3fc7cc0756753f298792/pyinstrument-5.0.3-cp313-cp313-win32.whl", hash = "sha256:a71777ae66969a5c1a57ba06e81ac3f19e3234b4de30fea84eb12f0cf29d009e", size = 123551 },
+    { url = "https://files.pythonhosted.org/packages/20/55/a28db1dd0d29186e389705554a8f81ad5a66a858f13aedc47f815700f879/pyinstrument-5.0.3-cp313-cp313-win_amd64.whl", hash = "sha256:4a385975db0aa52a65fd4c1ea72158af3aaf03d704156551a28d2146bbb107ee", size = 124324 },
+    { url = "https://files.pythonhosted.org/packages/17/8e/4da52ab91dba703a3c617e64debbd9882c7e2ea68e685e80e98cab22c6aa/pyinstrument-5.0.3-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:e0d7786b9656c2deb25db75c3c0eb4288d18a26f55b1e8de34879ad10694a8c7", size = 128766 },
+    { url = "https://files.pythonhosted.org/packages/cd/80/6e9825acc619db60720a59ed9272818ef95dbfe88a5a7f197e0b7077bced/pyinstrument-5.0.3-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:be6056192ef1cf7e90d488d1219dc3f18d8ccdafcd216d106301883fe64c3597", size = 121654 },
+    { url = "https://files.pythonhosted.org/packages/bf/49/3c9770658cb13e868da54fd86f2b4b5ea1fd256efab734c6005a88ea834e/pyinstrument-5.0.3-cp38-cp38-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:3a99acf8adf17297d8208a33f62d3cf251a171105919400999671cd2b352ad9d", size = 145806 },
+    { url = "https://files.pythonhosted.org/packages/ab/f2/ec8b96d7696e27c1383d08c58e66b779662d0825bcca696a56e0c191e2d8/pyinstrument-5.0.3-cp38-cp38-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:539c266145e6bbeee3b216f57d3c216da20737aeb8cf1fef9c2e5dae6018ea00", size = 144363 },
+    { url = "https://files.pythonhosted.org/packages/4d/52/8d6ab132e09ad340ec0ea3409043197cdd2d056350800e9c2c7e67e1692d/pyinstrument-5.0.3-cp38-cp38-musllinux_1_2_aarch64.whl", hash = "sha256:c8744d04cdee2b2a3f69613c04729d429cf84f2c1a174f618fe844d5a11c9e40", size = 144237 },
+    { url = "https://files.pythonhosted.org/packages/34/5a/046b8fd11776435149b577e3ada95e11aadd1fc15ea7707161c1c1b65176/pyinstrument-5.0.3-cp38-cp38-musllinux_1_2_x86_64.whl", hash = "sha256:92a503c56f27641ce07a281068b2d8d77a4efe69e14fe859109b7886b24b3e73", size = 143509 },
+    { url = "https://files.pythonhosted.org/packages/61/07/31b928193ab6198214fba98bb3cdb4ab0f3cd486edf2137a35553ff038b8/pyinstrument-5.0.3-cp38-cp38-win32.whl", hash = "sha256:842f19848180598dedda57d6ea3d8a7b4e3de53ce78573f8b6411db5ac27449a", size = 123228 },
+    { url = "https://files.pythonhosted.org/packages/c5/c3/7558b61b94cddd1e9ca1b007091d0d9d90959e2f086a4571bedc99dee1be/pyinstrument-5.0.3-cp38-cp38-win_amd64.whl", hash = "sha256:8288adadfa51d4f57b878910391dd80751a934ca45e52a4c9ad898a11565de03", size = 123928 },
+    { url = "https://files.pythonhosted.org/packages/6f/ec/c00e4cef7e40ecc17aae20b6ad934312463f49d3ba006370ae28737bf017/pyinstrument-5.0.3-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:d5b32915b0bbc2e173e73191491fe02e390f6f15d60310bdcf9bff04ce7e64ff", size = 129689 },
+    { url = "https://files.pythonhosted.org/packages/e4/7e/66b02776bc8c3e1fe77e1b8361bf7779b63f40d1f10461ce4f04f2b2408a/pyinstrument-5.0.3-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:8ed8486f140f26a84f1d9cf3a2ed4a288fa32808c954084e95e4342a2ecf8c6f", size = 122271 },
+    { url = "https://files.pythonhosted.org/packages/11/4e/9aa9c1665e05723195068cd698f0ef641cf627de2bda97084688fe36b53e/pyinstrument-5.0.3-cp39-cp39-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:2652f00bdad6f005b7422a5f87aafcc09074d612802e6be009706975f97c7e4b", size = 146606 },
+    { url = "https://files.pythonhosted.org/packages/b4/9c/63b61343daf6436ba4c18a71050f402db2ec5ec45acf1a2e88f5c0bae337/pyinstrument-5.0.3-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:26851778e4094da89d8d79474b0fc1a4cab046d0beb8e3a2818ec91e7901830b", size = 145334 },
+    { url = "https://files.pythonhosted.org/packages/90/b2/b593cc937d0e6a76b4089eca8ca0eda74ffa85f29254504932c968773835/pyinstrument-5.0.3-cp39-cp39-musllinux_1_2_aarch64.whl", hash = "sha256:4a09145c8394371185c24a905f76246ba77f9b64a358a609133088247efb0ab0", size = 145624 },
+    { url = "https://files.pythonhosted.org/packages/99/4f/1333575d5dd60aac2f46341bcee5ee2472a675bf8fc295ef61d2501b5258/pyinstrument-5.0.3-cp39-cp39-musllinux_1_2_x86_64.whl", hash = "sha256:bd47898f00fefce0159728e5439390873a96f3d221127e0ee44eb4c4165b09a9", size = 145153 },
+    { url = "https://files.pythonhosted.org/packages/2f/00/b271ba7e15839a1499da3da37c2c9abab6b79075f86e623050c9402445fa/pyinstrument-5.0.3-cp39-cp39-win32.whl", hash = "sha256:704d036a5712d8113fde3a88424982e5afef4f8f80483d323ae922d95a869eef", size = 123502 },
+    { url = "https://files.pythonhosted.org/packages/05/a2/028b71142a915ebc40ca7772337261afdfa4bc3f875059eae6c7d397feca/pyinstrument-5.0.3-cp39-cp39-win_amd64.whl", hash = "sha256:5a7a16a9a60c117f665bab9987f67eda390d3e27d92ba77eff61ef7492f95be7", size = 124375 },
+]
+
+[[package]]
 name = "pytest"
 version = "8.3.5"
 source = { registry = "https://pypi.org/simple" }
@@ -551,7 +607,7 @@ wheels = [
 
 [[package]]
 name = "uniplot"
-version = "0.21.3"
+version = "0.21.4"
 source = { editable = "." }
 dependencies = [
     { name = "numpy", version = "1.24.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
@@ -567,6 +623,7 @@ dev = [
     { name = "pandas", version = "2.2.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
     { name = "polars", version = "1.8.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "polars", version = "1.25.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
+    { name = "pyinstrument" },
     { name = "pytest" },
     { name = "ruff" },
 ]
@@ -582,6 +639,7 @@ dev = [
     { name = "mypy", specifier = "==1.14.1" },
     { name = "pandas", specifier = ">=2.0.3" },
     { name = "polars", specifier = ">=0.20.5" },
+    { name = "pyinstrument", specifier = ">=5.0.3" },
     { name = "pytest", specifier = ">=6.0.1" },
     { name = "ruff", specifier = ">=0.9.0" },
 ]
