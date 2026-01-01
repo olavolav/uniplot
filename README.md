@@ -293,3 +293,12 @@ uv run scripts/run_tests.sh
 ```
 
 Then proceed with issues, PRs etc. the usual way.
+
+
+## Projects that use uniplot
+
+* The [Photovoltaic Geographic Information System (PVGIS)](https://code.europa.eu/pvgis/pvgis)
+  uses uniplot to [generate horizon plots](https://asciinema.org/a/pynlwepKNRE6gqKqwPr6JmzTP).
+* The [FlexMeasures] CLI uses uniplot to [plot beliefs in sensors](https://github.com/FlexMeasures/flexmeasures/blob/2e3680cb35c1a4f2b94c7f77f9eb2ff70760755e/flexmeasures/cli/data_show.py#L754) for smart power control.
+
+You can find many more in the [Dependency Graph](https://github.com/olavolav/uniplot/network/dependents).
