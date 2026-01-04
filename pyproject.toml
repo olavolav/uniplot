@@ -10,6 +10,53 @@ dependencies = [
     "numpy >=1.22.0",
     "readchar>=4.2.1",
 ]
+keywords = [
+    "plot",
+    "plotting",
+    "terminal",
+    "cli",
+    "console",
+    "ascii",
+    "unicode",
+    "visualization",
+    "chart",
+    "graph",
+    "data-science",
+    "machine-learning",
+    "numpy",
+    "histogram",
+    "scatter-plot",
+    "time-series",
+    "dataviz",
+    "lightweight",
+    "ci-cd",
+    "pipeline",
+    "monitoring",
+    "braille",
+    "interactive"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: System Administrators",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Monitoring",
+    "Topic :: Terminals",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Operating System :: OS Independent",
+    "Environment :: Console",
+]
 
 [project.urls]
 Homepage = "https://github.com/olavolav/uniplot"
