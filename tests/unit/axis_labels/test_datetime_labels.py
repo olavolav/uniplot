@@ -116,3 +116,17 @@ def test_datetime_labeling_across_centuries():
     assert ls is not None
     render = ls.render()[0]
     assert " 2000 " in render
+
+
+def test_datetime_labeling_from_midnight():
+    start_datetime = np.datetime64("2024-08-01T00:00:00").astype("datetime64[s]")
+    end_datetime = np.datetime64("2024-08-01T09:00:00").astype("datetime64[s]")
+    ls = datetime_labels(
+        x_min=start_datetime.astype(float),
+        x_max=end_datetime.astype(float),
+        available_space=60,
+        vertical_direction=False,
+    )
+    assert ls is not None
+    render = ls.render()[0]
+    assert render.startswith("00:00 ")
