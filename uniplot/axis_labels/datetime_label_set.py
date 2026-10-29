@@ -53,7 +53,8 @@ class DatetimeLabelSet(LabelSet):
         short_labels = [str(x) for x in np.datetime_as_string(labels, unit="auto")]
         # Remove the date if it is the same in all labels
         if len(set(np.datetime_as_string(labels, unit="D"))) == 1:
-            short_labels = [t[11:] for t in short_labels]
+            # The "auto" unit renders midnight as a date only
+            short_labels = [t[11:] or "00:00" for t in short_labels]
         # Remove day, and then month, if that is redundant (i.e. all labels
         # have a "-01" at the end)
         for _ in range(2):
