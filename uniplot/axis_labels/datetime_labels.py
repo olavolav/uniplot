@@ -96,6 +96,8 @@ def datetime_labels(
             for i, q in enumerate(qs):
                 labels = _label_range(label_start, x_max_local, q * j, pe)
                 if timezone is not None:
+                    # Only convert the labels which can end up on the axis
+                    labels = labels[(labels >= x_min_local) & (labels <= x_max_local)]
                     labels = local_to_utc(labels, timezone)
 
                 # Crop labels

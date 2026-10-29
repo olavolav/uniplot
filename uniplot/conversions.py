@@ -1,5 +1,6 @@
 import datetime
 from datetime import tzinfo
+from functools import lru_cache
 from typing import Any
 
 import numpy as np
@@ -75,10 +76,7 @@ def utc_to_local(dts: NDArray, timezone: tzinfo) -> NDArray:
     timezone.
     """
     return np.array(
-        [
-            datetime.datetime.fromtimestamp(t, timezone).replace(tzinfo=None)
-            for t in dts.astype("datetime64[s]").astype(int)
-        ],
+        [_utc_to_local(t, timezone) for t in dts.astype("datetime64[s]").astype(int)],
         dtype="datetime64[s]",
     )
 
@@ -89,13 +87,33 @@ def local_to_utc(dts: NDArray, timezone: tzinfo) -> NDArray:
     timezone. A local time which occurs twice gives both, and a local time which
     is skipped gives none.
     """
-    utc = []
-    for t in dts.astype("datetime64[s]").astype(datetime.datetime):
-        for fold in (0, 1):
-            utc_time = t.replace(tzinfo=timezone, fold=fold).astimezone(
-                datetime.timezone.utc
-            )
-            # A skipped local time does not survive the way back
-            if utc_time.astimezone(timezone).replace(tzinfo=None) == t:
-                utc.append(utc_time.replace(tzinfo=None))
-    return np.unique(np.array(utc, dtype="datetime64[s]"))
+    return np.unique(
+        np.array(
+            [
+                utc
+                for t in dts.astype("datetime64[s]").astype(int)
+                for utc in _local_to_utc(t, timezone)
+            ],
+            dtype="datetime64[s]",
+        )
+    )
+
+
+# Finding labels converts the same timestamps over and over, one at a time
+@lru_cache(maxsize=4096)
+def _utc_to_local(t: int, timezone: tzinfo) -> int:
+    offset = datetime.datetime.fromtimestamp(t, timezone).utcoffset()
+    return t + int(offset.total_seconds()) if offset is not None else t
+
+
+@lru_cache(maxsize=4096)
+def _local_to_utc(t: int, timezone: tzinfo) -> tuple[int, ...]:
+    # The wall-clock time, read from a UTC timestamp of the same digits
+    local_time = datetime.datetime.fromtimestamp(t, datetime.timezone.utc)
+    utc = set()
+    for fold in (0, 1):
+        utc_time = int(local_time.replace(tzinfo=timezone, fold=fold).timestamp())
+        # A skipped local time does not survive the way back
+        if _utc_to_local(utc_time, timezone) == t:
+            utc.add(utc_time)
+    return tuple(utc)
