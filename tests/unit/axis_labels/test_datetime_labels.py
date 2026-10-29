@@ -130,3 +130,20 @@ def test_datetime_labeling_from_midnight():
     assert ls is not None
     render = ls.render()[0]
     assert render.startswith("00:00 ")
+
+
+def test_datetime_labeling_in_a_timezone():
+    from zoneinfo import ZoneInfo
+
+    start_datetime = np.datetime64("2024-08-01T09:00:00").astype("datetime64[s]")
+    end_datetime = np.datetime64("2024-08-01T15:00:00").astype("datetime64[s]")
+    ls = datetime_labels(
+        x_min=start_datetime.astype(float),
+        x_max=end_datetime.astype(float),
+        available_space=60,
+        vertical_direction=False,
+        timezone=ZoneInfo("Asia/Tokyo"),
+    )
+    assert ls is not None
+    render = ls.render()[0]
+    assert " 19:00 " in render

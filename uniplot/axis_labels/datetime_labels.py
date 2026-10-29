@@ -1,4 +1,5 @@
 from collections import defaultdict
+from datetime import tzinfo
 from functools import lru_cache
 from typing import Final
 
@@ -11,6 +12,7 @@ from uniplot.axis_labels.extended_talbot_labels import (
     _compute_density_score,
     _compute_preferred_number_of_labels,
 )
+from uniplot.conversions import local_to_utc, utc_to_local
 
 DIGIT_TIME_UNITS: Final = ["Y", "M", "D", "h", "m", "s"]
 
@@ -39,6 +41,7 @@ def datetime_labels(
     unit_scaling: str = "",
     log: bool = False,
     verbose: bool = False,
+    timezone: tzinfo | None = None,
 ) -> DatetimeLabelSet | None:
     """
     A simple way to get started with datetime labelling.
@@ -63,7 +66,18 @@ def datetime_labels(
 
     data_range = np.timedelta64(x_max_as_dt - x_min_as_dt)
     pseudo_exponent_index, pseudo_exponent = _compute_pseudo_exponent(data_range)
-    label_start = _find_left_zero_datetime(x_min_as_dt, pseudo_exponent_index)
+    # Round label values are found in local time, if a timezone is given
+    x_min_local, x_max_local = x_min_as_dt, x_max_as_dt
+    if timezone is not None:
+        x_min_local, x_max_local = utc_to_local(
+            np.array([x_min_as_dt, x_max_as_dt]), timezone
+        )
+        # When the clock is set back, local times can run past either end
+        x_min_local, x_max_local = (
+            min(x_min_local, x_max_local - data_range),
+            max(x_max_local, x_min_local + data_range),
+        )
+    label_start = _find_left_zero_datetime(x_min_local, pseudo_exponent_index)
     if verbose:
         print(f"pseudo-exponent = {pseudo_exponent}, label_start = {label_start}")
 
@@ -80,7 +94,9 @@ def datetime_labels(
             # i is the index of the currently selected "nice" number q
             qs = Q_VALUES[pe]
             for i, q in enumerate(qs):
-                labels = _label_range(label_start, x_max_as_dt, q * j, pe)
+                labels = _label_range(label_start, x_max_local, q * j, pe)
+                if timezone is not None:
+                    labels = local_to_utc(labels, timezone)
 
                 # Crop labels
                 labels = labels[(labels >= x_min_as_dt) & (labels <= x_max_as_dt)]
@@ -106,6 +122,7 @@ def datetime_labels(
                     available_space=available_space,
                     vertical_direction=vertical_direction,
                     unit=unit,
+                    timezone=timezone,
                 )
 
                 if current_set.compute_if_render_does_overlap():

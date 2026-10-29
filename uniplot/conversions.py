@@ -1,4 +1,5 @@
 import datetime
+from datetime import tzinfo
 from typing import Any
 
 import numpy as np
@@ -66,3 +67,35 @@ def convert_matrix_to_rows_of_submatrices(
     )
 
     return flattened_submatrices
+
+
+def utc_to_local(dts: NDArray, timezone: tzinfo) -> NDArray:
+    """
+    Convert UTC timestamps to the local time in the timezone, both without a
+    timezone.
+    """
+    return np.array(
+        [
+            datetime.datetime.fromtimestamp(t, timezone).replace(tzinfo=None)
+            for t in dts.astype("datetime64[s]").astype(int)
+        ],
+        dtype="datetime64[s]",
+    )
+
+
+def local_to_utc(dts: NDArray, timezone: tzinfo) -> NDArray:
+    """
+    Convert local times in the timezone to sorted UTC timestamps, both without a
+    timezone. A local time which occurs twice gives both, and a local time which
+    is skipped gives none.
+    """
+    utc = []
+    for t in dts.astype("datetime64[s]").astype(datetime.datetime):
+        for fold in (0, 1):
+            utc_time = t.replace(tzinfo=timezone, fold=fold).astimezone(
+                datetime.timezone.utc
+            )
+            # A skipped local time does not survive the way back
+            if utc_time.astimezone(timezone).replace(tzinfo=None) == t:
+                utc.append(utc_time.replace(tzinfo=None))
+    return np.unique(np.array(utc, dtype="datetime64[s]"))

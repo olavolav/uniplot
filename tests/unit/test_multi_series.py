@@ -86,3 +86,16 @@ def test_time_series_should_be_detected_as_such():
     series = MultiSeries(xs=dates, ys=ys)
 
     assert series.x_is_time_series
+
+
+def test_timezone_aware_pandas_xs_keep_their_timezone():
+    import pandas as pd  # type: ignore
+
+    xs = pd.date_range("2024-08-01 09:00", periods=3, freq="h", tz="Asia/Tokyo")
+    series = MultiSeries(ys=[1, 2, 3], xs=xs)
+
+    assert series.x_is_time_series
+    assert str(series.x_timezone) == "Asia/Tokyo"
+    assert series.xs[0][0] == np.datetime64("2024-08-01T00:00").astype(
+        "datetime64[s]"
+    ).astype(float)
