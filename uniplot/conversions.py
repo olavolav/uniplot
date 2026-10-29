@@ -1,4 +1,6 @@
 import datetime
+from datetime import tzinfo
+from functools import lru_cache
 from typing import Any
 
 import numpy as np
@@ -66,3 +68,52 @@ def convert_matrix_to_rows_of_submatrices(
     )
 
     return flattened_submatrices
+
+
+def utc_to_local(dts: NDArray, timezone: tzinfo) -> NDArray:
+    """
+    Convert UTC timestamps to the local time in the timezone, both without a
+    timezone.
+    """
+    return np.array(
+        [_utc_to_local(t, timezone) for t in dts.astype("datetime64[s]").astype(int)],
+        dtype="datetime64[s]",
+    )
+
+
+def local_to_utc(dts: NDArray, timezone: tzinfo) -> NDArray:
+    """
+    Convert local times in the timezone to sorted UTC timestamps, both without a
+    timezone. A local time which occurs twice gives both, and a local time which
+    is skipped gives none.
+    """
+    return np.unique(
+        np.array(
+            [
+                utc
+                for t in dts.astype("datetime64[s]").astype(int)
+                for utc in _local_to_utc(t, timezone)
+            ],
+            dtype="datetime64[s]",
+        )
+    )
+
+
+# Finding labels converts the same timestamps over and over, one at a time
+@lru_cache(maxsize=4096)
+def _utc_to_local(t: int, timezone: tzinfo) -> int:
+    offset = datetime.datetime.fromtimestamp(t, timezone).utcoffset()
+    return t + int(offset.total_seconds()) if offset is not None else t
+
+
+@lru_cache(maxsize=4096)
+def _local_to_utc(t: int, timezone: tzinfo) -> tuple[int, ...]:
+    # The wall-clock time, read from a UTC timestamp of the same digits
+    local_time = datetime.datetime.fromtimestamp(t, datetime.timezone.utc)
+    utc = set()
+    for fold in (0, 1):
+        utc_time = int(local_time.replace(tzinfo=timezone, fold=fold).timestamp())
+        # A skipped local time does not survive the way back
+        if _utc_to_local(utc_time, timezone) == t:
+            utc.add(utc_time)
+    return tuple(utc)

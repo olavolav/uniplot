@@ -1,9 +1,11 @@
 import re
+from datetime import tzinfo
 
 import numpy as np
 from numpy.typing import NDArray
 
 from uniplot.axis_labels.label_set import LabelSet
+from uniplot.conversions import utc_to_local
 
 
 class DatetimeLabelSet(LabelSet):
@@ -20,7 +22,9 @@ class DatetimeLabelSet(LabelSet):
         unit: str = "",
         log: bool = False,
         vertical_direction: bool = False,
+        timezone: tzinfo | None = None,
     ):
+        self.timezone = timezone
         # Note: unit scaling (`unit_scaling`) does not apply to timestamps, so
         # this class intentionally does not expose that option and lets the base
         # class default it to off.
@@ -49,6 +53,9 @@ class DatetimeLabelSet(LabelSet):
         """
         if labels is None:
             labels = self.labels
+        if self.timezone is not None:
+            # The labels are placed in UTC, but show the local time
+            labels = utc_to_local(labels, self.timezone)
         # By default, use NumPy's redering functionality
         short_labels = [str(x) for x in np.datetime_as_string(labels, unit="auto")]
         # Remove the date if it is the same in all labels

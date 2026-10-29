@@ -1,4 +1,6 @@
+from datetime import tzinfo
 from typing import Any
+from zoneinfo import ZoneInfo
 
 import numpy as np
 from numpy.typing import NDArray
@@ -23,6 +25,8 @@ class MultiSeries:
 
         self.x_is_time_series: bool = False
         self.y_is_time_series: bool = False
+        # The timezone of timezone-aware x values, for the x axis labels
+        self.x_timezone: tzinfo | None = None
 
         # Initialize y series
         if self.is_multi_dimensional:
@@ -46,6 +50,9 @@ class MultiSeries:
         else:
             if self.is_multi_dimensional:
                 self.x_is_time_series = all(_is_time_series(x) for x in xs)
+                self.x_timezone = next(
+                    (tz for tz in map(_timezone_of, xs) if tz is not None), None
+                )
 
                 if self.x_is_time_series:
                     self.xs = [_cast_as_numpy_time_series(xs_row) for xs_row in xs]
@@ -53,6 +60,7 @@ class MultiSeries:
                     self.xs = [_cast_as_numpy_floats(xs_row) for xs_row in xs]
             else:
                 self.x_is_time_series = _is_time_series(xs)
+                self.x_timezone = _timezone_of(xs)
 
                 if self.x_is_time_series:
                     self.xs = [_cast_as_numpy_time_series(xs)]
@@ -139,7 +147,7 @@ def _is_time_series(series: Any) -> bool:
     Check if the object is datetime-like. This might be a pandas DateTime, a
     list of datetimes, or a list of date(s).
     """
-    np_array = np.array(series)
+    np_array = np.array(_as_naive_utc(series))
     if np.issubdtype(np_array.dtype, np.number):
         return False
     try:
@@ -181,7 +189,33 @@ def _cast_as_numpy_time_series(series: Any) -> NDArray:
     # or a different type like "datetime64[m]" means that the conversion to
     # floating point will depend on the input format, which will lead to
     # unexpected behavior.
-    return np.array(series).astype("datetime64[s]").astype(float)
+    return np.array(_as_naive_utc(series)).astype("datetime64[s]").astype(float)
+
+
+def _as_naive_utc(series: Any) -> Any:
+    """
+    Converts timezone-aware pandas datetimes to UTC without a timezone, as
+    NumPy has no representation of timezones.
+    """
+    # A pandas `Series` holds its datetimes behind the `dt` accessor
+    datetimes = getattr(series, "dt", series)
+    if getattr(datetimes, "tz", None) is None:
+        return series
+    return datetimes.tz_convert(None)
+
+
+def _timezone_of(series: Any) -> tzinfo | None:
+    """
+    Returns the timezone of timezone-aware pandas datetimes, if any.
+    """
+    timezone = getattr(getattr(series, "dt", series), "tz", None)
+    if timezone is None:
+        return None
+    try:
+        # Prefer zoneinfo, as pytz needs its own way to localize times
+        return ZoneInfo(str(timezone))
+    except (ValueError, KeyError):
+        return timezone
 
 
 def _safe_max(array: NDArray) -> float:
