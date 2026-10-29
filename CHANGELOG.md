@@ -5,7 +5,7 @@ All notable changes to uniplot will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [0.24.0] - 2026-10-29
 ### Added
 - Unit scaling for axis labels via the new `x_unit_scaling` / `y_unit_scaling`
   options, assuming `x_unit` / `y_unit` is the base unit. Currently supports
