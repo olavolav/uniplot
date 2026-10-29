@@ -3,6 +3,8 @@ Plotting with pandas is such a common use case in data science that we want to
 make sure it works nicely with uniplot. Thus these tests.
 """
 
+import warnings
+
 import numpy as np
 import pandas as pd  # type: ignore
 
@@ -77,3 +79,11 @@ def test_plotting_time_series_from_pandas_series():
     data["date_as_series"] = data.index.to_series()
 
     plot(xs=data.date_as_series, ys=data.value, lines=True)
+
+
+def test_plotting_timezone_aware_time_series_from_pandas():
+    xs = pd.date_range("2026-10-28 00:00", periods=10, freq="h", tz="Asia/Tokyo")
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        plot(xs=xs, ys=range(10))
+        plot(xs=xs.to_series(), ys=range(10))

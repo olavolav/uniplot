@@ -139,7 +139,7 @@ def _is_time_series(series: Any) -> bool:
     Check if the object is datetime-like. This might be a pandas DateTime, a
     list of datetimes, or a list of date(s).
     """
-    np_array = np.array(series)
+    np_array = np.array(_as_naive_utc(series))
     if np.issubdtype(np_array.dtype, np.number):
         return False
     try:
@@ -181,7 +181,19 @@ def _cast_as_numpy_time_series(series: Any) -> NDArray:
     # or a different type like "datetime64[m]" means that the conversion to
     # floating point will depend on the input format, which will lead to
     # unexpected behavior.
-    return np.array(series).astype("datetime64[s]").astype(float)
+    return np.array(_as_naive_utc(series)).astype("datetime64[s]").astype(float)
+
+
+def _as_naive_utc(series: Any) -> Any:
+    """
+    Converts timezone-aware pandas datetimes to UTC without a timezone, as
+    NumPy has no representation of timezones.
+    """
+    # A pandas `Series` holds its datetimes behind the `dt` accessor
+    datetimes = getattr(series, "dt", series)
+    if getattr(datetimes, "tz", None) is None:
+        return series
+    return datetimes.tz_convert(None)
 
 
 def _safe_max(array: NDArray) -> float:
