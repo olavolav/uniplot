@@ -1,3 +1,5 @@
+from functools import partial
+
 from numpy.typing import NDArray
 
 import uniplot.plot_elements as elements
@@ -80,10 +82,12 @@ def generate_body_raw_elements(
     # Prepare y axis labels
     y_axis_labels = [""] * options.height
     if options.y_labels:
-        label_fn = (
-            datetime_labels if series.y_is_time_series else extended_talbot_labels
+        y_label_fn = (
+            partial(datetime_labels, timezone=series.y_timezone)
+            if series.y_is_time_series
+            else extended_talbot_labels
         )
-        y_axis_label_set = label_fn(
+        y_axis_label_set = y_label_fn(
             x_min=options.y_min,
             x_max=options.y_max,
             available_space=options.height,
@@ -110,10 +114,12 @@ def generate_body_raw_elements(
     # Prepare x axis labels
     x_axis_labels = ""
     if options.x_labels:
-        label_fn = (
-            datetime_labels if series.x_is_time_series else extended_talbot_labels
+        x_label_fn = (
+            partial(datetime_labels, timezone=series.x_timezone)
+            if series.x_is_time_series
+            else extended_talbot_labels
         )
-        x_axis_label_set = label_fn(
+        x_axis_label_set = x_label_fn(
             x_min=options.x_min,
             x_max=options.x_max,
             available_space=options.width,
