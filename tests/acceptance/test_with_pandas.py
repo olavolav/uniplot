@@ -120,3 +120,15 @@ def test_timezone_aware_timestamps_get_round_local_labels():
         "2026-10-26",
         "2026-10-27",
     ]
+
+
+def test_timezone_aware_y_values_get_local_labels():
+    from uniplot import plot_to_string
+
+    ys = pd.date_range("2026-10-25 00:00", periods=10, freq="h", tz="Asia/Kolkata")
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        output = plot_to_string(ys=ys, height=10, width=30)
+    rows = [line for line in output.splitlines() if line.startswith("│")]
+    y_axis_labels = [row.split("│")[-1].strip() for row in rows]
+    assert [label for label in y_axis_labels if label] == ["06:00", "00:00"]

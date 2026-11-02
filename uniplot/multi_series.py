@@ -25,18 +25,21 @@ class MultiSeries:
 
         self.x_is_time_series: bool = False
         self.y_is_time_series: bool = False
-        # The timezone of timezone-aware x values, for the x axis labels
+        # The timezones of timezone-aware x and y values, for the axis labels
         self.x_timezone: tzinfo | None = None
+        self.y_timezone: tzinfo | None = None
 
         # Initialize y series
         if self.is_multi_dimensional:
             self.y_is_time_series = all(_is_time_series(y) for y in ys)
+            self.y_timezone = _first_timezone_of(ys)
             if self.y_is_time_series:
                 self.ys = [_cast_as_numpy_time_series(ys_row) for ys_row in ys]
             else:
                 self.ys = [_cast_as_numpy_floats(ys_row) for ys_row in ys]
         else:
             self.y_is_time_series = _is_time_series(ys)
+            self.y_timezone = _timezone_of(ys)
 
             if self.y_is_time_series:
                 self.ys = [_cast_as_numpy_time_series(ys)]
@@ -50,9 +53,7 @@ class MultiSeries:
         else:
             if self.is_multi_dimensional:
                 self.x_is_time_series = all(_is_time_series(x) for x in xs)
-                self.x_timezone = next(
-                    (tz for tz in map(_timezone_of, xs) if tz is not None), None
-                )
+                self.x_timezone = _first_timezone_of(xs)
 
                 if self.x_is_time_series:
                     self.xs = [_cast_as_numpy_time_series(xs_row) for xs_row in xs]
@@ -216,6 +217,13 @@ def _timezone_of(series: Any) -> tzinfo | None:
         return ZoneInfo(str(timezone))
     except (ValueError, KeyError):
         return timezone
+
+
+def _first_timezone_of(series: Any) -> tzinfo | None:
+    """
+    Returns the first timezone of a list of series, if any.
+    """
+    return next((tz for tz in map(_timezone_of, series) if tz is not None), None)
 
 
 def _safe_max(array: NDArray) -> float:

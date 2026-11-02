@@ -82,10 +82,12 @@ def generate_body_raw_elements(
     # Prepare y axis labels
     y_axis_labels = [""] * options.height
     if options.y_labels:
-        label_fn = (
-            datetime_labels if series.y_is_time_series else extended_talbot_labels
+        y_label_fn = (
+            partial(datetime_labels, timezone=series.y_timezone)
+            if series.y_is_time_series
+            else extended_talbot_labels
         )
-        y_axis_label_set = label_fn(
+        y_axis_label_set = y_label_fn(
             x_min=options.y_min,
             x_max=options.y_max,
             available_space=options.height,
