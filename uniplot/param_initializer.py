@@ -131,6 +131,22 @@ def validate_and_transform_options(
             kwargs["legend_placement"]
         )
 
+    # Width and height must be positive integers. Anything else fails deep
+    # inside the rendering code with a bare `AssertionError` or `TypeError`,
+    # so reject it here with a clear error instead.
+    for key in ["width", "height"]:
+        if key in kwargs:
+            value = kwargs[key]
+            if (
+                isinstance(value, bool)
+                or not isinstance(value, (int, np.integer))
+                or value <= 0
+            ):
+                raise ValueError(
+                    f"Invalid '{key}' option: {value!r}. "
+                    "Valid values are positive integers."
+                )
+
     # By default, enable color for multiple series, disable color for a single
     # one
     kwargs["color"] = kwargs.get("color", len(series) > 1)
