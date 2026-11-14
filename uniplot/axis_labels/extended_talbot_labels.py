@@ -4,7 +4,7 @@ from typing import Final
 import numpy as np
 from numpy.typing import NDArray
 
-from uniplot.axis_labels.label_set import LabelSet
+from uniplot.axis_labels.label_set import LEFT_MARGIN_FOR_HORIZONTAL_AXIS, LabelSet
 
 # Preference-ordered list of "nice" numbers
 Q_VALUES: Final = [1, 5, 2, 2.5, 4, 3]
@@ -24,6 +24,7 @@ def extended_talbot_labels(
     unit_scaling: str = "",
     log: bool = False,
     verbose: bool = False,
+    left_margin: int = LEFT_MARGIN_FOR_HORIZONTAL_AXIS,
 ) -> LabelSet | None:
     """
     The following is based on the paper Talbot, J., Lin, S. & Hanrahan, P. An
@@ -83,6 +84,7 @@ def extended_talbot_labels(
                     unit_scaling=unit_scaling,
                     log=log,
                     vertical_direction=vertical_direction,
+                    left_margin=left_margin,
                 )
 
                 if current_set.compute_if_render_does_overlap():

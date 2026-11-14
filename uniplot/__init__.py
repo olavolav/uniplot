@@ -6,6 +6,16 @@ from uniplot.uniplot import (
     plot,
     plot_gen,
     plot_to_string,
+    sparkline,
+    sparkline_to_string,
 )
 
-__all__ = ["histogram", "histogram_to_string", "plot", "plot_gen", "plot_to_string"]
+__all__ = [
+    "histogram",
+    "histogram_to_string",
+    "plot",
+    "plot_gen",
+    "plot_to_string",
+    "sparkline",
+    "sparkline_to_string",
+]

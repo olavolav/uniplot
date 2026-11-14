@@ -21,6 +21,7 @@ def generate_header(options: Options) -> list[str]:
             options.title,
             width=options.width,
             line_length_hard_cap=options.line_length_hard_cap,
+            border_width=0 if options.border is None else 2,
         )
     ]
 
@@ -36,20 +37,16 @@ def generate_body(
     """
 
     lines: list[str] = []
-    # Top
-    if options.rounded_corners:
-        lines.append(f"╭{'─' * options.width}╮")
-    else:
-        lines.append(f"┌{'─' * options.width}┐")
-    # Body
+    corners = {"box": "┌┐└┘", "rounded": "╭╮╰╯"}.get(options.border or "")
+    side = "│" if corners else ""
+    edge = "─" * options.width
+    if corners:
+        lines.append(f"{corners[0]}{edge}{corners[1]}")
     for y_label, row in zip(y_axis_labels, pixel_character_matrix):
-        row = ("│" + "".join(row) + "│ " + y_label).rstrip()
-        lines.append(row)
-    # Bottom
-    if options.rounded_corners:
-        lines.append(f"╰{'─' * options.width}╯")
-    else:
-        lines.append(f"└{'─' * options.width}┘")
+        suffix = f" {y_label}" if y_label else ""
+        lines.append(f"{side}{''.join(row)}{side}{suffix}")
+    if corners:
+        lines.append(f"{corners[2]}{edge}{corners[3]}")
 
     if len(x_axis_labels) > 0:
         lines.append(x_axis_labels)
@@ -65,6 +62,7 @@ def generate_body(
                 force_ascii_characters=options.force_ascii_characters,
                 character_set=options.character_set,
                 legend_placement=options.legend_placement,
+                border_width=0 if options.border is None else 2,
             )
         )
 
@@ -98,14 +96,14 @@ def generate_body_raw_elements(
     # Observe line_length_hard_cap
     if options.line_length_hard_cap is not None:
         options.reset_width()
-        # Determine maximum length of y axis label
-        max_y_label_length = max([len(ls) for ls in y_axis_labels])
-        # Make sure the total plot does not exceed `line_length_hard_cap`
-        if 2 + options.width + 1 + max_y_label_length > options.line_length_hard_cap:
-            # Overflow, so we need to reduce width of plot area
-            options.width = options.line_length_hard_cap - (2 + 1 + max_y_label_length)
-            if options.width < 1:
-                raise ValueError("`width` must be greater than zero.")
+        max_y_label_length = max(len(label) for label in y_axis_labels)
+        label_width = 1 + max_y_label_length if max_y_label_length else 0
+        border_width = 0 if options.border is None else 2
+        options.width = min(
+            options.width, options.line_length_hard_cap - border_width - label_width
+        )
+        if options.width < 1:
+            raise ValueError("`width` must be greater than zero.")
 
     # Prepare x axis labels
     x_axis_labels = ""
@@ -121,6 +119,7 @@ def generate_body_raw_elements(
             unit_scaling=options.x_unit_scaling,
             log=options.x_as_log,
             vertical_direction=False,
+            left_margin=0 if options.border is None else 1,
         )  # type: ignore
         if x_axis_label_set is not None:
             x_axis_labels = x_axis_label_set.render()[0]

@@ -11,6 +11,7 @@ from uniplot.axis_labels.extended_talbot_labels import (
     _compute_density_score,
     _compute_preferred_number_of_labels,
 )
+from uniplot.axis_labels.label_set import LEFT_MARGIN_FOR_HORIZONTAL_AXIS
 
 DIGIT_TIME_UNITS: Final = ["Y", "M", "D", "h", "m", "s"]
 
@@ -39,6 +40,7 @@ def datetime_labels(
     unit_scaling: str = "",
     log: bool = False,
     verbose: bool = False,
+    left_margin: int = LEFT_MARGIN_FOR_HORIZONTAL_AXIS,
 ) -> DatetimeLabelSet | None:
     """
     A simple way to get started with datetime labelling.
@@ -105,6 +107,7 @@ def datetime_labels(
                     x_max=x_max,
                     available_space=available_space,
                     vertical_direction=vertical_direction,
+                    left_margin=left_margin,
                     unit=unit,
                 )
 

@@ -7,8 +7,17 @@ import math
 from random import random
 
 import numpy as np
+import pytest
 
-from uniplot import histogram, histogram_to_string, plot, plot_gen, plot_to_string
+from uniplot import (
+    histogram,
+    histogram_to_string,
+    plot,
+    plot_gen,
+    plot_to_string,
+    sparkline,
+    sparkline_to_string,
+)
 
 ################
 # Testing plot #
@@ -103,6 +112,19 @@ def test_just_single_point_plotting():
 
 def test_with_rounded_corners():
     plot([1, 2, 3], rounded_corners=True)
+
+
+def test_border_styles_with_axis_labels_hidden():
+    options = {"width": 8, "height": 2, "x_labels": False, "y_labels": False}
+    box = plot_to_string([1, 2, 3], border="box", **options).splitlines()
+    rounded = plot_to_string([1, 2, 3], border="rounded", **options).splitlines()
+    bare = plot_to_string(
+        [1, 2, 3], border=None, line_length_hard_cap=8, **options
+    ).splitlines()
+
+    assert box[0] == "┌────────┐"
+    assert rounded[0] == "╭────────╮"
+    assert bare == [row[1:-1] for row in box[1:-1]]
 
 
 def test_random_line_plotting():
@@ -407,3 +429,28 @@ def test_plotting_a_histogram_of_datetimes_shows_date_labels():
 def test_plotting_a_histogram_to_string():
     xs = [1, 2, 3, 2, 3, 2, 1]
     histogram_to_string(xs)
+
+
+#####################
+# Testing sparkline #
+#####################
+
+
+def test_sparkline_prints_string_result(capsys):
+    sparkline([1, 3, 2, 5, 4], width=10)
+    output = capsys.readouterr().out
+
+    assert output == sparkline_to_string([1, 3, 2, 5, 4], width=10) + "\n"
+
+
+@pytest.mark.parametrize("width", [1, 5, 10])
+@pytest.mark.parametrize("ys", [[1], [2, 2, 2], [1, 3, 2, 5, 4]])
+def test_sparkline_string_dimensions(ys, width):
+    output = sparkline_to_string(ys, width=width)
+
+    assert output.splitlines() == [output]
+    assert len(output) == width
+
+
+def test_sparkline_connects_points_without_plot_decorations():
+    assert sparkline_to_string([0, 1], width=5) == "⣀⠤⠔⠒⠉"

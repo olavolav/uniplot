@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from typing import Literal
 
 from uniplot.character_sets import ASCII_CHARACTER_SET, CharacterSet
 from uniplot.colors import Color
@@ -26,6 +27,8 @@ class Options:
     `float` values, regardless of the data type that is being plotted.
     """
 
+    # Frame around the plot area
+    border: Literal["box", "rounded"] | None = "box"
     # Character set
     character_set: CharacterSet = CharacterSet.BLOCK
     # Color mode
@@ -40,12 +43,12 @@ class Options:
     legend_labels: list[str] | None = None
     # Legend placement
     legend_placement: LegendPlacement = LegendPlacement.AUTO
-    # Draw lines between points
-    lines: list[bool] = field(default_factory=_default_lines)
     # Enforce a hard limit on the number of characters per line. This may
     # override the `width` option if there is not enough space.
     line_length_hard_cap: int | None = None
-    # Rounded corners
+    # Draw lines between points
+    lines: list[bool] = field(default_factory=_default_lines)
+    # Deprecated rounded corners option. Remove no earlier than 2027-05-14.
     rounded_corners: bool = False
     # Title of the plot
     title: str | None = None
@@ -63,8 +66,6 @@ class Options:
     x_max: float = 1.0
     # Minimum x value of the current view
     x_min: float = 0.0
-    # Plot y axis with log scale
-    y_as_log: bool = False
     # Units of x axis
     x_unit: str = ""
     # Scale x axis labels, assuming `x_unit` is the base unit. Supported values:
@@ -73,6 +74,8 @@ class Options:
     # inserted before the first non-whitespace character of the unit, so a
     # leading space is preserved; a blank `x_unit` still gets a prefix ("200k").
     x_unit_scaling: str = ""
+    # Plot y axis with log scale
+    y_as_log: bool = False
     # Horizontal gridlines
     y_gridlines: list[float] = field(default_factory=_default_gridlines)
     # Color of horizontal gridlines
@@ -93,6 +96,10 @@ class Options:
         # Validate values
         assert self.width > 0
         assert self.height > 0
+        if self.border not in ("box", "rounded", None):
+            raise ValueError('border must be "box", "rounded", or None.')
+        if self.border == "box" and self.rounded_corners:
+            self.border = "rounded"
 
         # Remember values for resetting later
         self._initial_bounds = (self.x_min, self.x_max, self.y_min, self.y_max)

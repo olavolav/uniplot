@@ -55,6 +55,7 @@ class LabelSet:
         unit_scaling: str = "",
         log: bool = False,
         vertical_direction: bool = False,
+        left_margin: int = LEFT_MARGIN_FOR_HORIZONTAL_AXIS,
     ):
         self.labels: NDArray = labels
         self.x_min = x_min
@@ -64,6 +65,7 @@ class LabelSet:
         self.log = log
         self.available_space = available_space
         self.vertical_direction = vertical_direction
+        self.left_margin = left_margin
         self._results_already_in_cache: bool = False
         self._rendered_result: list[str] = []
         self._render_does_overlap: bool = False
@@ -145,7 +147,7 @@ class LabelSet:
                         steps=self.available_space,
                     )
                     - int(0.5 * len(str_label))
-                    + LEFT_MARGIN_FOR_HORIZONTAL_AXIS,
+                    + self.left_margin,
                 )
                 buffer = offset - len(line)
                 if i == 0 and buffer < 0:

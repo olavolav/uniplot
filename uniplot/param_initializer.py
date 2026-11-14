@@ -36,6 +36,14 @@ def validate_and_transform_options(
     if kwargs is None:
         kwargs = {}
 
+    # TODO Remove rounded_corners no earlier than 2027-05-14 (six months).
+    if "rounded_corners" in kwargs:
+        print(
+            "Warning: the rounded_corners option is deprecated and will be removed "
+            'no earlier than May 14, 2027. Please use border="rounded" or '
+            'border="box" instead.'
+        )
+
     # First, some cleanup, including converting datetimes to float
     for key in ["x_min", "x_max", "y_min", "y_max"]:
         if key in kwargs:

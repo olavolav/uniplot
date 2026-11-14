@@ -318,12 +318,12 @@ class plot_gen:
                     if "width" not in self._option_kwargs:
                         opts.width = max_width
                         opts._initial_width = max_width
-                header_buffer = sections.generate_header(opts)
                 (
                     x_axis_labels,
                     y_axis_labels,
                     pixel_character_matrix,
                 ) = sections.generate_body_raw_elements(self.series, opts)
+                header_buffer = sections.generate_header(opts)
                 body_buffer = sections.generate_body(
                     x_axis_labels, y_axis_labels, pixel_character_matrix, opts
                 )
@@ -443,6 +443,27 @@ def histogram_to_string(
     # Histograms usually make sense only with lines
     kwargs["lines"] = True
     return plot_to_string(xs=xs_histo, ys=ys_histo, **kwargs)
+
+
+def sparkline(ys: Any, width: int = 5) -> None:
+    """Print a one-line Braille plot of `ys` spanning `width` terminal columns."""
+    print(sparkline_to_string(ys, width=width))
+
+
+def sparkline_to_string(ys: Any, width: int = 5) -> str:
+    """Return the same chart as `sparkline`, without a trailing newline."""
+    return plot_to_string(
+        ys,
+        width=width,
+        height=1,
+        border=None,
+        lines=True,
+        x_labels=False,
+        y_labels=False,
+        x_gridlines=[],
+        y_gridlines=[],
+        character_set="braille",
+    )
 
 
 ###########

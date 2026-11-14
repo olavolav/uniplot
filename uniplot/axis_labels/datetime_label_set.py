@@ -3,7 +3,7 @@ import re
 import numpy as np
 from numpy.typing import NDArray
 
-from uniplot.axis_labels.label_set import LabelSet
+from uniplot.axis_labels.label_set import LEFT_MARGIN_FOR_HORIZONTAL_AXIS, LabelSet
 
 
 class DatetimeLabelSet(LabelSet):
@@ -20,6 +20,7 @@ class DatetimeLabelSet(LabelSet):
         unit: str = "",
         log: bool = False,
         vertical_direction: bool = False,
+        left_margin: int = LEFT_MARGIN_FOR_HORIZONTAL_AXIS,
     ):
         # Note: unit scaling (`unit_scaling`) does not apply to timestamps, so
         # this class intentionally does not expose that option and lets the base
@@ -32,6 +33,7 @@ class DatetimeLabelSet(LabelSet):
             unit=unit,
             log=log,
             vertical_direction=vertical_direction,
+            left_margin=left_margin,
         )
         # For convenience, make sure we have the bounds also available as
         # datetime objects.

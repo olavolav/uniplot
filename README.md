@@ -169,7 +169,11 @@ In alphabetical order:
 * `line_length_hard_cap` - Enforce a hard limit on the number of characters per
   line of the plot area. This may override the `width` option if there is not
   enough space. Defaults to `None`.
-* `rounded_corners` - Draw bounding box with round corners. Defaults to `False.
+* `border` - Frame around the plot area. Use `"box"` for square corners
+  (the default), `"rounded"` for rounded corners, or `None` to hide the frame.
+* `rounded_corners` - Deprecated. Use `border="rounded"` instead. Removal is
+  planned no earlier than May 14, 2027. If `True`, a `"box"` border has rounded
+  corners. Defaults to `False`.
 * `x_as_log` - Plot the x axis as logarithmic scale. Defaults to `False`.
 * `x_gridlines` - A list of x values that have a vertical line for better
   orientation. Defaults to `[0]`, or to `[]` if `x_as_log` is enabled.
@@ -262,6 +266,18 @@ Result:
 └────────────────────────────────────────────────────────────┘
      -1                        0                       1
 ```
+
+### Sparklines
+
+Use `sparkline` to print a one-line Braille chart with connected points.
+
+```python
+from uniplot import sparkline
+
+sparkline([1, 3, 2, 5, 4], width=10)
+```
+
+Use `sparkline_to_string(ys, width=5)` to return the chart as a string.
 
 ### Arrow keys and FPS-style keys
 
