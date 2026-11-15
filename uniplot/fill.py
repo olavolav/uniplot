@@ -38,7 +38,7 @@ def _render_numpy(x0, x1, y0, y1, baseline, edges, y_min, y_max):
 
 
 try:
-    from numba import njit  # type: ignore[import-not-found]
+    from numba import njit  # type: ignore[import-not-found, import-untyped]
 
     @njit(cache=True)
     def _render_numba(x0, x1, y0, y1, baseline, edges, y_min, y_max):
