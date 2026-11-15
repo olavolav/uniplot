@@ -33,6 +33,8 @@ class Options:
     character_set: CharacterSet = CharacterSet.BLOCK
     # Color mode
     color: list[Color] | None = None
+    # Per-series baseline in plot coordinates, or "bottom" / None
+    fill: list[float | str | None] = field(default_factory=lambda: [None])
     # List of characters to use when plotting in force_ascii mode.
     force_ascii_characters: list[str] = field(default_factory=_default_ascii_characters)
     # Height of the plotting region, in lines

@@ -1,3 +1,6 @@
+import datetime
+from numbers import Real
+
 import numpy as np
 
 from uniplot.axis_labels.label_set import VALID_UNIT_SCALINGS
@@ -44,6 +47,11 @@ def validate_and_transform_options(
             'border="box" instead.'
         )
 
+    if kwargs.get("fill") is not None:
+        # Invalid samples break filled paths and must not poison automatic bounds.
+        series.xs = [np.where(np.isfinite(x), x, np.nan) for x in series.xs]
+        series.ys = [np.where(np.isfinite(y), y, np.nan) for y in series.ys]
+
     # First, some cleanup, including converting datetimes to float
     for key in ["x_min", "x_max", "y_min", "y_max"]:
         if key in kwargs:
@@ -76,6 +84,10 @@ def validate_and_transform_options(
         if kwargs.get("y_max") and "y_max" not in bounds_already_in_plot_space:
             kwargs["y_max"] = np.log10(kwargs["y_max"])
 
+    kwargs["fill"] = _normalize_fill(
+        kwargs.get("fill"), series, kwargs.get("y_as_log", False)
+    )
+
     # Colors of gridlines
     kwargs["x_gridlines_color"] = kwargs.get("x_gridlines_color", False)
     kwargs["x_gridlines_color"] = _init_color_from_arg(kwargs["x_gridlines_color"])
@@ -100,9 +112,22 @@ def validate_and_transform_options(
         kwargs["x_max"] = kwargs["x_max"] + 1
 
     # Set y bounds to show all points by default
-    y_enlarge_delta = AUTO_WINDOW_ENLARGE_FACTOR * (series.y_max() - series.y_min())
-    kwargs["y_min"] = kwargs.get("y_min", series.y_min() - y_enlarge_delta)
-    kwargs["y_max"] = kwargs.get("y_max", series.y_max() + y_enlarge_delta)
+    y_min, y_max = series.y_min(), series.y_max()
+    for xs, ys, baseline in zip(series.xs, series.ys, kwargs["fill"]):
+        if baseline is None or baseline == "bottom":
+            continue
+        finite = np.isfinite(xs) & np.isfinite(ys)
+        has_area = (
+            finite[:-1]
+            & finite[1:]
+            & (xs[:-1] != xs[1:])
+            & ((ys[:-1] != baseline) | (ys[1:] != baseline))
+        )
+        if np.any(has_area):
+            y_min, y_max = min(y_min, baseline), max(y_max, baseline)
+    y_enlarge_delta = AUTO_WINDOW_ENLARGE_FACTOR * (y_max - y_min)
+    kwargs["y_min"] = kwargs.get("y_min", y_min - y_enlarge_delta)
+    kwargs["y_max"] = kwargs.get("y_max", y_max + y_enlarge_delta)
 
     # Fallback for only a single data point, or multiple with single y
     # coordinate
@@ -208,3 +233,31 @@ def _init_color_from_arg(color_arg):
 
     # Otherwise assume no color
     return False
+
+
+def _normalize_fill(value, series: MultiSeries, log: bool) -> list:
+    values = value if isinstance(value, list) else [value] * len(series)
+    if len(values) != len(series):
+        raise ValueError("fill must have one entry per series.")
+    result: list[float | str | None] = []
+    for baseline in values:
+        if baseline is None or (isinstance(baseline, str) and baseline == "bottom"):
+            result.append(baseline)
+            continue
+        is_datetime = isinstance(baseline, (datetime.date, np.datetime64))
+        if is_datetime:
+            if not series.y_is_time_series or np.isnat(np.datetime64(baseline)):
+                raise ValueError(
+                    "fill requires a valid datetime baseline on a datetime y axis."
+                )
+        elif isinstance(baseline, (bool, np.bool_)) or not isinstance(baseline, Real):
+            raise ValueError(
+                'fill must be None, "bottom", a finite baseline, or a per-series list.'
+            )
+        baseline = floatify(baseline)
+        if not np.isfinite(baseline) or (log and baseline <= 0):
+            raise ValueError(
+                "fill baseline must be finite and positive on a logarithmic y axis."
+            )
+        result.append(float(np.log10(baseline)) if log else baseline)
+    return result

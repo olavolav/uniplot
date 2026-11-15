@@ -8,7 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Added experimental `sparkline` and `sparkline_to_string` helpers for
-  one-line Braille charts.
+  filled one-line Braille charts, with optional color and y-axis bounds.
+- Added `fill` to shade plots to a numeric or datetime baseline, or the
+  bottom of the view, with per-series settings.
 - Added `border="box"`, `border="rounded"`, and `border=None`; deprecated
   `rounded_corners` with removal no earlier than May 14, 2027.
 

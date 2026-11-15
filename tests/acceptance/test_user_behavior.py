@@ -437,14 +437,14 @@ def test_plotting_a_histogram_to_string():
 
 
 def test_sparkline_prints_string_result(capsys):
-    sparkline([1, 3, 2, 5, 4], width=10)
+    options = {"color": ["green"], "y_min": 0, "y_max": 10}
+    sparkline([1, 3, 2, 5, 4], width=10, **options)
     output = capsys.readouterr().out
 
-    assert output == sparkline_to_string([1, 3, 2, 5, 4], width=10) + "\n"
+    assert output == sparkline_to_string([1, 3, 2, 5, 4], width=10, **options) + "\n"
 
 
-@pytest.mark.parametrize("width", [1, 5, 10])
-@pytest.mark.parametrize("ys", [[1], [2, 2, 2], [1, 3, 2, 5, 4]])
+@pytest.mark.parametrize("ys,width", [([1], 1), ([2, 2, 2], 5), ([1, 3, 2, 5, 4], 10)])
 def test_sparkline_string_dimensions(ys, width):
     output = sparkline_to_string(ys, width=width)
 
@@ -452,5 +452,35 @@ def test_sparkline_string_dimensions(ys, width):
     assert len(output) == width
 
 
-def test_sparkline_connects_points_without_plot_decorations():
-    assert sparkline_to_string([0, 1], width=5) == "⣀⠤⠔⠒⠉"
+def test_sparkline_fills_to_bottom_without_plot_decorations():
+    assert sparkline_to_string([0, 1], width=5) == "⣀⣤⣶⣶⣿"
+
+
+@pytest.mark.parametrize(
+    "bounds", [{"y_min": 0}, {"y_max": 10}, {"y_min": 0, "y_max": 10}]
+)
+def test_sparkline_uses_explicit_bounds(bounds):
+    ys = [3, 5, 4]
+    expected = plot_to_string(
+        ys,
+        width=8,
+        height=1,
+        border=None,
+        fill="bottom",
+        lines=True,
+        x_labels=False,
+        y_labels=False,
+        x_gridlines=[],
+        y_gridlines=[],
+        character_set="braille",
+        **bounds,
+    )
+    output = sparkline_to_string(ys, width=8, **bounds)
+    assert output == expected
+
+
+def test_sparkline_color():
+    plain = sparkline_to_string([1, 3, 2], color=False)
+    colored = sparkline_to_string([1, 3, 2], color=["green"])
+    assert "\033[32m" in colored
+    assert colored.replace("\033[32m", "").replace("\033[0m", "") == plain

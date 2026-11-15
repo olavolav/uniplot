@@ -181,23 +181,34 @@ def _cast_as_numpy_time_series(series: Any) -> NDArray:
     # or a different type like "datetime64[m]" means that the conversion to
     # floating point will depend on the input format, which will lead to
     # unexpected behavior.
-    return np.array(series).astype("datetime64[s]").astype(float)
+    dates = np.array(series).astype("datetime64[s]")
+    values = dates.astype(float)
+    values[np.isnat(dates)] = np.nan
+    return values
 
 
 def _safe_max(array: NDArray) -> float:
-    return array[~np.isnan(array)].max()
+    values = array[~np.isnan(array)]
+    return values.max() if len(values) else -np.inf
 
 
 def _safe_maxs(series: list) -> float:
-    return max([_safe_max(row) for row in series if len(row) > 0])
+    result = max([_safe_max(row) for row in series if len(row) > 0])
+    if result == -np.inf:
+        raise ValueError("No valid data available to determine plot bounds.")
+    return result
 
 
 def _safe_mins(series: list) -> float:
-    return min([_safe_min(row) for row in series if len(row) > 0])
+    result = min([_safe_min(row) for row in series if len(row) > 0])
+    if result == np.inf:
+        raise ValueError("No valid data available to determine plot bounds.")
+    return result
 
 
 def _safe_min(array: NDArray) -> float:
-    return array[~np.isnan(array)].min()
+    values = array[~np.isnan(array)]
+    return values.min() if len(values) else np.inf
 
 
 def _safe_log10(x: NDArray) -> NDArray:

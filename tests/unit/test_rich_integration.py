@@ -119,14 +119,15 @@ def test_live_smoke(monkeypatch):
     assert "┌" in out
 
 
-def test_set_data_is_thread_safe_under_render():
+@pytest.mark.parametrize("fill", [None, "bottom"])
+def test_set_data_is_thread_safe_under_render(fill):
     # Interleave set_data on one thread with rendering on another; the lock must
     # keep this from raising (e.g. torn options state). Both sides do a bounded
     # number of iterations and yield, so neither starves the other.
     import threading
     import time
 
-    plt = plot_gen(ys=YS)
+    plt = plot_gen(ys=YS, fill=fill)
     errors = []
 
     def producer():

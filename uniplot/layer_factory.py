@@ -99,6 +99,7 @@ def render_points(xs: list[NDArray], ys: list[NDArray], options: Options) -> NDA
             width=full_width,
             height=full_height,
             lines=lines,
+            fill=options.fill[series_index % len(options.fill)],
             pixels=px_matrix,
             layer=series_index + 1,
         )  # type: ignore

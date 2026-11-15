@@ -161,6 +161,17 @@ In alphabetical order:
   set](https://en.wikipedia.org/wiki/Braille_Patterns) with 8x resolution,
   `"ascii"` to use ASCII characters only. Braille has the highest resolution,
   and a lighter look overall. Defaults to `"block"`.
+* `fill` - Fill the area between adjacent samples and a baseline. Defaults to
+  `None` (disabled). Use a number such as `0`, `"bottom"` for the current view's
+  bottom edge, or a list with one setting per series, such as `[0, None]`.
+  Fill uses the series color and connects samples independently of `lines`.
+  Missing or infinite samples leave gaps, and isolated points have no filled
+  area. Overlapping segment areas are combined, including paths that reverse
+  direction. Any positive-area pixel overlap is filled, preserving narrow peaks.
+  Explicit baselines participate in automatic y bounds; explicit view bounds
+  still take precedence. Logarithmic y axes require a positive baseline.
+  Datetime y axes accept datetime baselines or numeric Unix timestamps in
+  seconds. Boolean values are rejected.
 * `force_ascii_characters` -  List of characters to use when using the
   ASCII character set. Defaults to `["+", "x", "o", "*", "~", "."]`.
 * `legend_placement` - Arrangement of the legend labels. `"auto"` attempts to
@@ -278,6 +289,13 @@ sparkline([1, 3, 2, 5, 4], width=10)
 ```
 
 Use `sparkline_to_string(ys, width=5)` to return the chart as a string.
+Both helpers fill to the bottom of the view and accept keyword-only `color`,
+`y_min`, and `y_max`. Color uses the standard plot color formats. Set y bounds
+to compare several sparklines on the same scale; omitted bounds scale automatically.
+
+```python
+sparkline([10, 30, 20], width=20, color=["green"], y_min=0, y_max=100)
+```
 
 ### Arrow keys and FPS-style keys
 
