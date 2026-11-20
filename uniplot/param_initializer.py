@@ -7,6 +7,7 @@ from uniplot.axis_labels.label_set import VALID_UNIT_SCALINGS
 from uniplot.color_themes import COLOR_THEMES
 from uniplot.colors import Color
 from uniplot.conversions import floatify
+from uniplot.datetimes import is_missing, pad_datetime_bound, validate_datetime_option
 from uniplot.legend_placements import LegendPlacement
 from uniplot.multi_series import MultiSeries
 from uniplot.options import CharacterSet, Options
@@ -55,13 +56,22 @@ def validate_and_transform_options(
     # First, some cleanup, including converting datetimes to float
     for key in ["x_min", "x_max", "y_min", "y_max"]:
         if key in kwargs:
+            if getattr(series, f"{key[0]}_is_time_series"):
+                validate_datetime_option(
+                    kwargs[key], getattr(series, f"{key[0]}_timezone"), key
+                )
             kwargs[key] = floatify(kwargs[key])
-    # TODO y gridlines
-    if "x_gridlines" in kwargs:
-        kwargs["x_gridlines"] = [floatify(x) for x in kwargs["x_gridlines"]]
-    elif series.x_is_time_series:
-        # Default to no x gridlines
-        kwargs["x_gridlines"] = []
+    for axis in ("x", "y"):
+        key = f"{axis}_gridlines"
+        if key in kwargs:
+            if getattr(series, f"{axis}_is_time_series"):
+                for value in kwargs[key]:
+                    validate_datetime_option(
+                        value, getattr(series, f"{axis}_timezone"), key
+                    )
+            kwargs[key] = [floatify(value) for value in kwargs[key]]
+        elif getattr(series, f"{axis}_is_time_series"):
+            kwargs[key] = []
 
     if kwargs.get("x_as_log"):
         series.set_x_axis_to_log10()
@@ -99,10 +109,20 @@ def validate_and_transform_options(
         floatify(series.x_max()) - floatify(series.x_min())
     )
     kwargs["x_min"] = floatify(
-        kwargs.get("x_min", floatify(series.x_min()) - x_enlarge_delta)
+        kwargs.get(
+            "x_min",
+            pad_datetime_bound(
+                series.x_min(), series.x_min() - x_enlarge_delta, series.x_timezone
+            ),
+        )
     )
     kwargs["x_max"] = floatify(
-        kwargs.get("x_max", floatify(series.x_max()) + x_enlarge_delta)
+        kwargs.get(
+            "x_max",
+            pad_datetime_bound(
+                series.x_max(), series.x_max() + x_enlarge_delta, series.x_timezone
+            ),
+        )
     )
 
     # Fallback for only a single data point, or multiple with single x
@@ -126,8 +146,12 @@ def validate_and_transform_options(
         if np.any(has_area):
             y_min, y_max = min(y_min, baseline), max(y_max, baseline)
     y_enlarge_delta = AUTO_WINDOW_ENLARGE_FACTOR * (y_max - y_min)
-    kwargs["y_min"] = kwargs.get("y_min", y_min - y_enlarge_delta)
-    kwargs["y_max"] = kwargs.get("y_max", y_max + y_enlarge_delta)
+    kwargs["y_min"] = kwargs.get(
+        "y_min", pad_datetime_bound(y_min, y_min - y_enlarge_delta, series.y_timezone)
+    )
+    kwargs["y_max"] = kwargs.get(
+        "y_max", pad_datetime_bound(y_max, y_max + y_enlarge_delta, series.y_timezone)
+    )
 
     # Fallback for only a single data point, or multiple with single y
     # coordinate
@@ -246,7 +270,7 @@ def _normalize_fill(value, series: MultiSeries, log: bool) -> list:
             continue
         is_datetime = isinstance(baseline, (datetime.date, np.datetime64))
         if is_datetime:
-            if not series.y_is_time_series or np.isnat(np.datetime64(baseline)):
+            if not series.y_is_time_series or is_missing(baseline):
                 raise ValueError(
                     "fill requires a valid datetime baseline on a datetime y axis."
                 )
@@ -254,6 +278,8 @@ def _normalize_fill(value, series: MultiSeries, log: bool) -> list:
             raise ValueError(
                 'fill must be None, "bottom", a finite baseline, or a per-series list.'
             )
+        if is_datetime:
+            validate_datetime_option(baseline, series.y_timezone, "fill")
         baseline = floatify(baseline)
         if not np.isfinite(baseline) or (log and baseline <= 0):
             raise ValueError(

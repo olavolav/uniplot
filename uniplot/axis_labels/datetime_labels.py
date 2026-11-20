@@ -1,4 +1,5 @@
 from collections import defaultdict
+from datetime import tzinfo
 from functools import lru_cache
 from typing import Final
 
@@ -12,6 +13,7 @@ from uniplot.axis_labels.extended_talbot_labels import (
     _compute_preferred_number_of_labels,
 )
 from uniplot.axis_labels.label_set import LEFT_MARGIN_FOR_HORIZONTAL_AXIS
+from uniplot.datetimes import local_to_utc, utc_to_local
 
 DIGIT_TIME_UNITS: Final = ["Y", "M", "D", "h", "m", "s"]
 
@@ -41,6 +43,7 @@ def datetime_labels(
     log: bool = False,
     verbose: bool = False,
     left_margin: int = LEFT_MARGIN_FOR_HORIZONTAL_AXIS,
+    timezone: tzinfo | None = None,
 ) -> DatetimeLabelSet | None:
     """
     A simple way to get started with datetime labelling.
@@ -62,10 +65,22 @@ def datetime_labels(
 
     result: DatetimeLabelSet | None = None
     best_score: float = -2.0
+    fallback_labels: set = set()
 
     data_range = np.timedelta64(x_max_as_dt - x_min_as_dt)
     pseudo_exponent_index, pseudo_exponent = _compute_pseudo_exponent(data_range)
-    label_start = _find_left_zero_datetime(x_min_as_dt, pseudo_exponent_index)
+    x_min_local, x_max_local = x_min_as_dt, x_max_as_dt
+    if timezone is not None:
+        x_min_local, x_max_local = utc_to_local(
+            np.array([x_min_as_dt, x_max_as_dt]), timezone
+        )
+        # Local readings can reverse at a rollback. Include both occurrences,
+        # then crop by actual instants rather than local ordering.
+        x_min_local, x_max_local = (
+            min(x_min_local, x_max_local - data_range),
+            max(x_max_local, x_min_local + data_range),
+        )
+    label_start = _find_left_zero_datetime(x_min_local, pseudo_exponent_index)
     if verbose:
         print(f"pseudo-exponent = {pseudo_exponent}, label_start = {label_start}")
 
@@ -82,10 +97,18 @@ def datetime_labels(
             # i is the index of the currently selected "nice" number q
             qs = Q_VALUES[pe]
             for i, q in enumerate(qs):
-                labels = _label_range(label_start, x_max_as_dt, q * j, pe)
+                labels = _label_range(label_start, x_max_local, q * j, pe)
+                if timezone is not None:
+                    labels = labels[(labels >= x_min_local) & (labels <= x_max_local)]
+                    labels = local_to_utc(labels, timezone)
 
                 # Crop labels
                 labels = labels[(labels >= x_min_as_dt) & (labels <= x_max_as_dt)]
+                if timezone is not None and len(labels):
+                    middle = (x_min + x_max) / 2
+                    fallback_labels.add(
+                        labels[np.argmin(abs(labels.astype(float) - middle))]
+                    )
                 if len(labels) < 2:
                     continue
 
@@ -109,9 +132,17 @@ def datetime_labels(
                     vertical_direction=vertical_direction,
                     left_margin=left_margin,
                     unit=unit,
+                    timezone=timezone,
                 )
 
                 if current_set.compute_if_render_does_overlap():
+                    continue
+
+                if (
+                    timezone is not None
+                    and not vertical_direction
+                    and len(current_set.render()[0]) > available_space + 2 * left_margin
+                ):
                     continue
 
                 grid_alignment = int(current_set.compute_if_spacing_is_regular())
@@ -134,6 +165,28 @@ def datetime_labels(
                     best_score = score
                     result = current_set
 
+    if result is None and timezone is not None:
+        # Long date/offset strings may permit only a single tick. Prefer a round
+        # candidate near the center; do not truncate its offset to make it fit.
+        for label in sorted(
+            fallback_labels,
+            key=lambda t: abs(float(t.astype(float)) - (x_min + x_max) / 2),
+        )[:16]:
+            single = DatetimeLabelSet(
+                labels=np.array([label]),
+                x_min=x_min,
+                x_max=x_max,
+                available_space=available_space,
+                vertical_direction=vertical_direction,
+                left_margin=left_margin,
+                unit=unit,
+                timezone=timezone,
+            )
+            if not single.compute_if_render_does_overlap() and (
+                vertical_direction
+                or len(single.render()[0]) <= available_space + 2 * left_margin
+            ):
+                return single
     return result
 
 

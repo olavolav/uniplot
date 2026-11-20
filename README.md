@@ -113,7 +113,8 @@ difference is that `plot_to_string` does not support interactive mode.
 In both cases, NaN or `None` values are ignored.
 
 Note that since v0.12.0 you can also pass a list or an NumPy array of
-timestamps, and the axis labels should be formatted correctly.
+timestamps, and the axis labels should be formatted correctly. See
+[Datetimes and timezones](#datetimes-and-timezones) for timezone handling.
 
 
 ### Options
@@ -222,6 +223,44 @@ plot = partial(default_plot, height=25, width=80)
 
 This defines a new `plot` function that is identical to the original, except
 the default values for `width` and `height` are now different.
+
+
+## Datetimes and timezones
+
+Pass datetimes directly: uniplot uses their timezone for axis labels, with no
+extra options. This works on either axis with Python datetimes, pandas datetime
+indexes/series, and Polars datetime series.
+
+```python
+from datetime import datetime
+from zoneinfo import ZoneInfo
+from uniplot import plot
+
+berlin = ZoneInfo("Europe/Berlin")
+times = [datetime(2026, 1, 15, hour, tzinfo=berlin) for hour in (9, 12, 15)]
+plot(xs=times, ys=[1, 4, 2])  # Local labels such as 09:00, 12:00, 15:00
+```
+
+Timezone-aware points are spaced by elapsed time, including across daylight
+saving changes. Labels use round local times. Repeated autumn times include
+their UTC offsets, such as `02:00+02:00` and `02:00+01:00`; fewer labels may fit
+near these transitions. Dates remain visible when the view crosses midnight.
+
+Datetimes **without** a timezone are displayed as supplied. Uniplot does not
+guess your computer's timezone or apply daylight saving rules to them. Two
+identical naive clock readings therefore occupy the same position.
+
+Use either all aware or all naive datetimes on each axis; mixing them raises
+an error. If aware inputs have different timezones, labels use the first
+nonempty series' first valid timezone and uniplot warns. To choose another
+timezone, convert the inputs first, for example `times.tz_convert("UTC")` for
+a pandas DatetimeIndex or `[t.astimezone(ZoneInfo("UTC")) for t in times]` for a
+Python list. Do not remove timezone information to change the labels: doing so
+can collapse distinct observations during the autumn clock change.
+
+Datetime bounds, gridlines and fill baselines must have the same awareness as
+their axis. Numeric coordinates in seconds are also accepted. Missing values
+do not affect timezone inference. Datetime resolution remains one second.
 
 
 ## Experimental features

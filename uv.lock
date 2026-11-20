@@ -940,6 +940,7 @@ dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "readchar" },
+    { name = "tzdata" },
 ]
 
 [package.optional-dependencies]
@@ -969,6 +970,7 @@ requires-dist = [
     { name = "numpy", specifier = ">=1.22.0" },
     { name = "readchar", specifier = ">=4.2.1" },
     { name = "rich", marker = "extra == 'rich'", specifier = ">=13.0" },
+    { name = "tzdata", specifier = ">=2024.1" },
 ]
 provides-extras = ["fast", "rich"]
 

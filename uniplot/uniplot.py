@@ -264,9 +264,13 @@ class plot_gen:
         # since the last recompute are kept.
         explicit = self._pending_bound_values
         pinned_bounds = self._pinned_bounds.copy()
-        if series.x_is_time_series != previous.x_is_time_series:
+        if series.x_is_time_series != previous.x_is_time_series or (
+            (series.x_timezone is None) != (previous.x_timezone is None)
+        ):
             pinned_bounds -= {"x_min", "x_max"} - set(explicit)
-        if series.y_is_time_series != previous.y_is_time_series:
+        if series.y_is_time_series != previous.y_is_time_series or (
+            (series.y_timezone is None) != (previous.y_timezone is None)
+        ):
             pinned_bounds -= {"y_min", "y_max"} - set(explicit)
 
         # Build the kwargs for the validator: persisted options + pending

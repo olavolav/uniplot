@@ -4,6 +4,8 @@ from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 
+from uniplot.datetimes import datetime_seconds
+
 
 def floatify(x: Any) -> float:
     """
@@ -15,6 +17,8 @@ def floatify(x: Any) -> float:
     floating point will depend on the input format, which will lead to
     unexpected behavior.
     """
+    if isinstance(x, (datetime.datetime, datetime.date, np.datetime64)):
+        return datetime_seconds(x)
     try:
         if np.issubdtype(x.dtype, np.datetime64):
             return x.astype("datetime64[s]").astype(float)

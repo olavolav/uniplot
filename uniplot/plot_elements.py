@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime
 from typing import Any, Final
 
 import numpy as np
@@ -131,7 +132,16 @@ def prepare_histogram(
         # `datetime64[s]` so the downstream plot re-detects the x-axis as a time
         # series and renders date labels instead of raw numbers.
         if multi_series.y_is_time_series:
-            xs_barchart = xs_barchart.astype("datetime64[s]")
+            if multi_series.y_timezone is not None:
+                xs_barchart = np.array(
+                    [
+                        datetime.fromtimestamp(t, multi_series.y_timezone)
+                        for t in xs_barchart
+                    ],
+                    dtype=object,
+                )
+            else:
+                xs_barchart = xs_barchart.astype("datetime64[s]")
         xs_histo_series.append(xs_barchart)
         ys_histo_series.append(ys_barchart)
 
