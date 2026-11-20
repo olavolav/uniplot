@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   bottom of the view, with per-series settings.
 - Added `border="box"`, `border="rounded"`, and `border=None`; deprecated
   `rounded_corners` with removal no earlier than May 14, 2027.
+- Added time zone support for datetime labels.
 
 ## [0.24.0] - 2026-10-29
 ### Added
