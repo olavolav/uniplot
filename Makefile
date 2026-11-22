@@ -56,7 +56,7 @@ dist/:
 	@echo "Building package ..."
 	uv build
 
-publish: clean dist/
+publish: clean test dist/
 	@echo "Publishing package ..."
 	uv publish
 
