@@ -5,7 +5,7 @@ All notable changes to uniplot will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.25.0] - 2026-11-22
 ### Added
 - Added experimental `sparkline` and `sparkline_to_string` helpers for
   filled one-line Braille charts, with optional color and y-axis bounds.
@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   bottom of the view, with per-series settings.
 - Added `border="box"`, `border="rounded"`, and `border=None`; deprecated
   `rounded_corners` with removal no earlier than May 14, 2027.
-- Added time zone support for datetime labels.
+- Added time zone support for datetime labels. Thanks to @Flix6x for suggesting
+  the feature and providing a prototype PR!
 
 ## [0.24.0] - 2026-10-29
 ### Added
